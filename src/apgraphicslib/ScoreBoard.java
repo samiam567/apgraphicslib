@@ -7,7 +7,7 @@ public class ScoreBoard extends APLabel implements Updatable {
 	private double scoreSpeed;
 	private double targetScore;
 	
-	public boolean roundScore = true;
+	public int decimalsToRound = 1;
 	
 	public ScoreBoard(Object_draw drawer1, double x, double y, String score_phrase1, double score1) {
 		super(drawer1,x,y);
@@ -39,11 +39,15 @@ public class ScoreBoard extends APLabel implements Updatable {
 	
 	@Override
 	public void prePaintUpdate() {
-		if (roundScore) {
+		if (decimalsToRound == 0) { 
 			setMessage(score_phrase + " " + (int) Math.round(score) + end_phrase);
+			
 		}else {
-			setMessage(score_phrase + " " + score + end_phrase);
+			double scoreRoundMulti = Math.pow(10, decimalsToRound);
+			setMessage(score_phrase + " " + Math.round(score * scoreRoundMulti)/scoreRoundMulti + end_phrase);
+			
 		}
+			
 	}
 	
 	

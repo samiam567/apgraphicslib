@@ -10,6 +10,8 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import javax.imageio.ImageIO;
 
+import apgraphicslib.Physics_2DPolygon.PolyPoint;
+
 public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Textured3D, Updatable {
 	
 	protected class P3DPTexture {
@@ -39,8 +41,6 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 		 * {@summary returns the rgb value at a position in an image}
 		 */
 		 public RGBPoint3D getRGBPoint(double x, double y, double z,double theta, double phi, boolean threeD) {
-			 
-			 //TODO Fix this method to work with 3d values correctly (we gettin closer but we aint there quite yet)
 			 RGBPoint3D point = new RGBPoint3D(x,y,z,0,0,0);
 			 double divisor = 1;
 			
@@ -118,15 +118,15 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 	public Physics_3DTexturedPolygon(Object_draw drawer, double x, double y, double z, double ppSize) {
 		super(drawer, x, y, z);
 		this.platePointSize = ppSize;
-		platePoints = new LinkedList<RGBPoint3D>();
+		setPlatePoints(new LinkedList<RGBPoint3D>());
 	}
 	
 	private void updatePlatePoints() {
-		for (PolyPoint cPoint : platePoints) {
+		for (PolyPoint cPoint : getPlatePoints()) {
 			cPoint.rotate(rotationMatrix);
 		}
 		
-		platePoints.sort(new Comparator<Point3D>() {
+		getPlatePoints().sort(new Comparator<Point3D>() {
 			@Override
 			public int compare(Point3D o1, Point3D o2) {
 				return (Double.compare(o1.getZ(), o2.getZ()));
@@ -279,13 +279,15 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 		
 		
 		platePoint = Texture.getRGBPoint(x, y, z,theta,phi,true);
-		platePoints.add(platePoint);
+		getPlatePoints().add(platePoint);
 		
 		
 		
 		//calculate how much to increment the angles
 		return calculateAngleSteps(r,dthetadr,dphidr);
 	}
+	
+	
 	
 	
 	/**
@@ -315,7 +317,7 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 		Texture = new P3DPTexture(fileName);
 		
 		// remove old plate points
-		platePoints.clear();
+		getPlatePoints().clear();
 		
 	
 		dTheta = 0.000001;
@@ -352,7 +354,7 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 		
 		
 		getDrawer().out.println("Setting of texture complete.");
-		getDrawer().out.println("Added " + platePoints.size() + " platePoints.");
+		getDrawer().out.println("Added " + getPlatePoints().size() + " platePoints.");
 		getDrawer().resume(); //resume the drawer
 		
 	}
@@ -367,6 +369,14 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 		addPoint(x,y,0);
 	}
 	
+	public LinkedList<RGBPoint3D> getPlatePoints() {
+		return platePoints;
+	}
+
+	public void setPlatePoints(LinkedList<RGBPoint3D> platePoints) {
+		this.platePoints = platePoints;
+	}
+
 	@Override
 	public void paint(Graphics page) {
 		
@@ -381,7 +391,7 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 
  		
  		double parallaxValue, x, y;
-		for (RGBPoint3D cPoint : platePoints) {
+		for (RGBPoint3D cPoint : getPlatePoints()) {
 			
 			if (cPoint.getZ() + getZ() >= -Settings.distanceFromScreen) {
 				page.setColor(new Color(cPoint.R,cPoint.G,cPoint.B,cPoint.alpha));
@@ -433,7 +443,7 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 
 		
 		// remove old plate points
-		platePoints.clear();
+		getPlatePoints().clear();
 		
 		
 		
@@ -465,7 +475,7 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 				if (framePoly.contains(getX()+x,getY()+  y)) {
 					try {
 						newPoint = Texture.getRGBPoint(x,y,0,0,0,false);
-						platePoints.add(newPoint);
+						getPlatePoints().add(newPoint);
 					}catch(ArrayIndexOutOfBoundsException a) {
 						System.out.println("array out of bounds");
 					}
@@ -573,7 +583,7 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 		
 		//checking if the point is within the collision area of any of these object's points
 		int pointCounter = 10;
-		for (Coordinate3D cPoint : platePoints) {
+		for (Coordinate3D cPoint : getPlatePoints()) {
 			if (pointCounter % collisionCheckGain == 0) { //only check every [collisionCheckGain] points
 				if (Physics_engine_toolbox.objectRelativePointDistance3D(obX, obY, obZ, point3D, getX(), getY(), getZ(), cPoint) <= radius + platePointSize * collisionCheckGain/2) {
 					return true;
@@ -595,7 +605,7 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 	 */
 	public Coordinate3D checkForCollision(Tangible object) {
 		int pointCounter = 10;
-		for (Coordinate3D cPoint : platePoints) {
+		for (Coordinate3D cPoint : getPlatePoints()) {
 			if (pointCounter % collisionCheckGain == 0) { //only check every [collisionCheckGain] points
 				if (object.checkForCollision(cPoint, (Tangible) this, platePointSize * collisionCheckGain/2)) {
 					return cPoint;

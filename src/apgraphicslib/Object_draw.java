@@ -42,6 +42,7 @@ public class Object_draw extends JPanel {
 	
 	private double frameCount = 0, updateCount = 0, frameStep = 0.1;
 	private long updateStartTime, updateEndTime, frameStartTime, frameEndTime, subCalcTime;
+	private double frameTime = Settings.frameTime;
 	
 	public Object_draw() {
 		frame = new Physics_frame(this);
@@ -334,32 +335,44 @@ public class Object_draw extends JPanel {
 
 	public void doUpdate() { //for update thread. Updates the objects
 		try {			
-			frameStartTime = System.nanoTime();
-			repaint();
-			frameEndTime = System.nanoTime();		
-			
+			frameStartTime = System.nanoTime();	
+			prePaintUpdateObjects();
 			checkForResize();
-			frameCount = 0;
 			repaint();
 			
-			updateStartTime = System.nanoTime();
-			while (frameCount < 1) {
-				
+			
+			if (frameStep > 1) {
+				frameStep = 1;
+				frameTime *= frameStep;
+			}else if (frameStep != 1){
+				frameTime *= Math.sqrt(Settings.frameTime/frameTime);
+			}
+			
+			frameEndTime = System.nanoTime();	
+			
+			frameCount = 0;
+			subCalcTime = 0;
+			for (int i = 0; i < 1/frameStep; i++) {
+				updateStartTime = System.nanoTime();
 				updateObjects(frameStep*Settings.frameTime); //update the objects
 				checkForCollisions(); //check for collisions between the tangibles
 				frameCount += frameStep;
 				updateCount++;
 				
-			
+				updateEndTime = System.nanoTime();	
+				subCalcTime += ((long)( (updateEndTime - updateStartTime)));
 			}
-			prePaintUpdateObjects();
-			updateEndTime = System.nanoTime();	
-			subCalcTime = ((int)( (updateEndTime - updateStartTime)));
+			
+			subCalcTime *= frameStep;
+			
+			
 			
 			frameStep += ((double) subCalcTime) / (Settings.frameTime*1000000000 - (frameEndTime-frameStartTime));
 			frameStep /= 2; // the averaging of the two numbers keeps the system from freezing during big changes (like adding objects)
-	
-			subCalcTime = 0;
+			
+		
+			
+		
 
 	    }catch(ConcurrentModificationException c) {
 	    	c.printStackTrace();

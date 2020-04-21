@@ -27,6 +27,7 @@ public class Room extends Physics_3DDrawMovable implements Updatable, Three_dime
 	
 
 	private double roomWidth;
+	private double roomDepth;
 	private double roomHeight;
 	
 	private int roomPPSize = 10;
@@ -37,10 +38,11 @@ public class Room extends Physics_3DDrawMovable implements Updatable, Three_dime
 	
 	public Room nextRoom = null;
 	
-	public Room(Object_draw drawer, Character player, double xSize, double ySize) {
-		super(drawer, Settings.width/2, Settings.height/2, Settings.depth/2);
+	public Room(Object_draw drawer, Character player, double xSize, double ySize, double zSize) {
+		super(drawer, Settings.width/2, Settings.height/2, Settings.depth/2 + zSize/3 - Settings.distanceFromScreen);
 		roomWidth = xSize;
 		roomHeight = ySize;
+		roomDepth = zSize;
 		setPos(Settings.width/2, Settings.height - roomHeight/2, Settings.depth/2);
 		this.player = player;
 
@@ -53,22 +55,22 @@ public class Room extends Physics_3DDrawMovable implements Updatable, Three_dime
 		
 		walls.clear();
 		
-		leftWall = new Wall(this,getX() - roomWidth/2,getY(),getZ(),roomWidth,roomHeight,new Vector3D(0,Math.PI/2,0),roomPPSize);
+		leftWall = new Wall(this,getX() - roomWidth/2,getY(),getZ(),roomDepth,roomHeight,new Vector3D(0,Math.PI/2,0),roomPPSize);
 		leftWall.setName("leftWall");
 		
-		rightWall = new Wall(this,getX() + roomWidth/2,getY(),getZ(),roomWidth,roomHeight,new Vector3D(0,-Math.PI/2,0),roomPPSize);
+		rightWall = new Wall(this,getX() + roomWidth/2,getY(),getZ(),roomDepth,roomHeight,new Vector3D(0,-Math.PI/2,0),roomPPSize);
 		rightWall.setName("rightWall");
 		
-		backWall = new Wall(this,getX(),getY(),getZ() - roomWidth/2,roomWidth,roomHeight, new Vector3D(0,0,0),roomPPSize);
+		backWall = new Wall(this,getX(),getY(),getZ() - roomDepth/2,roomWidth,roomHeight, new Vector3D(0,0,0),roomPPSize);
 		backWall.setName("backWall");
 		
-		frontWall = new Wall(this,getX(),getY(),getZ() + roomWidth/2,roomWidth,roomHeight, new Vector3D(0,0,0),roomPPSize);
+		frontWall = new Wall(this,getX(),getY(),getZ() + roomDepth/2,roomWidth,roomHeight, new Vector3D(0,0,0),roomPPSize);
 		frontWall.setName("frontWall");
 		
-		floorWall = new Wall(this, getX(),getY() + getRoomHeight()/2,getZ(),roomWidth,roomWidth, new Vector3D(Math.PI/2,0,0),roomPPSize);
+		floorWall = new Wall(this, getX(),getY() + roomHeight/2,getZ(),roomWidth,roomDepth, new Vector3D(Math.PI/2,0,0),roomPPSize);
 		floorWall.setName("floorWall");
 		
-		ceilingWall = new Wall(this, getX(), getY() - getRoomHeight()/2,getZ(),roomWidth,roomWidth, new Vector3D(Math.PI/2,0,0),roomPPSize);
+		ceilingWall = new Wall(this, getX(), getY() - roomHeight/2,getZ(),roomWidth,roomDepth, new Vector3D(Math.PI/2,0,0),roomPPSize);
 		ceilingWall.setName("ceilingWall");
 		
 		

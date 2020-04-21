@@ -36,18 +36,15 @@ public class Physics_runner {
 		
 
 		drawer.add(new Object_border_tether(drawer));
-		drawer.add(new FPS_display(drawer, Settings.width * 0.01, Settings.height*0.05));
-		drawer.add(new FCPS_display(drawer, Settings.width * 0.01, Settings.height*0.05 + 15));
+		drawer.add(new FPS_display(drawer, Settings.width * 0.01 + 35, Settings.height*0.05));
+		drawer.add(new FCPS_display(drawer, Settings.width * 0.01 + 45, Settings.height*0.05 + 15));
 		
 		
-	//	Egg square = new Egg(drawer,Settings.width/2,Settings.height/2,0,50,10);
+		Egg square2 = new Egg(drawer,Settings.width/2,Settings.height/2,0,50,2);
 		Physics_3DTexturedPolygon square1 = new Physics_3DTexturedPolygon(drawer,Settings.width/2,Settings.height/2,0,2);
 		square1.setName("square1");
 		
-		Physics_2DTexturedPolygon square2 = new Physics_2DTexturedPolygon(drawer,Settings.width/2,Settings.height/2,2);
-		
-		
-		
+	
 		
 
 		double xSize = 330;
@@ -62,24 +59,21 @@ public class Physics_runner {
 		
 		square1.rotatePoints(new Vector3D(0,0,Math.PI/2));
 		
-		square2.setSize(xSize,ySize);
-		square2.addPoint(-xSize/2,-ySize/2);
-		square2.addPoint(xSize/2,-ySize/2);
-		square2.addPoint(xSize/2,ySize/2);
-		square2.addPoint(-xSize/2,ySize/2);
+		
 	
 		square2.setTexture("src/LegendOfJava/assets/sword.png");
 		
 		square2.rotatePoints(new Vector3D(0,0,Math.PI/2));
 		
+		square2.setAngularVelocity(new Vector3D(0.2,0.2,0.2));
 		
 		
 
-		drawer.add(square1);
+		//drawer.add(square1);
 		drawer.add(square2);
 		
 		Coordinate3D rotPoint = new Coordinate3D(400,500,0);
-		Vector rotVec = new Vector3D(1,1,1);
+		Vector rotVec = new Vector3D(0,0,2*Math.PI);
 		
 		
 		square1.setPointOfRotation(rotPoint,true);
@@ -87,10 +81,7 @@ public class Physics_runner {
 		
 		drawer.start();
 		boolean bla = true;
-		while(bla) {
-			square2.rotateAbout(rotVec.statMultiply(0.017), rotPoint);
-		}
-		
+	
 		
 		
 		//wait for close

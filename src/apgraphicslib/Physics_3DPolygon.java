@@ -1,5 +1,6 @@
 package apgraphicslib;
 
+import apgraphicslib.Physics_2DPolygon.PolyPoint;
 
 public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimensional, Rotatable {
 	
@@ -292,6 +293,20 @@ public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimens
 	@Override
 	public void addPoint(double x, double y) {
 		addPoint(new Point3D(x,y,0));
+	}
+	
+	/**
+	 * {@code resets the size based on the coordinates of the points}
+	 */
+	@Override
+	public void reCalculateSize() {
+		setSize(0,0,0);
+		for (PolyPoint cPoint : getPoints()) {
+			//if this points coords are greater than the max coords the size permits, increase the size to accommodate this point
+			if (Math.abs(cPoint.getX()) > getXSize()/2) setSize(Math.abs(cPoint.getX()*2),getYSize());
+			if (Math.abs(cPoint.getY()) > getYSize()/2) setSize(getXSize(),Math.abs(cPoint.getY()*2));
+			if (Math.abs(((Three_dimensional) cPoint).getZ()) > getZSize()/2) setSize(getXSize(),getYSize(),Math.abs(((Three_dimensional) cPoint).getZ())*2);
+		}
 	}
 
 

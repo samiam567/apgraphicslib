@@ -9,7 +9,7 @@ import apgraphicslib.Settings;
 import apgraphicslib.Vector3D;
 
 public class MainCharacter extends Character implements  MouseMotionListener, KeyListener {
-	protected static double playerSpeed = 10;
+	protected static double playerSpeed = 20;
 	protected static double playerTurningSpeed = 0.7;
 	
 	public MainCharacter(Object_draw drawer) {

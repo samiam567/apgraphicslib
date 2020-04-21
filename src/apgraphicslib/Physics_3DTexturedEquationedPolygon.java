@@ -1,5 +1,7 @@
 package apgraphicslib;
 
+import apgraphicslib.Physics_2DPolygon.PolyPoint;
+
 public abstract class Physics_3DTexturedEquationedPolygon extends Physics_3DTexturedPolygon {
 
 	protected class EquationNotImplementedException extends Exception {
@@ -62,6 +64,24 @@ public abstract class Physics_3DTexturedEquationedPolygon extends Physics_3DText
 		e.printStackTrace();
 		System.exit(1);
 		return null;		
+	}
+	
+	
+	
+	
+	/**
+	 * {@code resets the size based on the coordinates of the points}
+	 * this is needed here because an equationed polygon has no frame points to calculate the size with so we must use the platepoints
+	 */
+	@Override
+	public void reCalculateSize() {
+		super.reCalculateSize();
+		for (PolyPoint cPoint : getPlatePoints()) {
+			//if this points coords are greater than the max coords the size permits, increase the size to accommodate this point
+			if (Math.abs(cPoint.getX()) > getXSize()/2) setSize(Math.abs(cPoint.getX()*2),getYSize());
+			if (Math.abs(cPoint.getY()) > getYSize()/2) setSize(getXSize(),Math.abs(cPoint.getY()*2));
+			if (Math.abs(((Three_dimensional) cPoint).getZ()) > getZSize()/2) setSize(getXSize(),getYSize(),Math.abs(((Three_dimensional) cPoint).getZ())*2);
+		}
 	}
 
 }

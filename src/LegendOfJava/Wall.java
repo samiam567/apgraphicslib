@@ -45,10 +45,14 @@ public class Wall extends Physics_3DTexturedPolygon implements Three_dimensional
 		rotate(wallRotation);
 	}
 	
+	@Override
+	public void prePaintUpdate() {
+		reCalculateSize();
+	}
 	
 	@Override
 	public double getPaintOrderValue() { 	
-		return super.getPaintOrderValue() + parentRoom.player.getPaintOrderValue() + parentRoom.getRoomWidth();
+		return super.getPaintOrderValue() + parentRoom.player.getPaintOrderValue() + getZSize()/2;
 	}
 	
 	

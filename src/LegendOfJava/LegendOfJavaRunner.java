@@ -62,17 +62,18 @@ public class LegendOfJavaRunner {
 		}catch(HeadlessException h) {
 			System.out.println("your machine does not support Legend of Java. Please use your personal computer");
 		}
-		Room room0 = new Room(drawer, Ryan, 3 * Settings.width, 2 * Settings.height/2);
-		Room room1 = new Room(drawer, Ryan, 3 * Settings.width, 2 * Settings.height/2);
+		
+		Room room0 = new Room(drawer, Ryan,  Settings.width, 2 * Settings.height/2,2.7 * Settings.depth);
+		Room room1 = new Room(drawer, Ryan, 3 * Settings.width, 2 * Settings.height/2,3 * Settings.width);
 		room1.addRoomOb(new EnemyCharacter(Ryan, 0.5 * Settings.width, Settings.depth));
-		Room room2 = new Room(drawer, Ryan, 3 * Settings.width, 2 * Settings.height/2);
+		Room room2 = new Room(drawer, Ryan, 3 * Settings.width, 2 * Settings.height/2,3 * Settings.width);
 		room2.addRoomOb(new EnemyCharacter(Ryan, 0.8 * Settings.width, Settings.depth));
 		room2.addRoomOb(new EnemyCharacter(Ryan, 0.2 * Settings.width, Settings.depth));
-		Room room3 = new Room(drawer, Ryan, 3 * Settings.width, 2 * Settings.height/2);
+		Room room3 = new Room(drawer, Ryan, 3 * Settings.width, 2 * Settings.height/2,3 * Settings.width);
 		room3.addRoomOb(new EnemyCharacter(Ryan, 0.8 * Settings.width, Settings.depth));
 		room3.addRoomOb(new EnemyCharacter(Ryan, 0.2 * Settings.width, Settings.depth));
 		room3.addRoomOb(new EnemyCharacter(Ryan, 0.5 * Settings.width, -0.5 * Settings.depth));
-		Room endRoom = new Room(drawer, Ryan, 3 * Settings.width, 2 * Settings.height/2);
+		Room endRoom = new Room(drawer, Ryan, 3 * Settings.width, 2 * Settings.height/2,3 * Settings.width);
 		
 		room0.nextRoom = room1;
 		room1.nextRoom = room2;
@@ -98,7 +99,7 @@ public class LegendOfJavaRunner {
 		}else if (options[graphicsSetting].equals("high")) {
 			roomPPSize = 5;
 			playerPPSize = 3;
-			MainCharacter.playerTurningSpeed /= 100000;
+			//MainCharacter.playerTurningSpeed /= 100000;
 		}else if (options[graphicsSetting].equals("extreme")) {
 			roomPPSize = 1;
 			playerPPSize = 1;

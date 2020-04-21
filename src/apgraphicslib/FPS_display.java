@@ -8,7 +8,7 @@ public class FPS_display extends ScoreBoard {
 
 	public FPS_display(Object_draw drawer1, double x, double y) {
 		super(drawer1, x, y, "FPS:", 0);
-		roundScore = true;
+		decimalsToRound = 0;
 		setName("Unnamed FPSDisplay");
 	}
 

@@ -117,6 +117,17 @@ public class Physics_2DPolygon extends Physics_2DDrawMovable implements Updatabl
 		}
 	}
 	
+	/**
+	 * {@code resets the size based on the coordinates of the points}
+	 */
+	public void reCalculateSize() {
+		setSize(0,0);
+		for (PolyPoint cPoint : getPoints()) {
+			if (Math.abs(cPoint.getX()) > getXSize()/2) setSize(Math.abs(cPoint.getX()*2),getYSize());
+			if (Math.abs(cPoint.getY()) > getYSize()/2) setSize(getXSize(),Math.abs(cPoint.getY()*2));
+		}
+	}
+	
 	protected void updatePointValueLists() {
 		int pointIndx = 0;
 		for (PolyPoint cPoint : points) {

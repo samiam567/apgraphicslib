@@ -11,7 +11,7 @@ public class FCPS_display extends ScoreBoard {  //frames calculated per second
 	private int loops = 0;
 	public FCPS_display(Object_draw drawer1, double x, double y) {
 		super(drawer1, x, y, "FStep:", drawer1.getFrameStep());
-		roundScore = false;
+		decimalsToRound = 3;
 		setName("Unnamed FCPS_display");
 	}
 
@@ -21,9 +21,10 @@ public class FCPS_display extends ScoreBoard {  //frames calculated per second
 		loops++;
 		super.Update(frames);
 		try {
-			if (loops % 5000/getDrawer().getFrameStep() == 0) {
+			if (loops % 50/getDrawer().getFrameStep() == 0) {
 				setScore(getDrawer().getFrameStep());	
 			}
 		}catch(ArithmeticException a) {}
+
 	}
 }
