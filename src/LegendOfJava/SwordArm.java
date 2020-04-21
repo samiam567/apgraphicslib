@@ -66,7 +66,7 @@ public class SwordArm extends PlayerArm {
 						cHittable = (Hittable) cObject; //if we can do this than the object is something we can hit
 						
 						if (! cHittable.equals(parentPlayer)) { //we cant hit ourself
-							if (Physics_engine_toolbox.distance3D(parentPlayer.getCoordinates(), cHittable.getCoordinates()) < sword.getXSize() + sword.getYSize()) {
+							if (Physics_engine_toolbox.distance3D(parentPlayer.getCoordinates(), cHittable.getCoordinates()) < sword.getXSize() + 2*sword.getYSize()) {
 								cHittable.hit(parentPlayer.getAttackPower());
 							}
 						}

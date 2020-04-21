@@ -129,7 +129,7 @@ public class LegendOfJavaRunner {
 		
 		JOptionPane.showMessageDialog(drawer, "Proceed to the door to enter the first room");
 	
-		while (drawer.getFrame().isActive()) {
+		while (drawer.getFrame().isShowing()) {
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
@@ -153,6 +153,8 @@ public class LegendOfJavaRunner {
 		if (currentRoom == null) {
 			JOptionPane.showMessageDialog(drawer, "Game over\nYou win!");
 			drawer.getFrame().setVisible(false);
+			drawer.stop();
+			System.exit(1);
 		}else {
 			currentRoom.run();
 			drawer.resume();
