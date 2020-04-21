@@ -15,7 +15,7 @@ import apgraphicslib.Physics_3DPolygon.Point3D;
  * {@summary tools to draw objects using the mouse}
  * {@code you must call startCapture() before you can add points }
  */
-public class Polygon_drawer_tools extends Physics_drawable implements MouseListener, MouseMotionListener, KeyListener, Updatable, Drawable {
+public class Polygon_drawer_tools extends Physics_drawable implements MouseListener, MouseMotionListener, KeyListener, Drawable {
 	private Physics_3DPolygon object;
 	private String name;
 	private boolean capturing = false;
@@ -33,8 +33,6 @@ public class Polygon_drawer_tools extends Physics_drawable implements MouseListe
 		name = "Polygon_drawer_tools for " + object.getName();
 	}
 	
-	public void Update(double frames ) {
-	}
 	
 	private void addListeners() {
 		object.getDrawer().getFrame().getContentPane().addMouseListener(this);

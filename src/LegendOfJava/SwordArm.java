@@ -1,6 +1,8 @@
 package LegendOfJava;
 
 import LegendOfJava.Character.Side;
+import apgraphicslib.Physics_engine_compatible;
+import apgraphicslib.Physics_engine_toolbox;
 import apgraphicslib.Settings;
 import apgraphicslib.Vector2D;
 import apgraphicslib.Vector3D;
@@ -48,15 +50,28 @@ public class SwordArm extends PlayerArm {
 		
 		if (swinging) {
 			if (((Vector2D)rotation).getI() > -Math.PI/3) {
-				((Vector2D) angularVelocity).setI(-10);
+				((Vector2D) angularVelocity).setI(-3);
 				sword.setOrbitalAngularVelocity(angularVelocity);
 			}else {
 				((Vector2D) angularVelocity).setI(0);
 				setRotation(0,((Vector2D) rotation).getJ(),((Vector3D) rotation).getK());
 				((Vector2D) angularVelocity).setI(0);		
 				sword.setOrbitalRotation(new Vector3D(0,0,0));
-				System.out.println("swing finished");
+				
 				swinging = false;
+				
+				Hittable cHittable = null;
+				for (Physics_engine_compatible cObject : getDrawer().getObjects()) {
+					try {
+						cHittable = (Hittable) cObject; //if we can do this than the object is something we can hit
+						
+						if (! cHittable.equals(parentPlayer)) { //we cant hit ourself
+							if (Physics_engine_toolbox.distance3D(parentPlayer.getCoordinates(), cHittable.getCoordinates()) < sword.getXSize() + sword.getYSize()) {
+								cHittable.hit(parentPlayer.getAttackPower());
+							}
+						}
+					}catch(ClassCastException c) {}
+				}
 			}
 		}
 		

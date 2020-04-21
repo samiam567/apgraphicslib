@@ -1,7 +1,12 @@
 package LegendOfJava;
 
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.HeadlessException;
+
 import javax.swing.JOptionPane;
+
+import apgraphicslib.APLabel;
 import apgraphicslib.FCPS_display;
 import apgraphicslib.FPS_display;
 import apgraphicslib.Object_draw;
@@ -10,16 +15,22 @@ import apgraphicslib.Settings;
 public class LegendOfJavaRunner {
 	public static Object_draw drawer;
 	public static MainCharacter Ryan;
+	public static APLabel console;
 	
 	private static int roomPPSize = 10, playerPPSize = 5;
 	
 	private static Room currentRoom;
+	private static int roomNumber = 0;
+	
 	
 	public static void main(String[] args) {
 		//set the Settings:
 		Settings.perspective = true;
 		Settings.frameTime = 1D/30; //attempt to make the FPS 30
-		
+		Settings.width = 1000;
+		Settings.height = 800;
+		Settings.depth = 1000;
+	//	Settings.autoResizeFrame = false;
 		
 		
 		drawer = new Object_draw();
@@ -30,24 +41,45 @@ public class LegendOfJavaRunner {
 		
 		drawer.getFrame().setVisible(false);
 		
-		drawer.add(new FPS_display(drawer, Settings.width * 0.01, Settings.height*0.05));
-		drawer.add(new FCPS_display(drawer, Settings.width * 0.01, Settings.height*0.05 + 15));
+		FPS_display fpsView = new FPS_display(drawer, Settings.width * 0.01 + 28, Settings.height*0.05);
+		fpsView.setColor(Color.white);
+		FCPS_display fcpsView = new FCPS_display(drawer, Settings.width * 0.01 + 43, Settings.height*0.05 + 15);
+		fcpsView.setColor(Color.white);
+		drawer.add(fpsView);
+		drawer.add(fcpsView);
+		
+		console = new APLabel(drawer,Settings.width * 0.5, Settings.height * 0.1);
+		console.setColor(Color.cyan);
+		drawer.add(console);
+		console.setMessage("The Legend of JAVA");
+		console.setFont(new Font("ZapfDingbats",Font.BOLD,30));
+		
 		Ryan = new MainCharacter(drawer);
 		Ryan.setName("Ryan");
 		
-		JOptionPane.showMessageDialog(drawer.getFrame(), "This program is under development and is not part of A8.");
-		
+		try {
+			JOptionPane.showMessageDialog(drawer.getFrame(), "Welcome to the Legend of Java. \n If something doesn't work, try re-starting the program and/or a different graphics setting.");
+		}catch(HeadlessException h) {
+			System.out.println("your machine does not support Legend of Java. Please use your personal computer");
+		}
+		Room room0 = new Room(drawer, Ryan, 3 * Settings.width, 2 * Settings.height/2);
 		Room room1 = new Room(drawer, Ryan, 3 * Settings.width, 2 * Settings.height/2);
+		room1.addRoomOb(new EnemyCharacter(Ryan, 0.5 * Settings.width, Settings.depth));
 		Room room2 = new Room(drawer, Ryan, 3 * Settings.width, 2 * Settings.height/2);
-		room2.addRoomOb(new EnemyCharacter(Ryan, 0.6 * Settings.width, Settings.height - PlayerTorso.torsoYSize - PlayerHead.headYSize-50, Settings.depth));
+		room2.addRoomOb(new EnemyCharacter(Ryan, 0.8 * Settings.width, Settings.depth));
+		room2.addRoomOb(new EnemyCharacter(Ryan, 0.2 * Settings.width, Settings.depth));
 		Room room3 = new Room(drawer, Ryan, 3 * Settings.width, 2 * Settings.height/2);
+		room3.addRoomOb(new EnemyCharacter(Ryan, 0.8 * Settings.width, Settings.depth));
+		room3.addRoomOb(new EnemyCharacter(Ryan, 0.2 * Settings.width, Settings.depth));
+		room3.addRoomOb(new EnemyCharacter(Ryan, 0.5 * Settings.width, -0.5 * Settings.depth));
 		Room endRoom = new Room(drawer, Ryan, 3 * Settings.width, 2 * Settings.height/2);
-		 
+		
+		room0.nextRoom = room1;
 		room1.nextRoom = room2;
 		room2.nextRoom = room3;
-		room3.nextRoom = endRoom;
+	//	room3.nextRoom = endRoom;  we havent made an end room yet
 		
-		currentRoom = room1;
+		currentRoom = room0;
 		
 		
 		//getting graphics settings
@@ -66,12 +98,13 @@ public class LegendOfJavaRunner {
 		}else if (options[graphicsSetting].equals("high")) {
 			roomPPSize = 5;
 			playerPPSize = 3;
+			MainCharacter.playerTurningSpeed /= 100000;
 		}else if (options[graphicsSetting].equals("extreme")) {
 			roomPPSize = 1;
 			playerPPSize = 1;
 		}
 		
-		Room cRoom = room1;
+		Room cRoom = room0;
 		while (cRoom != null) {
 			cRoom.setPPSize(roomPPSize);
 			cRoom = cRoom.nextRoom;
@@ -85,15 +118,17 @@ public class LegendOfJavaRunner {
 		System.out.println("RoomZ: " + room1.getZ());
 		
 	
-		room1.run();
+		room0.run();
 		
 		System.out.println("loading complete.");
 		drawer.start();
 		
-		JOptionPane.showMessageDialog(drawer.getFrame(),"Controls: \n Move: WASD");
+		JOptionPane.showMessageDialog(drawer.getFrame(),"Controls: \n Move: WASD \n Attack: SPACE ");
 		
 		drawer.getFrame().setVisible(true);
 		
+		JOptionPane.showMessageDialog(drawer, "Proceed to the door to enter the first room");
+	
 		while (drawer.getFrame().isActive()) {
 			try {
 				Thread.sleep(100);
@@ -109,11 +144,15 @@ public class LegendOfJavaRunner {
 
 	public static void loadNextRoom() {
 		System.out.println("loading next room...");
+		
 		currentRoom.remove();
 		drawer.pause();
+		roomNumber++;
 		currentRoom = currentRoom.nextRoom;
+		console.setMessage("Room: "+ roomNumber);
 		if (currentRoom == null) {
 			JOptionPane.showMessageDialog(drawer, "Game over\nYou win!");
+			drawer.getFrame().setVisible(false);
 		}else {
 			currentRoom.run();
 			drawer.resume();

@@ -1,12 +1,16 @@
 package apgraphicslib;
 
+import java.awt.Color;
 import java.awt.Graphics;
+
 
 public class Vector3DDrawable extends Vector3D implements Drawable {
 	
 	protected Coordinate3D coordinates;
 	private String name = "Unnamed Vector3DDrawable";
 	private Object_draw drawer;
+	
+	private Color color = Color.BLACK;
 	
 	public Vector3DDrawable(Object_draw drawer, double i, double j, double k, double x, double y, double z) {
 		super(i, j, k);
@@ -91,6 +95,23 @@ public class Vector3DDrawable extends Vector3D implements Drawable {
 		
 	}
 
+
+
+	@Override
+	public void setColor(Color newColor) {
+		color = newColor;
+	}
+
+
+
+	@Override
+	public Color getColor() {
+		return color;
+	}
+
+
+
+	
 
 
 

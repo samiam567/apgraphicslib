@@ -19,6 +19,11 @@ public abstract class Physics_2DDrawMovable extends Physics_drawable implements 
 		speed.add(acceleration.statMultiply(frames));
 	}
 	
+	@Override 
+	public void prePaintUpdate() {
+		
+	}
+	
 
 	
 	/**

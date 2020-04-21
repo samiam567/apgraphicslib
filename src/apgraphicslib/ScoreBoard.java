@@ -1,15 +1,12 @@
 package apgraphicslib;
 
-import java.awt.Font;
-import java.awt.Graphics;
-
-public class ScoreBoard extends Physics_drawable implements Updatable {
+public class ScoreBoard extends APLabel implements Updatable {
 	
 	private String score_phrase,end_phrase = "";
 	private double score;
 	private double scoreSpeed;
 	private double targetScore;
-	private Font font = new Font("TimesRoman", Font.PLAIN, 15);
+	
 	public boolean roundScore = true;
 	
 	public ScoreBoard(Object_draw drawer1, double x, double y, String score_phrase1, double score1) {
@@ -40,9 +37,15 @@ public class ScoreBoard extends Physics_drawable implements Updatable {
 		}
 	}
 	
-	public void setFont(Font font1) {
-		font = font1;
+	@Override
+	public void prePaintUpdate() {
+		if (roundScore) {
+			setMessage(score_phrase + " " + (int) Math.round(score) + end_phrase);
+		}else {
+			setMessage(score_phrase + " " + score + end_phrase);
+		}
 	}
+	
 	
 	public void setScore(double score1) {
 		score = score1;
@@ -64,16 +67,6 @@ public class ScoreBoard extends Physics_drawable implements Updatable {
 		scoreSpeed = scoreSpeed1;
 	}
 	
-	
-	public void paint(Graphics page) {
-		page.setFont(font);
-		
-		if (roundScore) {
-			page.drawString(score_phrase + " " + (int) Math.round(score) + end_phrase,(int) getX(), (int) getY());
-		}else {
-			page.drawString(score_phrase + " " + score + end_phrase,(int) getX(),(int) getY());
-		}
-	}
 
 	public double getTargetScore() {
 		return targetScore;

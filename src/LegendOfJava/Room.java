@@ -2,6 +2,9 @@ package LegendOfJava;
 
 import java.awt.Graphics;
 import java.util.LinkedList;
+
+import javax.swing.JOptionPane;
+
 import apgraphicslib.Coordinate3D;
 import apgraphicslib.Object_draw;
 import apgraphicslib.Physics_3DDrawMovable;
@@ -22,7 +25,7 @@ public class Room extends Physics_3DDrawMovable implements Updatable, Three_dime
 	public Character player;
 	
 	
-	
+
 	private double roomWidth;
 	private double roomHeight;
 	
@@ -42,6 +45,8 @@ public class Room extends Physics_3DDrawMovable implements Updatable, Three_dime
 		this.player = player;
 
 		loaded = false;
+		
+		
 	}
 		
 	private void setWalls() {
@@ -136,6 +141,7 @@ public class Room extends Physics_3DDrawMovable implements Updatable, Three_dime
 		remove();
 		if (! loaded) load();
 		add();
+		roomAngV.setIJK(0,0.00000000000000001,0);
 	}
 	private void add() {
 		getDrawer().add(this);
@@ -192,7 +198,11 @@ public class Room extends Physics_3DDrawMovable implements Updatable, Three_dime
 		
 		//check if player is at the door
 		if (Physics_engine_toolbox.distance3D(frontWall.getCoordinates(), player.getCoordinates()) < PlayerHead.headZSize + roomHeight/2) {
-			LegendOfJavaRunner.loadNextRoom();
+			if (EnemyCharacter.numEnemys == 0) {
+				LegendOfJavaRunner.loadNextRoom();
+			}else {
+				LegendOfJavaRunner.console.setMessage("you cannot leave the room while there are still enemies!");
+			}
 		}
 		
 	}

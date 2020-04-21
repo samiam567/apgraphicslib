@@ -253,10 +253,17 @@ public class Object_draw extends JPanel {
 		}
 	}
 	
-	private void checkForCollisions() {
-		//TODO Implement this
-		
-		
+	private void prePaintUpdateObjects() {
+		try {		
+			for (Updatable current_object : updatables) {
+				current_object.prePaintUpdate();
+			}
+		}catch(ConcurrentModificationException c) {
+			System.out.println(c.toString());
+		}
+	}
+
+	private void checkForCollisions() {		
 		Coordinate2D pointOfCollision;
 		Tangible o1, o2;
 		for (int i = 0; i < tangibles.size(); i++) {
@@ -334,16 +341,20 @@ public class Object_draw extends JPanel {
 			checkForResize();
 			frameCount = 0;
 			repaint();
+			
+			updateStartTime = System.nanoTime();
 			while (frameCount < 1) {
-				updateStartTime = System.nanoTime();
+				
 				updateObjects(frameStep*Settings.frameTime); //update the objects
 				checkForCollisions(); //check for collisions between the tangibles
 				frameCount += frameStep;
 				updateCount++;
-				updateEndTime = System.nanoTime();	
-				subCalcTime += ((int)( (updateEndTime - updateStartTime)));
+				
+			
 			}
-			subCalcTime *= frameStep;
+			prePaintUpdateObjects();
+			updateEndTime = System.nanoTime();	
+			subCalcTime = ((int)( (updateEndTime - updateStartTime)));
 			
 			frameStep += ((double) subCalcTime) / (Settings.frameTime*1000000000 - (frameEndTime-frameStartTime));
 			frameStep /= 2; // the averaging of the two numbers keeps the system from freezing during big changes (like adding objects)
@@ -374,7 +385,8 @@ public class Object_draw extends JPanel {
 		page.fillRect(0, 0, getFrame().getWidth(), getFrame().getHeight());
 		page.setColor(Color.black);
 		try {
-		for (Drawable cOb : getDrawables()) {				
+		for (Drawable cOb : getDrawables()) {		
+			page.setColor(cOb.getColor());
 			cOb.paint(page);
 		}
 		}catch(ConcurrentModificationException c) {

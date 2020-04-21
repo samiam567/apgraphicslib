@@ -136,9 +136,10 @@ public class Physics_2DPolygon extends Physics_2DDrawMovable implements Updatabl
 	public void Update(double frames) {
 		super.Update(frames);
 		
+		updatePointValueLists();
 		//orbital rotation
 		if (orbitalAngularAcceleration.getR() != 0) orbitalAngularVelocity.add(orbitalAngularAcceleration.statMultiply(frames));
-		if (orbitalAngularVelocity.getR() != 0) {
+	//	if (orbitalAngularVelocity.getR() != 0) {
 			orbitalAngVFrames = orbitalAngularVelocity.statMultiply(frames);
 			
 			orbitalRotation.add(orbitalAngVFrames);	
@@ -156,8 +157,8 @@ public class Physics_2DPolygon extends Physics_2DDrawMovable implements Updatabl
 				rotation.add(orbitalAngVFrames);
 			}
 			
-			updatePointValueLists();
-		}
+			
+	//	}
 		
 		//rotation about a point
 		if (angularAcceleration.getR() != 0) angularVelocity.add(angularAcceleration.statMultiply(frames));

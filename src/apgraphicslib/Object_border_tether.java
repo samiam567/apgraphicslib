@@ -23,5 +23,10 @@ public class Object_border_tether extends Physics_object implements Updatable {
 		}
 		
 	}
+	
+	@Override 
+	public void prePaintUpdate() {
+		
+	}
 
 }

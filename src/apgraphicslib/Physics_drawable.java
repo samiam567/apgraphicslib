@@ -1,5 +1,7 @@
 package apgraphicslib;
 
+import java.awt.Color;
+
 /**
  * @author samiam567
  * {@summary Generic class that implements Drawable. @see Drawable }
@@ -9,6 +11,8 @@ public abstract class Physics_drawable extends Physics_object implements Drawabl
 	protected Coordinate2D coordinates;
 	private double xSize, ySize;
 	protected double maxSize;
+	
+	private Color color = Color.BLACK;
 	
 	public Physics_drawable(Object_draw drawer, double x, double y) {
 		super(drawer);
@@ -34,7 +38,14 @@ public abstract class Physics_drawable extends Physics_object implements Drawabl
 	public double getY() {
 		return coordinates.getY();
 	}
-
+	
+	public void setColor(Color newColor) {
+		color = newColor;
+	}
+	
+	public Color getColor() {
+		return color;
+	}
 
 	@Override
 	public Coordinate2D getCoordinates() {

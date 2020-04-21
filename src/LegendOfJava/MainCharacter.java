@@ -9,21 +9,30 @@ import apgraphicslib.Settings;
 import apgraphicslib.Vector3D;
 
 public class MainCharacter extends Character implements  MouseMotionListener, KeyListener {
-	protected static double playerSpeed = 1;
+	protected static double playerSpeed = 10;
 	protected static double playerTurningSpeed = 0.7;
 	
 	public MainCharacter(Object_draw drawer) {
 		super(drawer,Settings.width/2, Settings.height - PlayerTorso.torsoYSize - PlayerHead.headYSize-50, 250);
-		addListeners(); //adds this as the listeners for all the stuff
+		
 		load();
 		add();
 		setName("Ryan");
+		addListeners();
 	}
 	
 	
 	@Override
 	public void Update(double frames) {
 		super.Update(frames);	
+	}
+	
+	public void hit(double attackPower) {
+		super.hit(attackPower);
+		LegendOfJavaRunner.console.setMessage("You have been hit! Health: " + HP);
+	}
+	public void die() {
+		System.out.println("I cAnnOT bE kIllED mWaHaHaHa");
 	}
 	
 	@Override
@@ -62,20 +71,23 @@ public class MainCharacter extends Character implements  MouseMotionListener, Ke
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if (e.getKeyChar() == 'a') {;
-			((Vector3D) Room.roomAngV).setIJK(0,1,0);
-			Room.roomAngV.multiply(playerTurningSpeed);
-		}else if (e.getKeyChar() == 'd') {
-			((Vector3D) Room.roomAngV).setIJK(0,-1,0);
-			Room.roomAngV.multiply(playerTurningSpeed);
-		}else if (e.getKeyChar() == 'w') {
+		
+		if (e.getKeyChar() == 'w') {
 			Room.roomSpeed.setIJK(0,0,-playerSpeed);
 		}else if (e.getKeyChar() == 's') {
 			Room.roomSpeed.setIJK(0,0,playerSpeed);
+		}
+		
+		if (e.getKeyChar() == 'd') {
+			((Vector3D) Room.roomAngV).setIJK(0,-1,0);
+			Room.roomAngV.multiply(playerTurningSpeed);
+		}if (e.getKeyChar() == 'a') {;
+			((Vector3D) Room.roomAngV).setIJK(0,1,0);
+			Room.roomAngV.multiply(playerTurningSpeed);
 		}else if (e.getExtendedKeyCode() == 38) { //UP arrow key
 			((Vector3D) Room.roomAngV).setIJK(-1,0,0);
 			Room.roomAngV.multiply(playerTurningSpeed);
-		}else if (e.getExtendedKeyCode() == 40) { //UP arrow key
+		}else if (e.getExtendedKeyCode() == 40) { //DOWN arrow key
 			((Vector3D) Room.roomAngV).setIJK(1,0,0);
 			Room.roomAngV.multiply(playerTurningSpeed);
 		}
@@ -83,7 +95,7 @@ public class MainCharacter extends Character implements  MouseMotionListener, Ke
 		if (e.getKeyChar() == ' ') {
 			System.out.println("attacking!");
 			swordArm.Update(0.000000000000000001);
-			swordArm.swinging = true;
+			attack();
 		}
 
 	}
@@ -98,7 +110,7 @@ public class MainCharacter extends Character implements  MouseMotionListener, Ke
 
 	}
 	
-	private void addListeners() {		
+	public void addListeners() {		
 		getDrawer().getFrame().getContentPane().addMouseMotionListener(this);
 		getDrawer().getFrame().getGlassPane().addMouseMotionListener(this);
 		getDrawer().getFrame().addMouseMotionListener(this);

@@ -9,8 +9,15 @@ import apgraphicslib.Physics_3DPolygon;
 
 
 
-public class Character extends Physics_3DPolygon {
+public class Character extends Physics_3DPolygon implements Hittable {
 	public enum Side {left,right};
+	
+	//combat numbers
+	protected double HP = 10;
+
+	private double attack = 5;
+
+	private double defense = 2;
 	
 	protected PlayerHead head;
 	PlayerBodyPart torso;
@@ -38,6 +45,46 @@ public class Character extends Physics_3DPolygon {
 			
 		setSize(PlayerHead.headXSize, PlayerHead.headYSize + PlayerTorso.torsoYSize + 180);
 		setName("Character");
+	}
+	
+	/**
+	 * {@code called when the character was hit by an attack}
+	 * @param attackPower the power of the attack this character was hit with
+	 */
+	public void hit(double attackPower) {
+		getDrawer().out.println(getName() + " has been hit");
+		HP -= attackPower/defense;
+		if (HP <= 0) die();
+	}
+	
+	/**
+	 * {@summary this method is called if the characters HP <= 0}
+	 */
+	public void die() {
+		
+	}
+	
+	/**
+	 * {@code removes this character from the environment}
+	 */
+	public void remove() {
+		getDrawer().pause();
+		getDrawer().remove(this);
+		for (PlayerBodyPartAble bP : bodyParts) {
+			getDrawer().remove(bP);
+		}
+		getDrawer().resume();
+	}
+	
+	/**
+	 * {@code makes the character swing their sword}
+	 */
+	public void attack() {
+		swordArm.swinging = true;
+	}
+	
+	public double getAttackPower() {
+		return attack;
 	}
 	
 	public void load() {

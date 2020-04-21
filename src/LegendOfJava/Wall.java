@@ -15,7 +15,7 @@ public class Wall extends Physics_3DTexturedPolygon implements Three_dimensional
 	private Vector3D wallRotation;
 	
 	public Wall(Room parentRoom, double x, double y, double z, double xSize, double ySize, Vector3D	rotation, int ppSize) {
-		super(parentRoom.getDrawer(), x, y, 0, ppSize);
+		super(parentRoom.getDrawer(), x, y, z, ppSize);
 		this.parentRoom = parentRoom;
 		
 		addPoint(-xSize/2, -ySize/2, 0);
