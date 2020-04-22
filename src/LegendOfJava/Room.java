@@ -16,7 +16,9 @@ import apgraphicslib.Vector3D;
 
 public class Room extends Physics_3DDrawMovable implements Updatable, Three_dimensional {
 	
-	private Wall leftWall, rightWall, backWall, ceilingWall, floorWall, frontWall;
+	private Wall leftWall, rightWall, backWall, ceilingWall, floorWall;
+
+	private Wall frontWall;
 	
 	private LinkedList<Wall> walls = new LinkedList<Wall>();
 	private LinkedList<RoomObjectable> roomObs = new LinkedList<RoomObjectable>();
@@ -55,6 +57,9 @@ public class Room extends Physics_3DDrawMovable implements Updatable, Three_dime
 		
 		walls.clear();
 		
+		double potSize = 30;
+		
+		
 		leftWall = new Wall(this,getX() - roomWidth/2,getY(),getZ(),roomDepth,roomHeight,new Vector3D(0,Math.PI/2,0),roomPPSize);
 		leftWall.setName("leftWall");
 		
@@ -67,11 +72,14 @@ public class Room extends Physics_3DDrawMovable implements Updatable, Three_dime
 		frontWall = new Wall(this,getX(),getY(),getZ() + roomDepth/2,roomWidth,roomHeight, new Vector3D(0,0,0),roomPPSize);
 		frontWall.setName("frontWall");
 		
-		floorWall = new Wall(this, getX(),getY() + roomHeight/2,getZ(),roomWidth,roomDepth, new Vector3D(Math.PI/2,0,0),roomPPSize);
+		floorWall = new FloorWall(this, getX(),getY() + roomHeight/2,getZ(),roomWidth,roomDepth, new Vector3D(Math.PI/2,0,0),roomPPSize);
 		floorWall.setName("floorWall");
 		
 		ceilingWall = new Wall(this, getX(), getY() - roomHeight/2,getZ(),roomWidth,roomDepth, new Vector3D(Math.PI/2,0,0),roomPPSize);
 		ceilingWall.setName("ceilingWall");
+		
+		addRoomOb(new Pot(getDrawer(),Settings.width/2-getRoomWidth()/3 + potSize,floorWall.getY() - potSize*2,Settings.depth/2-getRoomDepth()/3 + potSize,potSize,potSize*2, potSize, 10));
+		addRoomOb(new Pot(getDrawer(),Settings.width/2+getRoomWidth()/3 + potSize,floorWall.getY() - potSize*2,Settings.depth/2-getRoomDepth()/3 + potSize,potSize,potSize*2, potSize, 10));
 		
 		
 		walls.add(backWall);
@@ -237,10 +245,6 @@ public class Room extends Physics_3DDrawMovable implements Updatable, Three_dime
 		setPos(x,y);
 	}
 
-	public double getRoomHeight() {
-		return roomHeight;
-	}
-
 	public void setPPSize(int roomPPSize) {
 		loaded = false;
 		
@@ -255,6 +259,14 @@ public class Room extends Physics_3DDrawMovable implements Updatable, Three_dime
 
 	public double getRoomWidth() {
 		return roomWidth;
+	}
+	
+	public double getRoomHeight() {
+		return roomHeight;
+	}
+
+	public double getRoomDepth() {
+		return roomDepth;
 	}
 
 	

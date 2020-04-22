@@ -81,6 +81,7 @@ public class Character extends Physics_3DPolygon implements Hittable {
 	 * {@code makes the character swing their sword}
 	 */
 	public void attack() {
+		AudioManager.playSwordSwingAudio();
 		swordArm.swinging = true;
 	}
 	

@@ -83,9 +83,9 @@ public class Physics_runner {
 
 		*/
 		
-		Pot pot1 = new Pot(drawer,Settings.width/2, Settings.height/2,10,100,8);
+		Pot pot1 = new Pot(drawer,Settings.width/2, Settings.height/2,10,100,200,100,5);
 		
-		pot1.setTexture("src/LegendOfJava/assets/texture.jpg");
+		
 	
 		
 		

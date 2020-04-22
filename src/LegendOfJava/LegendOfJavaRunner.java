@@ -107,8 +107,9 @@ public class LegendOfJavaRunner {
 			playerPPSize = 1;
 		}
 		
+
 		Room cRoom = room0;
-		while (cRoom != null) {
+		while (cRoom != null) {	
 			cRoom.setPPSize(roomPPSize);
 			cRoom = cRoom.nextRoom;
 		}

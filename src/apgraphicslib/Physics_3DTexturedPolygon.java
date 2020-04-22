@@ -112,6 +112,7 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 	protected double dTheta = 0.001;
 	public boolean paintInProgress = false;
 	protected int collisionCheckGain = 5;
+	private double minZToPaintPoints = -Settings.distanceFromScreen;
 	
 	public Physics_3DTexturedPolygon(Object_draw drawer, double x, double y, double z, double ppSize) {
 		super(drawer, x, y, z);
@@ -380,6 +381,13 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 	public void setPlatePoints(LinkedList<RGBPoint3D> platePoints) {
 		this.platePoints = platePoints;
 	}
+	
+	/**
+	 * @param newMinZ the minimum z value to show points on the screen 
+	 */
+	public void setMinZToPaintPoints(double newMinZ) {
+		minZToPaintPoints = newMinZ;
+	}
 
 	@Override
 	public void paint(Graphics page) {
@@ -397,7 +405,7 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
  		double parallaxValue, x, y;
 		for (RGBPoint3D cPoint : getPlatePoints()) {
 			
-			if (cPoint.getZ() + getZ() >= -Settings.distanceFromScreen) {
+			if (cPoint.getZ() + getZ() >= minZToPaintPoints) {
 				page.setColor(new Color(cPoint.R,cPoint.G,cPoint.B,cPoint.alpha));
 				
 				if (Settings.perspective) {
@@ -421,7 +429,7 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 					x += Settings.width/2;
 					y += Settings.height/2;
 					
-					page.fillRect((int) Math.round(x) ,(int) Math.round(y) , (int) (platePointSize+1), (int) (platePointSize+1));
+					page.fillRect((int) Math.round(x - platePointSize*parallaxValue/2) ,(int) Math.round(y - platePointSize*parallaxValue/2) , (int) (platePointSize * parallaxValue), (int) (platePointSize * parallaxValue));
 					
 				}else {
 					page.fillRect((int) Math.round(getX() + cPoint.getX()-platePointSize/2) ,(int) Math.round(getY() + cPoint.getY()-platePointSize/2) , (int) (platePointSize+1), (int) (platePointSize+1));

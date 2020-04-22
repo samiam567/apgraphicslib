@@ -84,7 +84,7 @@ public abstract class Physics_drawable extends Physics_object implements Drawabl
 		try {
 			return ((Three_dimensional) this).getZ();
 		}catch(ClassCastException c) {
-			return 0;
+			return -Settings.distanceFromScreen - 0.1; //always paint 2D components on top
 		}
 	}
 

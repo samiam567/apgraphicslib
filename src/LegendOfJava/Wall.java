@@ -1,5 +1,7 @@
 package LegendOfJava;
 
+import java.awt.Graphics;
+
 import apgraphicslib.CollisionEvent;
 import apgraphicslib.Coordinate2D;
 import apgraphicslib.Coordinate3D;
@@ -24,6 +26,8 @@ public class Wall extends Physics_3DTexturedPolygon implements Three_dimensional
 		addPoint(-xSize/2, ySize/2, 0);
 		
 		wallRotation = rotation;
+		
+		setMinZToPaintPoints(0);
 		
 		setPos(x,y,z);
 	}
@@ -52,8 +56,10 @@ public class Wall extends Physics_3DTexturedPolygon implements Three_dimensional
 	
 	@Override
 	public double getPaintOrderValue() { 	
-		return super.getPaintOrderValue() + parentRoom.player.getPaintOrderValue() + getZSize()/2;
+		return super.getPaintOrderValue() ;
 	}
+	
+
 	
 	
 	
