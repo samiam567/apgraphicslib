@@ -7,12 +7,12 @@ public class Sword extends Physics_3DTexturedPolygon implements PlayerBodyPartAb
 	protected String textureSrc = "src/LegendofJava/assets/sword.png";
 	protected Character parentPlayer;
 	
-	public Sword(SwordArm parentArm, double ppSize) {
-		super(parentArm.getDrawer(), parentArm.getX() + PlayerArm.armZSize/2, parentArm.getY() + PlayerArm.armXSize/2, parentArm.getZ() + PlayerArm.armYSize, 2);
+	public Sword(SwordArm parentArm) {
+		super(parentArm.getDrawer(), parentArm.getX() + PlayerArm.armZSize/2, parentArm.getY() + PlayerArm.armXSize, parentArm.getZ() + PlayerArm.armYSize, 1);
 		
+		this.parentPlayer = parentArm.parentPlayer;
 		
-		
-		double xSize =130;
+		double xSize = 200;
 		double ySize = 30;
 		setSize(xSize,ySize);
 		addPoint(-xSize/2,-ySize/2);
@@ -24,9 +24,24 @@ public class Sword extends Physics_3DTexturedPolygon implements PlayerBodyPartAb
 		
 		rotatePoints(new Vector3D(0,0,Math.PI/2));
 		setSize(ySize,xSize);
+
+	
+		if (parentPlayer.isMain) {
+			setPos(parentArm.getX() + PlayerArm.armZSize/2, parentArm.getY() + PlayerArm.armXSize - getYSize()/2,parentArm.getZ() + 2*parentArm.getZSize());
+		}else {
+			setPos(parentArm.getX() + PlayerArm.armZSize/2, parentArm.getY() + PlayerArm.armXSize - getYSize()/2,parentArm.getZ() - 2*parentArm.getZSize());
+		}
+	
 		
-		setPos(parentArm.getX() + PlayerArm.armZSize/2, parentArm.getY() + PlayerArm.armXSize/2 - getYSize()/2,parentArm.getZ());
-		parentArm.swinging = true;
+	}
+	
+	@Override
+	public double getPaintOrderValue() { 
+		if (parentPlayer.isMain) {
+			return parentPlayer.head.getPaintOrderValue() + 1;
+		}else {
+			return parentPlayer.head.getPaintOrderValue() - 1;
+		}
 	}
 
 }

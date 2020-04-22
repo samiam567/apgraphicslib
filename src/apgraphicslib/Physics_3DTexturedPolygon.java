@@ -10,8 +10,6 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import javax.imageio.ImageIO;
 
-import apgraphicslib.Physics_2DPolygon.PolyPoint;
-
 public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Textured3D, Updatable {
 	
 	protected class P3DPTexture {
@@ -126,10 +124,16 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 			cPoint.rotate(rotationMatrix);
 		}
 		
+		
+	}
+	
+	@Override
+	public void prePaintUpdate() {
+		super.prePaintUpdate();
 		getPlatePoints().sort(new Comparator<Point3D>() {
 			@Override
 			public int compare(Point3D o1, Point3D o2) {
-				return (Double.compare(o1.getZ(), o2.getZ()));
+				return (Double.compare(o2.getZ(), o1.getZ()));
 			}
 		});
 	}

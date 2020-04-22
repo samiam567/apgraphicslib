@@ -17,8 +17,9 @@ public class Character extends Physics_3DPolygon implements Hittable {
 
 	private double attack = 5;
 
-	private double defense = 2;
+	protected double defense = 2;
 	
+	public boolean isMain = false;
 	protected PlayerHead head;
 	PlayerBodyPart torso;
 	protected PlayerArm leftArm, rightArm;
@@ -94,6 +95,7 @@ public class Character extends Physics_3DPolygon implements Hittable {
 		rightArm.load();
 		swordArm.load();
 		loaded = true;
+		
 	}
 	
 	public void add() {
@@ -103,6 +105,7 @@ public class Character extends Physics_3DPolygon implements Hittable {
 		for (PlayerBodyPartAble bP : bodyParts) {
 			getDrawer().add(bP);
 		}
+		
 	}
 	
 	protected void setBodyParts() {
@@ -127,6 +130,7 @@ public class Character extends Physics_3DPolygon implements Hittable {
 		rightArm.setName(getName() + " rightArm");
 		
 		swordArm = new SwordArm(this, ppSize);
+		
 		
 		bodyParts.add(leftArm);
 		bodyParts.add(rightArm);

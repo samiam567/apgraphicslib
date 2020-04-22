@@ -18,7 +18,7 @@ public class LegendOfJavaRunner {
 	public static APLabel console;
 	
 	private static int roomPPSize = 10, playerPPSize = 5;
-	
+	private static HealthBar hpBar;
 	private static Room currentRoom;
 	private static int roomNumber = 0;
 	
@@ -56,6 +56,9 @@ public class LegendOfJavaRunner {
 		
 		Ryan = new MainCharacter(drawer);
 		Ryan.setName("Ryan");
+		
+		hpBar = new HealthBar(drawer, Settings.width * 0.01, Settings.height * 0.1, Ryan);
+		drawer.add(hpBar);
 		
 		try {
 			JOptionPane.showMessageDialog(drawer.getFrame(), "Welcome to the Legend of Java. \n If something doesn't work, try re-starting the program and/or a different graphics setting.");
@@ -152,9 +155,10 @@ public class LegendOfJavaRunner {
 		currentRoom = currentRoom.nextRoom;
 		console.setMessage("Room: "+ roomNumber);
 		if (currentRoom == null) {
-			JOptionPane.showMessageDialog(drawer, "Game over\nYou win!");
+			
 			drawer.getFrame().setVisible(false);
 			drawer.stop();
+			JOptionPane.showMessageDialog(drawer, "Game over\nYou win!");
 			System.exit(1);
 		}else {
 			currentRoom.run();

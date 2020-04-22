@@ -20,27 +20,44 @@ public class SwordArm extends PlayerArm {
 		
 		
 		if (PlayerArm.swordArm == Side.left) {
-			setPos(parentPlayer.leftArm.getX(),parentPlayer.leftArm.getY() + armYSize/2 + armZSize/2,parentPlayer.leftArm.getZ() + armYSize/2);
+			if (parentPlayer.isMain) {
+				setPos(parentPlayer.leftArm.getX(),parentPlayer.leftArm.getY() + armYSize/2 + armZSize/2,parentPlayer.leftArm.getZ() + armYSize/2);
+			}else {
+				setPos(parentPlayer.leftArm.getX(),parentPlayer.leftArm.getY() + armYSize/2 + armZSize/2,parentPlayer.leftArm.getZ() - armYSize/2);
+			}
 		}else {
-			setPos(parentPlayer.rightArm.getX(),parentPlayer.rightArm.getY() + armYSize/2 + armZSize/2,parentPlayer.rightArm.getZ() + armYSize/2);
+			if (parentPlayer.isMain) {
+				setPos(parentPlayer.rightArm.getX(),parentPlayer.rightArm.getY() + armYSize/2 + armZSize/2,parentPlayer.rightArm.getZ() + armYSize/2);
+			}else {
+				setPos(parentPlayer.rightArm.getX(),parentPlayer.rightArm.getY() + armYSize/2 + armZSize/2,parentPlayer.rightArm.getZ() - armYSize/2);
+			}
 		}
 		
-		sword = new Sword(this,ppSize);
+		sword = new Sword(this);
 		sword.setPointOfRotation(getCoordinates(), true);
 		parentPlayer.bodyParts.add(sword);
+		swinging = true;
 	}
-	
+
 	
 
 	@Override
 	public void load() {
 		setTexture(textureSrc);
 		rotatePoints(new Vector3D(Math.PI/2, 0, 0));
-		
+		reCalculateSize();
 		if (PlayerArm.swordArm == Side.left) {
-			setPos(parentPlayer.leftArm.getX(),parentPlayer.leftArm.getY() + armYSize/2 + armZSize/2,parentPlayer.leftArm.getZ() + armYSize/2);
+			if (parentPlayer.isMain) {
+				setPos(parentPlayer.leftArm.getX(),parentPlayer.leftArm.getY() + armYSize/2 + armZSize/2,parentPlayer.leftArm.getZ() + armYSize/2);
+			}else {
+				setPos(parentPlayer.leftArm.getX(),parentPlayer.leftArm.getY() + armYSize/2 + armZSize/2,parentPlayer.leftArm.getZ() - armYSize/2);
+			}
 		}else {
-			setPos(parentPlayer.rightArm.getX(),parentPlayer.rightArm.getY() + armYSize/2 + armZSize/2,parentPlayer.rightArm.getZ() + armYSize/2);
+			if (parentPlayer.isMain) {
+				setPos(parentPlayer.rightArm.getX(),parentPlayer.rightArm.getY() + armYSize/2 + armZSize/2,parentPlayer.rightArm.getZ() + armYSize/2);
+			}else {
+				setPos(parentPlayer.rightArm.getX(),parentPlayer.rightArm.getY() + armYSize/2 + armZSize/2,parentPlayer.rightArm.getZ() - armYSize/2);
+			}
 		}
 	}
 	
@@ -49,9 +66,17 @@ public class SwordArm extends PlayerArm {
 		super.Update(frames);
 		
 		if (swinging) {
-			if (((Vector2D)rotation).getI() > -Math.PI/3) {
-				((Vector2D) angularVelocity).setI(-3);
-				sword.setOrbitalAngularVelocity(angularVelocity);
+		
+			if ( Math.abs(((Vector2D)rotation).getI()) < Math.PI/3) {
+				
+				if (parentPlayer.isMain) {
+					((Vector2D) angularVelocity).setI(3);
+					sword.setOrbitalAngularVelocity(angularVelocity);
+					angularVelocity.multiply(-1);
+				}else{
+					((Vector2D) angularVelocity).setI(-3);
+					sword.setOrbitalAngularVelocity(angularVelocity);
+				}
 			}else {
 				((Vector2D) angularVelocity).setI(0);
 				setRotation(0,((Vector2D) rotation).getJ(),((Vector3D) rotation).getK());

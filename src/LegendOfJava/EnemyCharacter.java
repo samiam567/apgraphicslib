@@ -36,6 +36,7 @@ public class EnemyCharacter extends Character implements RoomObjectable {
 	protected void setBodyParts() {
 		super.setBodyParts();
 		head.textureSrc = "src/LegendOfJava/assets/enemyHead.jpg";
+		rotatePoints(new Vector3D(0,Math.PI,0));
 		
 	}
 	
@@ -74,9 +75,7 @@ public class EnemyCharacter extends Character implements RoomObjectable {
 	@Override
 	public void load() {
 		super.load();
-		head.rotate(new Vector3D(0,Math.PI,0));
-		head.rotate(new Vector3D(0,0,Math.PI/2));
-		head.rotate(new Vector3D(Math.PI/4,0,0));
+		head.rotatePoints(new Vector3D(0,Math.PI,0));
 	}
 	
 	public void add(Room room) {

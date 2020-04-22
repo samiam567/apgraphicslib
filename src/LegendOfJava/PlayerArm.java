@@ -13,7 +13,7 @@ public class PlayerArm extends PlayerBodyPart {
 	private double loops = 0;
 	protected Side side;
 
-	public static final Side swordArm = Side.right;
+	public static final Side swordArm = Side.left;
 	
 	public PlayerArm(Character parent, double x, double y, Character.Side side, int ppSize) {
 		super(parent, x, y + 35, parent.getZ(), ppSize);

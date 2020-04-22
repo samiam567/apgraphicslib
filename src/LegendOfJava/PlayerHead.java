@@ -21,15 +21,15 @@ public class PlayerHead extends PlayerBodyPart implements Tangible  {
 		setSize(headXSize,headYSize,headZSize);
 		
 
+	
 		
-		rotatePoints(new Vector3D(0.5,0.8,2.8));
-		
-		rotatePoints(new Vector3D(0,0,-1.15));
-		rotatePoints(new Vector3D(0,-Math.PI/2,0));
 	}
 	
 	public void load() {
 		setTexture(textureSrc);
+		rotatePoints(new Vector3D(0,Math.PI/7,0));
+		rotatePoints(new Vector3D(0,0,-Math.PI/2));
+		rotatePoints(new Vector3D(0,Math.PI,0));
 	}
 	
 

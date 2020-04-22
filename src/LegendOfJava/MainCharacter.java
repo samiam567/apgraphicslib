@@ -4,6 +4,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+
+import javax.swing.JOptionPane;
+
 import apgraphicslib.Object_draw;
 import apgraphicslib.Settings;
 import apgraphicslib.Vector3D;
@@ -14,11 +17,12 @@ public class MainCharacter extends Character implements  MouseMotionListener, Ke
 	
 	public MainCharacter(Object_draw drawer) {
 		super(drawer,Settings.width/2, Settings.height - PlayerTorso.torsoYSize - PlayerHead.headYSize-50, 250);
-		
+		isMain = true;
 		load();
 		add();
 		setName("Ryan");
 		addListeners();
+		defense = 5;
 	}
 	
 	
@@ -26,13 +30,13 @@ public class MainCharacter extends Character implements  MouseMotionListener, Ke
 	public void Update(double frames) {
 		super.Update(frames);	
 	}
-	
-	public void hit(double attackPower) {
-		super.hit(attackPower);
-		LegendOfJavaRunner.console.setMessage("You have been hit! Health: " + HP);
-	}
+
 	public void die() {
-		System.out.println("I cAnnOT bE kIllED mWaHaHaHa");
+		getDrawer().repaint();
+		System.out.println("oof");
+		JOptionPane.showMessageDialog(getDrawer(), "GAME OVER");
+		getDrawer().stop();
+		System.exit(1);
 	}
 	
 	@Override
@@ -43,16 +47,7 @@ public class MainCharacter extends Character implements  MouseMotionListener, Ke
 	
 	@Override
 	public void mouseDragged(MouseEvent e) {
-	
-			getDrawer().pause();
-	
-			((Vector3D) Room.roomAngV).setIJK(-prevPoint.getY()+e.getY(),e.getX()-prevPoint.getX(),0);
-			Room.roomAngV.multiply(-playerTurningSpeed);
-		
-			prevPoint.setPos(e.getX(), e.getY());
-			
-			getDrawer().resume();
-			
+
 			
 	}
 	
@@ -79,9 +74,11 @@ public class MainCharacter extends Character implements  MouseMotionListener, Ke
 		}
 		
 		if (e.getKeyChar() == 'd') {
+			System.out.println("d");
 			((Vector3D) Room.roomAngV).setIJK(0,-1,0);
 			Room.roomAngV.multiply(playerTurningSpeed);
-		}if (e.getKeyChar() == 'a') {;
+		}if (e.getKeyChar() == 'a') {
+			System.out.println("a");
 			((Vector3D) Room.roomAngV).setIJK(0,1,0);
 			Room.roomAngV.multiply(playerTurningSpeed);
 		}else if (e.getExtendedKeyCode() == 38) { //UP arrow key
