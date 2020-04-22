@@ -34,7 +34,7 @@ public class MainCharacter extends Character implements  MouseMotionListener, Ke
 	@Override
 	public void hit(double attackPower) {
 		super.hit(attackPower);
-		LegendOfJavaRunner.audioManager.playDamageAudio(); //OOF
+		AudioManager.playDamageAudio(); //OOF
 	}
 
 	public void die() {

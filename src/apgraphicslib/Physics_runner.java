@@ -1,5 +1,7 @@
 package apgraphicslib;
 
+import LegendOfJava.Pot;
+
 public class Physics_runner {
 
 	private static Object_draw drawer = new Object_draw();
@@ -42,12 +44,12 @@ public class Physics_runner {
 		drawer.add(new FCPS_display(drawer, Settings.width * 0.01 + 45, Settings.height*0.05 + 15));
 		
 		
-		Egg square2 = new Egg(drawer,Settings.width/2,Settings.height/2,0,30,2);
-		Physics_3DTexturedPolygon square1 = new Physics_3DTexturedPolygon(drawer,Settings.width/2,Settings.height/2,0,1);
-		square1.setName("square1");
+		//Egg square2 = new Egg(drawer,Settings.width/2,Settings.height/2,0,30,2);
+		//Physics_3DTexturedPolygon square1 = new Physics_3DTexturedPolygon(drawer,Settings.width/2,Settings.height/2,0,1);
+		//square1.setName("square1");
 		
 	
-		
+		/*
 
 		double xSize = 330;
 		double ySize = 90;
@@ -79,11 +81,20 @@ public class Physics_runner {
 
 		square1.setPointOfRotation(rotPoint,true);
 
+		*/
 		
-		drawer.start();
-
+		Pot pot1 = new Pot(drawer,Settings.width/2, Settings.height/2,10,100,8);
+		
+		pot1.setTexture("src/LegendOfJava/assets/texture.jpg");
 	
 		
+		
+		
+		
+		drawer.start();
+		drawer.add(pot1);
+	
+		pot1.setAngularVelocity(new Vector3D(0.2,0.2,0.2));
 		
 		//wait for close
 		while (drawer.getFrame().isActive()) {
@@ -95,7 +106,7 @@ public class Physics_runner {
 			}
 		}
 		
-		drawer.stop();
-		System.exit(1);
+	//	drawer.stop();
+	//	System.exit(1);
 	}
 }

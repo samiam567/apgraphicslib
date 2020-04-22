@@ -88,6 +88,7 @@ public class EnemyCharacter extends Character implements RoomObjectable {
 	@Override
 	public void hit(double attackPower) {
 		super.hit(attackPower);
+		AudioManager.playHitAudio(); //SMACK!
 	}
 	
 	@Override
