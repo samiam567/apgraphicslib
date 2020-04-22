@@ -15,13 +15,14 @@ import apgraphicslib.Physics_drawable;
 
 public class HealthBar extends Physics_drawable{
 	
-	private MainCharacter player;
+	private Character character;
 	private BufferedImage img;
 	private static String imgSrc = "src/LegendOfJava/assets/heart.png";
-	private static int heartSize = 25;
-	public HealthBar(Object_draw drawer, double x, double y, MainCharacter player) {
+	private int heartSize = 25;
+	public HealthBar(Object_draw drawer, double x, double y, Character player, int heartSize) {
 		super(drawer, x, y);
-		this.player = player;
+		this.character = player;
+		this.heartSize = heartSize;
 		File imgFile = new File(imgSrc);
 		try {
 			img = ImageIO.read(imgFile);
@@ -43,7 +44,7 @@ public class HealthBar extends Physics_drawable{
 	
 	@Override
 	public void paint(Graphics page) {
- 		for (int i = 0; i < player.HP; i++) {
+ 		for (int i = 0; i < character.HP; i++) {
  			page.drawImage(img,(int) (i*heartSize + getX()),(int) getY(),new ImageObserver() {
 
 				@Override

@@ -15,6 +15,7 @@ public class EnemyCharacter extends Character implements RoomObjectable {
 	private double targetTheta = Math.PI/2;
 	private Room parentRoom;
 	private Vector3DDynamicPointVector targSpeed;
+	private HealthBar hpBar;
 	
 	public static int numEnemys = 0;
 	
@@ -30,6 +31,7 @@ public class EnemyCharacter extends Character implements RoomObjectable {
 		targetPoint = new Coordinate3D(0,  Settings.height - PlayerTorso.torsoYSize - PlayerHead.headYSize-50, 0);
 		targSpeed = new Vector3DDynamicPointVector(getCoordinates(),targetPoint);
 		setName("enemy");
+		
 	}
 	
 	@Override
@@ -56,6 +58,24 @@ public class EnemyCharacter extends Character implements RoomObjectable {
 		if (Math.random() * 10 < 0.1) {
 			attack();
 		}
+		
+		double hpX, hpY;
+		hpX = head.getX() - Settings.width/2;
+		hpY = head.getY() - PlayerHead.headYSize - 10 - Settings.height/2;
+		
+		//as z gets bigger, the object gets further away from the viewer, and the object appears to be smaller
+		double parallaxValue = 1;
+		if (head.getZ() != 0) {
+			parallaxValue = (Settings.distanceFromScreen) / ((head.getZ()) + Settings.distanceFromScreen);
+		}
+
+		hpX *= parallaxValue;
+		hpY *= parallaxValue;
+		
+		hpX += Settings.width/2;
+		hpY += Settings.height/2;
+		
+		hpBar.setPos(hpX,hpY);
 
 	}
 	
@@ -63,12 +83,10 @@ public class EnemyCharacter extends Character implements RoomObjectable {
 	public void die() { 
 		remove();
 		numEnemys--;
-		LegendOfJavaRunner.console.setMessage("Enemy Killed!");
 	}
 	
 	@Override
 	public void hit(double attackPower) {
-		LegendOfJavaRunner.console.setMessage("Enemy Hit! Enemy health: " + HP);
 		super.hit(attackPower);
 	}
 	
@@ -76,12 +94,21 @@ public class EnemyCharacter extends Character implements RoomObjectable {
 	public void load() {
 		super.load();
 		head.rotatePoints(new Vector3D(0,Math.PI,0));
+		hpBar = new HealthBar(getDrawer(),head.getX(), head.getY() - PlayerHead.headYSize/3,this,10);
 	}
 	
+	@Override
 	public void add(Room room) {
 		parentRoom = room;
 		super.add();
 		numEnemys++;
+		getDrawer().add(hpBar);
+	}
+	
+	@Override
+	public void remove() {
+		super.remove();
+		getDrawer().remove(hpBar);
 	}
 	
 	@Override

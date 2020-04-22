@@ -22,6 +22,7 @@ public class Physics_frame extends JFrame{
 		setSize((int) (Settings.width), (int) (Settings.height));
 		setTitle("Physics-Engine V" + Settings.version + "           Programmed by Alec Pannunzio ID:" + frameCount);
 		cp = getContentPane();
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		setBackground(Settings.frameColor);		
 		cp.setBackground(Settings.frameColor);

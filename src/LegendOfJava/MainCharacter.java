@@ -12,8 +12,8 @@ import apgraphicslib.Settings;
 import apgraphicslib.Vector3D;
 
 public class MainCharacter extends Character implements  MouseMotionListener, KeyListener {
-	protected static double playerSpeed = 20;
-	protected static double playerTurningSpeed = 0.7;
+	protected static double playerSpeed = 23;
+	protected static double playerTurningSpeed = 0.85;
 	
 	public MainCharacter(Object_draw drawer) {
 		super(drawer,Settings.width/2, Settings.height - PlayerTorso.torsoYSize - PlayerHead.headYSize-50, 250);
@@ -29,6 +29,12 @@ public class MainCharacter extends Character implements  MouseMotionListener, Ke
 	@Override
 	public void Update(double frames) {
 		super.Update(frames);	
+	}
+	
+	@Override
+	public void hit(double attackPower) {
+		super.hit(attackPower);
+		LegendOfJavaRunner.audioManager.playDamageAudio(); //OOF
 	}
 
 	public void die() {

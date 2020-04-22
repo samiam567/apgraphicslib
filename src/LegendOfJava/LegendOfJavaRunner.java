@@ -22,6 +22,8 @@ public class LegendOfJavaRunner {
 	private static Room currentRoom;
 	private static int roomNumber = 0;
 	
+	public static AudioManager audioManager;
+	
 	
 	public static void main(String[] args) {
 		//set the Settings:
@@ -53,11 +55,13 @@ public class LegendOfJavaRunner {
 		drawer.add(console);
 		console.setMessage("The Legend of JAVA");
 		console.setFont(new Font("ZapfDingbats",Font.BOLD,30));
+
+		audioManager = new AudioManager(drawer);
 		
 		Ryan = new MainCharacter(drawer);
 		Ryan.setName("Ryan");
 		
-		hpBar = new HealthBar(drawer, Settings.width * 0.01, Settings.height * 0.1, Ryan);
+		hpBar = new HealthBar(drawer, Settings.width * 0.01, Settings.height * 0.1, Ryan,25);
 		drawer.add(hpBar);
 		
 		try {
