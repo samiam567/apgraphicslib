@@ -1,7 +1,5 @@
 package LegendOfJava;
 
-import java.awt.Graphics;
-
 import apgraphicslib.CollisionEvent;
 import apgraphicslib.Coordinate2D;
 import apgraphicslib.Coordinate3D;
@@ -11,6 +9,7 @@ import apgraphicslib.Three_dimensional;
 import apgraphicslib.Vector3D;
 
 
+
 public class Wall extends Physics_3DTexturedPolygon implements Three_dimensional, Tangible {
 	private Room parentRoom;
 	String wallTexture = "noTexture";
@@ -18,6 +17,7 @@ public class Wall extends Physics_3DTexturedPolygon implements Three_dimensional
 	
 	public Wall(Room parentRoom, double x, double y, double z, double xSize, double ySize, Vector3D	rotation, int ppSize) {
 		super(parentRoom.getDrawer(), x, y, z, ppSize);
+		
 		this.parentRoom = parentRoom;
 		
 		addPoint(-xSize/2, -ySize/2, 0);

@@ -429,10 +429,10 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 					x += Settings.width/2;
 					y += Settings.height/2;
 					
-					page.fillRect((int) Math.round(x - platePointSize*parallaxValue/2) ,(int) Math.round(y - platePointSize*parallaxValue/2) , (int) (platePointSize * parallaxValue), (int) (platePointSize * parallaxValue));
+					page.fillRect((int) Math.round(x - platePointSize*parallaxValue/2 - 1) ,(int) Math.round(y - platePointSize*parallaxValue/2 - 1) , (int) (platePointSize * parallaxValue + 2), (int) (platePointSize * parallaxValue + 2));
 					
 				}else {
-					page.fillRect((int) Math.round(getX() + cPoint.getX()-platePointSize/2) ,(int) Math.round(getY() + cPoint.getY()-platePointSize/2) , (int) (platePointSize+1), (int) (platePointSize+1));
+					page.fillRect((int) Math.round(getX() + cPoint.getX()-platePointSize/2 - 1) ,(int) Math.round(getY() + cPoint.getY()-platePointSize/2 - 1) , (int) (platePointSize+2), (int) (platePointSize+2));
 				}
 			}
 		}

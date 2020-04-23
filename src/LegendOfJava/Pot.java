@@ -7,7 +7,7 @@ import apgraphicslib.Vector3D;
 public class Pot extends Physics_3DTexturedEquationedPolygon implements Hittable, RoomObjectable {
 
 	public Pot(Object_draw drawer, double x, double y, double z, double xSize, double ySize, double zSize, double ppSize) {
-		super(drawer, x, y, z, Math.sqrt(xSize*xSize + ySize*ySize + zSize*zSize), ppSize);
+		super(drawer, x, y, z, Math.sqrt(xSize*xSize + ySize*ySize + zSize*zSize), ppSize/2);
 		setSize(xSize,ySize,zSize);
 		setTexture("src/LegendOfJava/assets/potTexture.jpg");
 		rotatePoints(new Vector3D(Math.PI,0,0));

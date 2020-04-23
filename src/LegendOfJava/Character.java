@@ -81,8 +81,10 @@ public class Character extends Physics_3DPolygon implements Hittable {
 	 * {@code makes the character swing their sword}
 	 */
 	public void attack() {
-		AudioManager.playSwordSwingAudio();
-		swordArm.swinging = true;
+		if (! swordArm.swinging) {
+			AudioManager.playSwordSwingAudio();
+			swordArm.swinging = true;
+		}
 	}
 	
 	public double getAttackPower() {
@@ -115,7 +117,12 @@ public class Character extends Physics_3DPolygon implements Hittable {
 		}
 		bodyParts.clear();
 		
-		head = new PlayerHead(this,ppSize);
+		if (isMain) {
+			head = new MainCharacterHead(this,ppSize); //this version is tangible
+		}else {
+			head = new PlayerHead(this,ppSize);
+		}
+		
 		head.setName(getName() + " head"); 
 		bodyParts.add(head);
 		

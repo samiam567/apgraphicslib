@@ -17,6 +17,7 @@ public class EnemyCharacter extends Character implements RoomObjectable {
 	private Vector3DDynamicPointVector targSpeed;
 	private HealthBar hpBar;
 	
+	private double initX, initY, initZ; 
 	public static int numEnemys = 0;
 	
 	/**
@@ -27,6 +28,10 @@ public class EnemyCharacter extends Character implements RoomObjectable {
 	 */
 	public EnemyCharacter(MainCharacter Char, double x, double z) {
 		super(Char.getDrawer(),x, Settings.height - PlayerTorso.torsoYSize - PlayerHead.headYSize-50,z);
+		initX = x;
+		initY = Settings.height - PlayerTorso.torsoYSize - PlayerHead.headYSize-50;
+		initZ = z;
+		
 		mainCharacter = Char;
 		targetPoint = new Coordinate3D(0,  Settings.height - PlayerTorso.torsoYSize - PlayerHead.headYSize-50, 0);
 		targSpeed = new Vector3DDynamicPointVector(getCoordinates(),targetPoint);
@@ -96,6 +101,7 @@ public class EnemyCharacter extends Character implements RoomObjectable {
 		super.load();
 		head.rotatePoints(new Vector3D(0,Math.PI,0));
 		hpBar = new HealthBar(getDrawer(),head.getX(), head.getY() - PlayerHead.headYSize/3,this,10);
+		setPos(initX, initY, initZ);
 	}
 	
 	@Override
@@ -104,6 +110,7 @@ public class EnemyCharacter extends Character implements RoomObjectable {
 		super.add();
 		numEnemys++;
 		getDrawer().add(hpBar);
+		setPos(initX, initY, initZ);
 	}
 	
 	@Override

@@ -31,12 +31,14 @@ public class Sword extends Physics_3DTexturedPolygon implements PlayerBodyPartAb
 		}else {
 			setPos(parentArm.getX() + PlayerArm.armZSize/2, parentArm.getY() + PlayerArm.armXSize - getYSize()/2,parentArm.getZ() - 2*parentArm.getZSize());
 		}
-	
+		
+		setName(parentArm.parentPlayer.getName() + " sword");
 		
 	}
 	
 	@Override
 	public double getPaintOrderValue() { 
+		
 		if (parentPlayer.isMain) {
 			return parentPlayer.head.getPaintOrderValue() + 1;
 		}else {

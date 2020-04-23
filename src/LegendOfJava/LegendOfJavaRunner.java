@@ -9,6 +9,7 @@ import javax.swing.JOptionPane;
 import apgraphicslib.APLabel;
 import apgraphicslib.FCPS_display;
 import apgraphicslib.FPS_display;
+import apgraphicslib.Object_border_tether;
 import apgraphicslib.Object_draw;
 import apgraphicslib.Settings;
 
@@ -20,6 +21,7 @@ public class LegendOfJavaRunner {
 	private static int roomPPSize = 10, playerPPSize = 5;
 	private static HealthBar hpBar;
 	private static Room currentRoom;
+	private static Room endRoom;
 	private static int roomNumber = 0;
 	
 	public static void main(String[] args) {
@@ -65,22 +67,37 @@ public class LegendOfJavaRunner {
 			System.out.println("your machine does not support Legend of Java. Please use your personal computer");
 		}
 		
-		Room room0 = new Room(drawer, Ryan,  Settings.width, 2 * Settings.height/2,2.7 * Settings.depth);
+		Room room0 = new Room(drawer, Ryan, 2 * Settings.width, 2 * Settings.height/2,3.5 * Settings.width);
+		room0.setName("Room 0");
+		
 		Room room1 = new Room(drawer, Ryan, 3 * Settings.width, 2 * Settings.height/2,3 * Settings.width);
 		room1.addRoomOb(new EnemyCharacter(Ryan, 0.5 * Settings.width, Settings.depth));
+		room1.setName("Room 1");
+		
+		Room room1L = new Room(drawer, Ryan, 3 * Settings.width, 2 * Settings.height/2,3 * Settings.width);
+		room1L.addRoomOb(new EnemyCharacter(Ryan, 0.8 * Settings.width, Settings.depth));
+		room1L.addRoomOb(new EnemyCharacter(Ryan, 0.2 * Settings.width, Settings.depth));
+		room1.setLeftRoom(room1L);
+		room1L.setName("Room 1 L");
+		
 		Room room2 = new Room(drawer, Ryan, 3 * Settings.width, 2 * Settings.height/2,3 * Settings.width);
 		room2.addRoomOb(new EnemyCharacter(Ryan, 0.8 * Settings.width, Settings.depth));
 		room2.addRoomOb(new EnemyCharacter(Ryan, 0.2 * Settings.width, Settings.depth));
+		room2.setName("Room 2");
+		
 		Room room3 = new Room(drawer, Ryan, 3 * Settings.width, 2 * Settings.height/2,3 * Settings.width);
 		room3.addRoomOb(new EnemyCharacter(Ryan, 0.8 * Settings.width, Settings.depth));
 		room3.addRoomOb(new EnemyCharacter(Ryan, 0.2 * Settings.width, Settings.depth));
 		room3.addRoomOb(new EnemyCharacter(Ryan, 0.5 * Settings.width, -0.5 * Settings.depth));
-		Room endRoom = new Room(drawer, Ryan, 3 * Settings.width, 2 * Settings.height/2,3 * Settings.width);
+		room3.setName("Room 3");
 		
-		room0.nextRoom = room1;
-		room1.nextRoom = room2;
-		room2.nextRoom = room3;
-	//	room3.nextRoom = endRoom;  we havent made an end room yet
+		endRoom = new Room(drawer, Ryan, 3 * Settings.width, 2 * Settings.height/2,3 * Settings.width);
+		endRoom.setName("End");
+		
+		room0.setNextRoom(room1);
+		room1.setNextRoom(room2);
+		room2.setNextRoom(room3);
+		room3.setNextRoom(endRoom);  
 		
 		currentRoom = room0;
 		
@@ -101,18 +118,13 @@ public class LegendOfJavaRunner {
 		}else if (options[graphicsSetting].equals("high")) {
 			roomPPSize = 5;
 			playerPPSize = 3;
-			//MainCharacter.playerTurningSpeed /= 100000;
 		}else if (options[graphicsSetting].equals("extreme")) {
 			roomPPSize = 1;
 			playerPPSize = 1;
 		}
 		
-
-		Room cRoom = room0;
-		while (cRoom != null) {	
-			cRoom.setPPSize(roomPPSize);
-			cRoom = cRoom.nextRoom;
-		}
+		setRoomPPSizeRecursive(room0,roomPPSize);
+			
 		
 		Ryan.setPPSize(playerPPSize);
 		
@@ -145,17 +157,43 @@ public class LegendOfJavaRunner {
 		drawer.stop();
 		System.exit(1);
 	}
+	
+	
+	//yayyy recursion
+	private static void setRoomPPSizeRecursive(Room cRoom, int ppSize) {
+		
+		if (! cRoom.ppSizeSet) { // if we haven't already been to this node
+			System.out.println("Set platePointSize of " + cRoom.getName());
+			cRoom.setPPSize(ppSize);
+			//cRoom.ppSizeSet = true;
+			System.out.println("recursion!");
+			if (cRoom.nextRoom != null) {
+				setRoomPPSizeRecursive(cRoom.nextRoom, ppSize);
+			}
+			
+			if (cRoom.leftRoom != null) {
+				setRoomPPSizeRecursive(cRoom.leftRoom, ppSize);
+			}
+			
+			if (cRoom.rightRoom != null) {
+				setRoomPPSizeRecursive(cRoom.rightRoom, ppSize);
+			}
+			
+			if (cRoom.prevRoom != null) {
+				setRoomPPSizeRecursive(cRoom.prevRoom, ppSize);
+			}
+		}
+	}
 
-	public static void loadNextRoom() {
+	public static void loadRoom( Room nextRoom) {
 		System.out.println("loading next room...");
 		
-		currentRoom.remove();
 		drawer.pause();
+		currentRoom.remove();
 		roomNumber++;
-		currentRoom = currentRoom.nextRoom;
-		console.setMessage("Room: "+ roomNumber);
-		if (currentRoom == null) {
-			
+		currentRoom = nextRoom;
+		console.setMessage("Room: "+ currentRoom.getName());
+		if (currentRoom.equals(endRoom)) {
 			drawer.getFrame().setVisible(false);
 			drawer.stop();
 			JOptionPane.showMessageDialog(drawer, "Game over\nYou win!");

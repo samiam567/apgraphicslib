@@ -27,7 +27,7 @@ public class Room extends Physics_3DDrawMovable implements Updatable, Three_dime
 	public Character player;
 	
 	
-
+	
 	private double roomWidth;
 	private double roomDepth;
 	private double roomHeight;
@@ -36,9 +36,11 @@ public class Room extends Physics_3DDrawMovable implements Updatable, Three_dime
 	
 	private boolean loaded = false, wallsSet = false;
 	
+	public boolean ppSizeSet = false;
+	
 	public static Vector3D roomAngV = new Vector3D(0,0,0), roomSpeed = new Vector3D(0,0,0);
 	
-	public Room nextRoom = null;
+	public Room nextRoom = null, leftRoom = null, rightRoom = null, prevRoom = null;
 	
 	public Room(Object_draw drawer, Character player, double xSize, double ySize, double zSize) {
 		super(drawer, Settings.width/2, Settings.height/2, Settings.depth/2 + zSize/3 - Settings.distanceFromScreen);
@@ -75,7 +77,7 @@ public class Room extends Physics_3DDrawMovable implements Updatable, Three_dime
 		floorWall = new FloorWall(this, getX(),getY() + roomHeight/2,getZ(),roomWidth,roomDepth, new Vector3D(Math.PI/2,0,0),roomPPSize);
 		floorWall.setName("floorWall");
 		
-		ceilingWall = new Wall(this, getX(), getY() - roomHeight/2,getZ(),roomWidth,roomDepth, new Vector3D(Math.PI/2,0,0),roomPPSize);
+		ceilingWall = new FloorWall(this, getX(), getY() - roomHeight/2,getZ(),roomWidth,roomDepth, new Vector3D(Math.PI/2,0,0),roomPPSize);
 		ceilingWall.setName("ceilingWall");
 		
 		addRoomOb(new Pot(getDrawer(),Settings.width/2-getRoomWidth()/3 + potSize,floorWall.getY() - potSize*2,Settings.depth/2-getRoomDepth()/3 + potSize,potSize,potSize*2, potSize, 10));
@@ -128,10 +130,32 @@ public class Room extends Physics_3DDrawMovable implements Updatable, Three_dime
 	
 	
 	public void setWallTexture() {
-		backWall.setTexture("src/LegendOfJava/assets/Dungeon side wall 7by3.png");
-		frontWall.setTexture("src/LegendOfJava/assets/Dungeon wall 7by3.png");
-		leftWall.setTexture("src/LegendOfJava/assets/Dungeon side wall 7by3.png");
-		rightWall.setTexture("src/LegendOfJava/assets/Dungeon side wall 7by3.png");
+		
+		
+		if (nextRoom != null) {
+			frontWall.setTexture("src/LegendOfJava/assets/Dungeon wall 7by3.png");
+		}else {
+			frontWall.setTexture("src/LegendOfJava/assets/Dungeon side wall 7by3.png");
+		}
+		
+		if (leftRoom != null) {
+			leftWall.setTexture("src/LegendOfJava/assets/Dungeon wall 7by3.png");
+		}else {
+			leftWall.setTexture("src/LegendOfJava/assets/Dungeon side wall 7by3.png");
+		}
+		
+		if (rightRoom != null) {
+			rightWall.setTexture("src/LegendOfJava/assets/Dungeon wall 7by3.png");
+		}else {
+			rightWall.setTexture("src/LegendOfJava/assets/Dungeon side wall 7by3.png");
+		}
+		
+		if (prevRoom != null) {
+			backWall.setTexture("src/LegendOfJava/assets/Dungeon wall 7by3.png");
+		} else {
+			backWall.setTexture("src/LegendOfJava/assets/Dungeon side wall 7by3.png");
+		}
+		
 		floorWall.setTexture("src/LegendOfJava/assets/Dungeon side wall 7by3.png");
 		ceilingWall.setTexture("src/LegendOfJava/assets/Dungeon side wall 7by3.png");
 		loaded = false;
@@ -164,6 +188,21 @@ public class Room extends Physics_3DDrawMovable implements Updatable, Three_dime
 			rOb.add(this);
 		}
 	
+	}
+	
+	public void setLeftRoom(Room lRoom) {
+		leftRoom = lRoom;
+		lRoom.rightRoom = this;
+	}
+	
+	public void setRightRoom(Room rRoom) {
+		rightRoom = rRoom;
+		rRoom.leftRoom = this;
+	}
+	
+	public void setNextRoom(Room nRoom) {
+		nextRoom = nRoom;
+		nRoom.prevRoom = this;
 	}
 	
 	public void remove() {
@@ -200,20 +239,53 @@ public class Room extends Physics_3DDrawMovable implements Updatable, Three_dime
 		
 		//rotate room objects around mailCharacter
 		for (RoomObjectable rOb : roomObs) {
-			
 			rOb.setOrbitalAngularVelocity(roomAngV);
 			rOb.setSpeed(roomSpeed);
 		}
 		
 		
 		//check if player is at the door
-		if (Physics_engine_toolbox.distance3D(frontWall.getCoordinates(), player.getCoordinates()) < PlayerHead.headZSize + roomHeight/2) {
-			if (EnemyCharacter.numEnemys == 0) {
-				LegendOfJavaRunner.loadNextRoom();
-			}else {
-				LegendOfJavaRunner.console.setMessage("you cannot leave the room while there are still enemies!");
+		if (nextRoom != null) {
+			if (Physics_engine_toolbox.distance3D(frontWall.getCoordinates(), player.getCoordinates()) < PlayerHead.headZSize + roomHeight/2) {
+				if (EnemyCharacter.numEnemys == 0) {
+					LegendOfJavaRunner.loadRoom(nextRoom);
+				}else {
+					LegendOfJavaRunner.console.setMessage("you cannot leave the room while there are still enemies!");
+				}
 			}
 		}
+		
+		if (leftRoom != null) {
+			if (Physics_engine_toolbox.distance3D(leftWall.getCoordinates(), player.getCoordinates()) < PlayerHead.headZSize + roomHeight/2) {
+				if (EnemyCharacter.numEnemys == 0) {
+					LegendOfJavaRunner.loadRoom(leftRoom);
+				}else {
+					LegendOfJavaRunner.console.setMessage("you cannot leave the room while there are still enemies!");
+				}
+			}
+		}
+		
+		if (rightRoom != null) {
+			if (Physics_engine_toolbox.distance3D(rightWall.getCoordinates(), player.getCoordinates()) < PlayerHead.headZSize + roomHeight/2) {
+				if (EnemyCharacter.numEnemys == 0) {
+					LegendOfJavaRunner.loadRoom(rightRoom);
+				}else {
+					LegendOfJavaRunner.console.setMessage("you cannot leave the room while there are still enemies!");
+				}
+			}
+		}
+		
+		if (prevRoom != null) {
+			if (Physics_engine_toolbox.distance3D(backWall.getCoordinates(), player.getCoordinates()) < PlayerHead.headZSize + roomHeight/2) {
+				if (EnemyCharacter.numEnemys == 0) {
+					LegendOfJavaRunner.loadRoom(prevRoom);
+				}else {
+					LegendOfJavaRunner.console.setMessage("you cannot leave the room while there are still enemies!");
+				}
+			}
+		}
+		
+		
 		
 	}
 	
@@ -247,6 +319,8 @@ public class Room extends Physics_3DDrawMovable implements Updatable, Three_dime
 
 	public void setPPSize(int roomPPSize) {
 		loaded = false;
+		
+		ppSizeSet = true;
 		
 		double roomSize = Math.sqrt(roomWidth*roomWidth+roomHeight*roomHeight);
 		
