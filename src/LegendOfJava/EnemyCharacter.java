@@ -101,7 +101,6 @@ public class EnemyCharacter extends Character implements RoomObjectable {
 		super.load();
 		head.rotatePoints(new Vector3D(0,Math.PI,0));
 		hpBar = new HealthBar(getDrawer(),head.getX(), head.getY() - PlayerHead.headYSize/3,this,10);
-		setPos(initX, initY, initZ);
 	}
 	
 	@Override
@@ -117,6 +116,7 @@ public class EnemyCharacter extends Character implements RoomObjectable {
 	public void remove() {
 		super.remove();
 		getDrawer().remove(hpBar);
+		parentRoom.roomObs.remove(this);
 	}
 	
 	@Override

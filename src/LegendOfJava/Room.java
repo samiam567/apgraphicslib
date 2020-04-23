@@ -21,7 +21,7 @@ public class Room extends Physics_3DDrawMovable implements Updatable, Three_dime
 	private Wall frontWall;
 	
 	private LinkedList<Wall> walls = new LinkedList<Wall>();
-	private LinkedList<RoomObjectable> roomObs = new LinkedList<RoomObjectable>();
+	LinkedList<RoomObjectable> roomObs = new LinkedList<RoomObjectable>();
 	
 	private Vector3D rotation = new Vector3D(0,0,0);
 	public Character player;
@@ -52,15 +52,16 @@ public class Room extends Physics_3DDrawMovable implements Updatable, Three_dime
 
 		loaded = false;
 		
+		setWalls();
+		double potSize = 30;
+		addRoomOb(new Pot(getDrawer(),Settings.width/2-getRoomWidth()/3 + potSize,floorWall.getY() - potSize*2,Settings.depth/2-getRoomDepth()/3 + potSize,potSize,potSize*2, potSize, 10));
+		addRoomOb(new Pot(getDrawer(),Settings.width/2+getRoomWidth()/3 + potSize,floorWall.getY() - potSize*2,Settings.depth/2-getRoomDepth()/3 + potSize,potSize,potSize*2, potSize, 10));
 		
 	}
 		
 	private void setWalls() {
 		
-		walls.clear();
-		
-		double potSize = 30;
-		
+		walls.clear();	
 		
 		leftWall = new Wall(this,getX() - roomWidth/2,getY(),getZ(),roomDepth,roomHeight,new Vector3D(0,Math.PI/2,0),roomPPSize);
 		leftWall.setName("leftWall");
@@ -80,8 +81,6 @@ public class Room extends Physics_3DDrawMovable implements Updatable, Three_dime
 		ceilingWall = new FloorWall(this, getX(), getY() - roomHeight/2,getZ(),roomWidth,roomDepth, new Vector3D(Math.PI/2,0,0),roomPPSize);
 		ceilingWall.setName("ceilingWall");
 		
-		addRoomOb(new Pot(getDrawer(),Settings.width/2-getRoomWidth()/3 + potSize,floorWall.getY() - potSize*2,Settings.depth/2-getRoomDepth()/3 + potSize,potSize,potSize*2, potSize, 10));
-		addRoomOb(new Pot(getDrawer(),Settings.width/2+getRoomWidth()/3 + potSize,floorWall.getY() - potSize*2,Settings.depth/2-getRoomDepth()/3 + potSize,potSize,potSize*2, potSize, 10));
 		
 		
 		walls.add(backWall);
@@ -211,13 +210,11 @@ public class Room extends Physics_3DDrawMovable implements Updatable, Three_dime
 		for (Wall cWall : walls) {
 			getDrawer().remove(cWall);
 		}
-		for (RoomObjectable rOb : roomObs) {
-			getDrawer().remove(rOb);
-			try {
-				((Pot) rOb).getColor();
-				roomObs.remove(rOb);
-			}catch(ClassCastException c) {}
+		
+		for(RoomObjectable cOb : roomObs) {
+			getDrawer().remove(cOb);
 		}
+		
 	}
 	
 	public LinkedList<Wall> getWalls() {

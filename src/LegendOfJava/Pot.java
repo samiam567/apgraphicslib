@@ -2,12 +2,19 @@ package LegendOfJava;
 
 import apgraphicslib.Object_draw;
 import apgraphicslib.Physics_3DTexturedEquationedPolygon;
+import apgraphicslib.Settings;
 import apgraphicslib.Vector3D;
 
 public class Pot extends Physics_3DTexturedEquationedPolygon implements Hittable, RoomObjectable {
-
+	
+	private double initX, initY, initZ; 
+	private Room parentRoom;
 	public Pot(Object_draw drawer, double x, double y, double z, double xSize, double ySize, double zSize, double ppSize) {
 		super(drawer, x, y, z, Math.sqrt(xSize*xSize + ySize*ySize + zSize*zSize), ppSize/2);
+		initX = x;
+		initY = y;
+		initZ = z;
+		
 		setSize(xSize,ySize,zSize);
 		setTexture("src/LegendOfJava/assets/potTexture.jpg");
 		rotatePoints(new Vector3D(Math.PI,0,0));
@@ -16,13 +23,15 @@ public class Pot extends Physics_3DTexturedEquationedPolygon implements Hittable
 	@Override
 	public void add(Room room) {
 		getDrawer().add(this);
-		
+		setPos(initX, initY, initZ);
+		parentRoom = room;
 	}
 
 	@Override
 	public void hit(double attackPower) {
 		AudioManager.playPotBreakAudio();
 		getDrawer().remove(this);
+		parentRoom.roomObs.remove(this);
 		System.out.println("pot hit!");
 		LegendOfJavaRunner.Ryan.HP++;
 		AudioManager.playHeartRestoreAudio();

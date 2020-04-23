@@ -80,6 +80,12 @@ public class LegendOfJavaRunner {
 		room1.setLeftRoom(room1L);
 		room1L.setName("Room 1 L");
 		
+		Room room1L2 = new Room(drawer, Ryan, 3 * Settings.width, 2 * Settings.height/2,3 * Settings.width);
+		room1L2.addRoomOb(new EnemyCharacter(Ryan, 0.8 * Settings.width, -Settings.depth/3));
+		room1L2.addRoomOb(new EnemyCharacter(Ryan, 0.2 * Settings.width, Settings.depth));
+		room1L.setNextRoom(room1L2);
+		room1L2.setName("Room 1 L 2");
+		
 		Room room2 = new Room(drawer, Ryan, 3 * Settings.width, 2 * Settings.height/2,3 * Settings.width);
 		room2.addRoomOb(new EnemyCharacter(Ryan, 0.8 * Settings.width, Settings.depth));
 		room2.addRoomOb(new EnemyCharacter(Ryan, 0.2 * Settings.width, Settings.depth));
@@ -90,6 +96,10 @@ public class LegendOfJavaRunner {
 		room3.addRoomOb(new EnemyCharacter(Ryan, 0.2 * Settings.width, Settings.depth));
 		room3.addRoomOb(new EnemyCharacter(Ryan, 0.5 * Settings.width, -0.5 * Settings.depth));
 		room3.setName("Room 3");
+		room3.setLeftRoom(room1L2);
+		
+		Room room4 = new Room(drawer, Ryan, 3 * Settings.width, 2 * Settings.height/2,3 * Settings.width);
+		room4.setName("This is the last room. \n You win!");
 		
 		endRoom = new Room(drawer, Ryan, 3 * Settings.width, 2 * Settings.height/2,3 * Settings.width);
 		endRoom.setName("End");
@@ -97,7 +107,8 @@ public class LegendOfJavaRunner {
 		room0.setNextRoom(room1);
 		room1.setNextRoom(room2);
 		room2.setNextRoom(room3);
-		room3.setNextRoom(endRoom);  
+		room3.setNextRoom(room4); 
+		room4.setNextRoom(endRoom);
 		
 		currentRoom = room0;
 		
@@ -192,7 +203,7 @@ public class LegendOfJavaRunner {
 		currentRoom.remove();
 		roomNumber++;
 		currentRoom = nextRoom;
-		console.setMessage("Room: "+ currentRoom.getName());
+		console.setMessage(currentRoom.getName());
 		if (currentRoom.equals(endRoom)) {
 			drawer.getFrame().setVisible(false);
 			drawer.stop();
