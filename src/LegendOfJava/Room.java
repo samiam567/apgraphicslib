@@ -109,11 +109,11 @@ public class Room extends Physics_3DDrawMovable implements Updatable, Three_dime
 	}
 	
 	public void load() {
-		
+	
 		for (Wall cWall : walls) {
 			cWall.loadTexture();
 		}
-	
+		
 		loaded = true;
 	}
 	
@@ -162,6 +162,7 @@ public class Room extends Physics_3DDrawMovable implements Updatable, Three_dime
 	}
 	
 	public void run() {
+		wallsSet = false;
 		setPos(Settings.width/2,Settings.height/2,Settings.depth/2);
 		if (wallsSet) {
 			for (Wall cWall : walls) {
@@ -212,6 +213,10 @@ public class Room extends Physics_3DDrawMovable implements Updatable, Three_dime
 		}
 		for (RoomObjectable rOb : roomObs) {
 			getDrawer().remove(rOb);
+			try {
+				((Pot) rOb).getColor();
+				roomObs.remove(rOb);
+			}catch(ClassCastException c) {}
 		}
 	}
 	
