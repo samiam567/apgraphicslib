@@ -7,6 +7,7 @@ package apgraphicslib;
  */
 public class Vector3D extends Vector2D implements Three_dimensional {
 	protected double k = 0, phi = 0;
+	private static Vector3D tempVec = new Vector3D(0,0,0);
 	
 	/**
 	 * {@summary this constructor should ONLY be used by the Dynamic point vector}
@@ -18,6 +19,11 @@ public class Vector3D extends Vector2D implements Three_dimensional {
 			Exception e = new Exception("ONLY Dynamic Vectors can use this constructor");
 			e.printStackTrace();
 		}
+	}
+	
+	public Vector3D() {
+		super(1657934);
+		setIJK(0,0,0);
 	}
 	
 	public Vector3D(double xComponent, double yComponent, double zComponent) {
@@ -154,8 +160,29 @@ public class Vector3D extends Vector2D implements Three_dimensional {
 	/**
 	 * @return a Vector representing the scaling of this Vector by the multiple without changing this vector
 	 */
+	@Override
 	public Vector3D statMultiply(double mult) {
 		return new Vector3D(getI() * mult, getJ() * mult, getK() * mult);
+	}
+	
+	
+	
+	/**
+	 * scales this Vector by the multiple without changing this vector
+	 * @param outputVec make this vec into the multiple
+	 */
+	public Vector3D statMultiplyInto(double mult, Vector3D outputVec) {
+		outputVec.setIJK(getI() * mult, getJ() * mult, getK() * mult);
+		return outputVec;
+	}
+	
+	/**
+	 * {@code WARNING this method uses the temp protocol. If the return isn't immediately used it may be overritten causing terrible awful errors}
+	 * @return a Vector representing the scaling of this Vector by the multiple without changing this vector
+	 */
+	@Override
+	public Vector3D tempStatMultiply(double multi) {
+		return statMultiplyInto(multi, tempVec);
 	}
 	
 	/**
@@ -163,7 +190,37 @@ public class Vector3D extends Vector2D implements Three_dimensional {
 	 * {@summary adds the passed Vector to this Vector without changing this Vector}
 	 * @return a Vector3D representing the addition of this Vector and the passed Vector
 	 */
+	@Override
 	public Vector3D statAdd(Vector addVec) {
+		return new Vector3D(getI() + ((Vector2D) addVec).getI(), getJ() + ((Vector2D) addVec).getJ(),getK() + ((Vector3D) addVec).getK());
+	}
+	
+	/**
+	 * @param Vector3D addVec
+	 * @param outputVec puts the result of adding the passed Vector to this vector into the outputVec
+	 * @return outputVec
+	 */
+	public Vector3D statAddInto(Vector addVec, Vector3D outputVec) {
+		outputVec.setIJK(getI() + ((Vector2D) addVec).getI(), getJ() + ((Vector2D) addVec).getJ(),getK() + ((Vector3D) addVec).getK());
+		return outputVec;
+	}
+	
+	/**
+	 * {@code WARNING this method uses the temp protocol. If the return isn't immediately used it may be overritten causing terrible awful errors}
+	 * {@summary adds the passed Vector to this Vector without changing this Vector}
+	 * @return a Vector3D representing the addition of this Vector and the passed Vector
+	 */
+	@Override
+	public Vector3D tempStatAdd(Vector addVec) {
+		return statAddInto(addVec, tempVec);
+	}
+	
+	/**
+	 * @param Vector3D addVec
+	 * {@summary adds the passed Vector to this Vector without changing this Vector}
+	 * @return a Vector3D representing the addition of this Vector and the passed Vector
+	 */
+	public Vector3D statAddInto(Vector addVec) {
 		return new Vector3D(getI() + ((Vector2D) addVec).getI(), getJ() + ((Vector2D) addVec).getJ(),getK() + ((Vector3D) addVec).getK());
 	}
 	

@@ -149,9 +149,9 @@ public class Physics_2DPolygon extends Physics_2DDrawMovable implements Updatabl
 		
 		updatePointValueLists();
 		//orbital rotation
-		if (orbitalAngularAcceleration.getR() != 0) orbitalAngularVelocity.add(orbitalAngularAcceleration.statMultiply(frames));
+		if (orbitalAngularAcceleration.getR() != 0) orbitalAngularVelocity.add(((Vector2D) orbitalAngularAcceleration).tempStatMultiply(frames));
 	//	if (orbitalAngularVelocity.getR() != 0) {
-			orbitalAngVFrames = orbitalAngularVelocity.statMultiply(frames);
+			orbitalAngVFrames = ((Vector2D) orbitalAngularVelocity).tempStatMultiply(frames);
 			
 			orbitalRotation.add(orbitalAngVFrames);	
 			
@@ -172,9 +172,9 @@ public class Physics_2DPolygon extends Physics_2DDrawMovable implements Updatabl
 	//	}
 		
 		//rotation about a point
-		if (angularAcceleration.getR() != 0) angularVelocity.add(angularAcceleration.statMultiply(frames));
+		if (angularAcceleration.getR() != 0) angularVelocity.add(((Vector2D) angularAcceleration).tempStatMultiply(frames));
 		if ( angularVelocity.getR() != 0) {
-			angVFrames = angularVelocity.statMultiply(frames);
+			angVFrames = ((Vector2D) angularVelocity).tempStatMultiply(frames);
 			rotationMatrix.calculateRotation(angVFrames);
 			rotation.add(angVFrames);	
 			updatePoints();
@@ -237,7 +237,7 @@ public class Physics_2DPolygon extends Physics_2DDrawMovable implements Updatabl
 
 	public void setRotation(double i, double j) {
 		getDrawer().pause();
-		rotate(rotation.statMultiply(-1));
+		rotate(((Vector2D) rotation).statMultiply(-1));
 		
 		((Vector2D) rotation).setI(i);
 		((Vector2D) rotation).setJ(j);

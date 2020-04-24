@@ -8,6 +8,7 @@ package apgraphicslib;
 public class Vector2D extends Vector implements Two_dimensional {
 	protected double i,j,theta;
 	protected boolean rectangularCalculated = true, polarCalculated = true;
+	private static Vector2D tempVec = new Vector2D(0,0);
 	
 	public Vector2D(int key) {
 		if (key != 1657934) {
@@ -142,7 +143,11 @@ public class Vector2D extends Vector implements Two_dimensional {
 	}
 
 
-
+	
+	public static Vector2D add(Vector2D vec1, Vector2D vec2) {
+		return new Vector2D(vec1.getI() + vec2.getI(),vec1.getJ() + vec2.getJ());
+	}
+	
 	/**
 	 * @param Vector2D addVec
 	 * {@summary adds the passed Vector to this Vector without changing this Vector}
@@ -152,10 +157,26 @@ public class Vector2D extends Vector implements Two_dimensional {
 		return new Vector2D(i + ((Vector2D) addVec).getI(), j + ((Vector2D) addVec).getJ());
 	}
 	
-	public static Vector2D add(Vector2D vec1, Vector2D vec2) {
-		return new Vector2D(vec1.getI() + vec2.getI(),vec1.getJ() + vec2.getJ());
+	/**
+	 * @param Vector3D addVec
+	 * @param outputVec puts the result of adding the passed Vector to this vector into the outputVec
+	 * @return outputVec
+	 */
+	public Vector2D statAddInto(Vector addVec, Vector2D outputVec) {
+		outputVec.setI(getI() + ((Vector2D) addVec).getI());
+		outputVec.setJ(getJ() + ((Vector2D) addVec).getJ());
+		return outputVec;
 	}
 	
+	/**
+	 * {@code WARNING this method uses the temp protocol. If the return isn't immediately used it may be overritten causing terrible awful errors}
+	 * {@summary adds the passed Vector to this Vector without changing this Vector}
+	 * @return a Vector3D representing the addition of this Vector and the passed Vector
+	 */
+	public Vector2D tempStatAdd(Vector addVec) {
+		return statAddInto(addVec, tempVec);
+	}
+
 	public static Vector2D subtract(Vector2D vec1, Vector2D vec2) {
 		return new Vector2D(vec1.getI() - vec2.getI(),vec1.getJ() - vec2.getJ());
 	}
@@ -176,6 +197,24 @@ public class Vector2D extends Vector implements Two_dimensional {
 	 */
 	public Vector2D statMultiply(double multi) {
 		return new Vector2D(getI() * multi,getJ() * multi);
+	}
+	
+	/**
+	 * scales this Vector by the multiple without changing this vector
+	 * @param outputVec make this vec into the multiple
+	 */
+	public Vector2D statMultiplyInto(double mult, Vector2D outputVec) {
+		outputVec.setI(getI() * mult);
+		outputVec.setJ(getJ() * mult);
+		return outputVec;
+	}
+	
+	/**
+	 * {@code WARNING this method uses the temp protocol. If the return isn't immediately used it may be overritten causing terrible awful errors}
+	 * @return a Vector representing the scaling of this Vector by the multiple without changing this vector
+	 */
+	public Vector2D tempStatMultiply(double multi) {
+		return statMultiplyInto(multi, tempVec);
 	}
 	
 	public void setTheta(double theta1) {
