@@ -40,8 +40,8 @@ public class Object_draw extends JPanel {
 
 	public int inactivity_timer = 0;
 	
-	private double frameCount = 0, updateCount = 0, frameStep = 0.1;
-	private long updateStartTime, updateEndTime, frameStartTime, frameEndTime, subCalcTime;
+	private double frameCount = 0, updateCount = 0, frameStep = 0.1, actualFPS = 1/Settings.frameTime;
+	private long updateStartTime, updateEndTime, frameStartTime, frameEndTime, subCalcTime, lastPaintTime;
 	private double frameTime = Settings.frameTime;
 	
 	public Object_draw() {
@@ -66,6 +66,7 @@ public class Object_draw extends JPanel {
 			System.out.println(i + " in Object_draw.start()");
 			resume();
 		}
+		lastPaintTime = System.nanoTime();
 	}
 	
 	/**
@@ -339,6 +340,8 @@ public class Object_draw extends JPanel {
 			prePaintUpdateObjects();
 			checkForResize();
 			repaint();
+			actualFPS = 1000000000/((double)(System.nanoTime() - lastPaintTime));
+			lastPaintTime = System.nanoTime();
 			
 			
 			if (frameStep > 1) {
@@ -354,7 +357,8 @@ public class Object_draw extends JPanel {
 			subCalcTime = 0;
 			for (int i = 0; i < 1/frameStep; i++) {
 				updateStartTime = System.nanoTime();
-				updateObjects(frameStep*Settings.frameTime); //update the objects
+				//updateObjects(frameStep*Settings.frameTime); //update the objects
+				updateObjects((1 / ( (int) 1/frameStep )) / actualFPS);
 				checkForCollisions(); //check for collisions between the tangibles
 				frameCount += frameStep;
 				updateCount++;
