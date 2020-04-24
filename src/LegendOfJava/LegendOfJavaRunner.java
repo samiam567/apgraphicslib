@@ -149,7 +149,7 @@ public class LegendOfJavaRunner {
 		System.out.println("loading complete.");
 		drawer.start();
 		
-		JOptionPane.showMessageDialog(drawer.getFrame(),"Controls: \n Move: WASD \n Attack: SPACE ");
+		JOptionPane.showMessageDialog(drawer.getFrame(),"Controls: \n Move: WASD \n Attack: SPACE \n Dodge: SHIFT ");
 		
 		drawer.getFrame().setVisible(true);
 		

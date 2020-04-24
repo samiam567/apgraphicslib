@@ -13,4 +13,6 @@ public interface PlayerBodyPartAble extends Drawable, Three_dimensional {
 
 	public void setOrbitalAngularVelocity(Vector rotVec);
 
+	public void setOrbitalRotation(Vector rotVec);
+
 }

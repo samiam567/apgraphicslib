@@ -13,7 +13,11 @@ public class FPS_display extends ScoreBoard {
 	}
 
 	public void paint(Graphics page) {
-		setScore(getDrawer().getActualFPS());
+		if (loops % Settings.targetFPS == 0) {
+			setScore(getDrawer().getActualFPS());
+			loops = 1;
+		}
+		loops++;
 		super.paint(page);
 		
 	}

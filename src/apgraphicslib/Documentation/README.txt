@@ -3,8 +3,8 @@ Game Tips:
 ----------------
 
 Make sure your sound is up!
-break the pots (brown cylinders in the corner) to restore your hearts!
-
+break the pots (brown cylinders in the corner) to restore your hearts
+Banging your head against the wall is fine, but don't do it too much or you'll get a headache
 
 
 
@@ -22,3 +22,11 @@ Important Methods:
 
 All of the time control is done in Object_draw.doUpdate();
 Recursion is used in the method LegendOfJavaRunner.setRoomPPSizeRecursive() to traverse the binary tree of rooms
+
+
+
+----------------
+Cool Classes:
+----------------
+Vector3D (duh)
+Timer (Used for the JumpBack ability in LOJ)

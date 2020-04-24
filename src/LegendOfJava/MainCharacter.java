@@ -7,9 +7,46 @@ import java.awt.event.MouseMotionListener;
 import javax.swing.JOptionPane;
 import apgraphicslib.Object_draw;
 import apgraphicslib.Settings;
+import apgraphicslib.Timer;
 import apgraphicslib.Vector3D;
 
 public class MainCharacter extends Character implements  MouseMotionListener, KeyListener {
+	
+	private boolean hittable = true;
+	/**
+	 * 
+	 * {@code creating one of these will cause the mainCharacter to jump back the passed number of units}
+	 *
+	 */
+	private class JumpBackTimer extends Timer {
+		private static final double timeToJump = 0.7;
+
+		private double units;
+		public JumpBackTimer(MainCharacter player, double units) {
+			super(player.getDrawer(), timeToJump, TimerUnits.seconds);
+			this.units = units;
+			Room.roomSpeed.setIJK(0,0,units / timeToJump);
+			
+			for (PlayerBodyPartAble bp : bodyParts) {
+				bp.setPointOfRotation(head.getCoordinates(), true);
+				bp.setOrbitalAngularVelocity(new Vector3D(-2*Math.PI/timeToJump,0,0));
+			}
+			
+			hittable = false;
+		}
+		
+		@Override
+		protected void triggerEvent() {
+			Room.roomSpeed.setIJK(0,0,0);
+			for (PlayerBodyPartAble bp : bodyParts) {
+				bp.setOrbitalRotation(new Vector3D(0,0,0));
+				bp.setOrbitalAngularVelocity(new Vector3D(0,0,0));
+			}
+			hittable = true;
+		}
+		
+	}
+	
 	protected static double playerSpeed = 1100;
 	protected static double playerTurningSpeed = 1.7;
 
@@ -31,8 +68,10 @@ public class MainCharacter extends Character implements  MouseMotionListener, Ke
 	
 	@Override
 	public void hit(double attackPower) {
-		super.hit(attackPower);
-		AudioManager.playDamageAudio(); //OOF
+		if (hittable) {
+			super.hit(attackPower);
+			AudioManager.playDamageAudio(); //OOF
+		}
 	}
 
 	public void die() {
@@ -71,17 +110,21 @@ public class MainCharacter extends Character implements  MouseMotionListener, Ke
 	@Override
 	public void keyPressed(KeyEvent e) {
 		
-		if (e.getKeyChar() == 'w') {
+		if ( (e.getKeyChar() == 'w' ) || (e.getKeyCode() == 87)) {
 			Room.roomSpeed.setIJK(0,0,-playerSpeed);
-		}else if (e.getKeyChar() == 's') {
+		}else if ((e.getKeyChar() == 's') || (e.getKeyCode() == 83)) {
 			Room.roomSpeed.setIJK(0,0,playerSpeed);
 		}
 		
-		if (e.getKeyChar() == 'd') {
+		if (e.getKeyCode() == 16) { //SHIFT key
+			JumpBackTimer j = new JumpBackTimer(this,300);
+		}
+		
+		if ((e.getKeyChar() == 'd') || (e.getKeyCode() == 68)) {
 			System.out.println("d");
 			((Vector3D) Room.roomAngV).setIJK(0,-1,0);
 			Room.roomAngV.multiply(playerTurningSpeed);
-		}if (e.getKeyChar() == 'a') {
+		}if ( (e.getKeyChar() == 'a') || (e.getKeyCode() == 65)) {
 			System.out.println("a");
 			((Vector3D) Room.roomAngV).setIJK(0,1,0);
 			Room.roomAngV.multiply(playerTurningSpeed);
@@ -103,9 +146,9 @@ public class MainCharacter extends Character implements  MouseMotionListener, Ke
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		if ((e.getKeyChar() ==  'w') || (e.getKeyChar() == 's')) {
+		if ((e.getKeyChar() ==  'w') || (e.getKeyChar() == 's')  || (e.getKeyCode() == 87)|| (e.getKeyCode() == 83)) {
 			((Vector3D) Room.roomSpeed).setIJK(0, 0, 0);
-		}else if ( (e.getKeyChar() == 'a') || (e.getKeyChar() == 'd') || (e.getExtendedKeyCode() == 40) || (e.getExtendedKeyCode() == 38)  ) {	
+		}else if ( (e.getKeyChar() == 'a') || (e.getKeyChar() == 'd')|| (e.getKeyCode() == 65) || (e.getKeyCode() == 68) || (e.getExtendedKeyCode() == 40) || (e.getExtendedKeyCode() == 38)  ) {	
 			((Vector3D) Room.roomAngV).setIJK(0,0,0);
 		}
 
