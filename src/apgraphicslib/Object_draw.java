@@ -70,6 +70,9 @@ public class Object_draw extends JPanel {
 			frameEndTime = System.nanoTime();	
 			
 			subCalcTime = 0;
+			
+			if ( (! Double.isFinite(frameStep)) || (frameStep <= 0) ) frameStep = 1;
+			
 			for (double frameCount = 0; frameCount < 1; frameCount += frameStep) {
 				updateStartTime = System.nanoTime();
 				//updateObjects(frameStep*Settings.frameTime); //update the objects
