@@ -7,6 +7,7 @@ package apgraphicslib;
  */
 public class Vector2D extends Vector implements Two_dimensional {
 	protected double i,j,theta;
+	protected boolean rectangularCalculated = true, polarCalculated = true;
 	
 	public Vector2D(int key) {
 		if (key != 1657934) {
@@ -16,15 +17,13 @@ public class Vector2D extends Vector implements Two_dimensional {
 	}
 	
 	public Vector2D(double xComponent, double yComponent) {
-		i = xComponent;
-		j = yComponent;
-		rectangularToPolar();
+		setI(xComponent);
+		setJ(yComponent);
 	}
 	
 	public Vector2D(Coordinate2D pI, Coordinate2D pF) {
-		i = pF.getX() - pI.getX();
-		j = pF.getY() - pI.getY();
-		rectangularToPolar();
+		setI(pF.getX() - pI.getX());
+		setJ(pF.getY() - pI.getY());
 	}
 
 	
@@ -34,8 +33,11 @@ public class Vector2D extends Vector implements Two_dimensional {
 	 * {@summary converts the rectangular values and updates the angles and r of the Vector}
 	 */
 	protected void rectangularToPolar() {
-		theta = Math.PI + Math.atan2(j,i);
-		r = Math.sqrt(Math.pow(i, 2) + Math.pow(j, 2));
+		if (! polarCalculated) {
+			theta = Math.PI + Math.atan2(j,i);
+			r = Math.sqrt(Math.pow(i, 2) + Math.pow(j, 2));
+			polarCalculated = true;
+		}
 	}
 	
 	/** 
@@ -52,8 +54,11 @@ public class Vector2D extends Vector implements Two_dimensional {
 	 * {@summary takes the polar values of the Vector and updates the rectangular values based off of them}
 	 */
 	protected void polarToRectangular() {
-		i = r * Math.cos(theta);
-		j = r * Math.sin(theta);
+		if (! rectangularCalculated) {
+			i = r * Math.cos(theta);
+			j = r * Math.sin(theta);
+			rectangularCalculated = true;
+		}
 	}
 	
 	/**
@@ -67,27 +72,60 @@ public class Vector2D extends Vector implements Two_dimensional {
 	}
 	
 	public double getI() {
+		polarToRectangular();
 		return i;
 	}
 	public double getJ() {
+		polarToRectangular();
 		return j;
 	}
+	
+	@Override
+	public double getR() {
+		rectangularToPolar();
+		return r;
+	}
 	public double getTheta() {
+		rectangularToPolar();
 		return theta;
 	}
 	
+	/**
+	 * 
+	 * @param r
+	 * 
+	 * {@summary Should NEVER be used inside a Vector class because it calls polarToRectangular()}
+	 * {@code sets the r of the vector and then calls polarToRectangular() @see polarToRectangular()}
+	 */
+	public void setR(double r) {
+		rectangularToPolar();
+		this.r = r;
+		rectangularCalculated = false;
+	}
+
+	public void setI(double newI) {
+		polarToRectangular();
+		i = newI;
+		polarCalculated = false;
+	}
+
+	public void setJ(double newJ) {
+		polarToRectangular();
+		this.j = newJ;
+		polarCalculated = false;
+	}
+
 	/**
 	 * @param Vector2D addVec
 	 * {@summary adds the passed vector to this Vector}
 	 */
 	public Vector2D add(Vector addVec) {
 		try {
-			i += ((Vector2D) addVec).getI();
-			j += ((Vector2D) addVec).getJ();
+			setI(((Vector2D) addVec).getI() + getI());
+			setJ(((Vector2D) addVec).getJ() + getJ());
 		}catch(ClassCastException c) {
 			setR(getR() + addVec.getR());
 		}
-    	rectangularToPolar();
     	return this;
 	}
 	
@@ -128,8 +166,7 @@ public class Vector2D extends Vector implements Two_dimensional {
 	 * @return 
 	 */
 	public Vector2D multiply(double multi) {
-		r *= multi;
-		polarToRectangular();
+		setR(getR() * multi);
 		return this;
 	}
 	
@@ -141,28 +178,6 @@ public class Vector2D extends Vector implements Two_dimensional {
 		return new Vector2D(getI() * multi,getJ() * multi);
 	}
 	
-	/**
-	 * 
-	 * @param r
-	 * 
-	 * {@summary Should NEVER be used inside a Vector class because it calls polarToRectangular()}
-	 * {@code sets the r of the vector and then calls polarToRectangular() @see polarToRectangular()}
-	 */
-	public void setR(double r) {
-		this.r = r;
-		polarToRectangular();
-	}
-	
-	public void setI(double newI) {
-		this.i = newI;
-		rectangularToPolar();
-	}
-	
-	public void setJ(double newJ) {
-		this.j = newJ;
-		rectangularToPolar();
-	}
-	
 	public void setTheta(double theta1) {
 		theta = theta1;
 		polarToRectangular();
@@ -170,8 +185,8 @@ public class Vector2D extends Vector implements Two_dimensional {
 	
 	@Override
 	public void setSize(double xSize, double ySize) {
-		i = xSize;
-		j = ySize;
+		setI(xSize);
+	    setJ(ySize);
 	}
 	
 
@@ -184,7 +199,7 @@ public class Vector2D extends Vector implements Two_dimensional {
 	public double getYSize() {	
 		return getJ();
 	}
-
+	
 	/**
 	 * @deprecated vectors do not have coordinates
 	 */

@@ -6,10 +6,10 @@ package apgraphicslib;
  *{@code NOTE: we use the spherical coordinate system for Vector3D which we call "polar". This is r, theta, and phi.        Vector3D has i,j,k,r,theta,phi}
  */
 public class Vector3D extends Vector2D implements Three_dimensional {
-	double k = 0, phi = 0;
+	protected double k = 0, phi = 0;
 	
 	/**
-	 * {@summary this constuctor should ONLY be used by the Dynamic point vector}
+	 * {@summary this constructor should ONLY be used by the Dynamic point vector}
 	 * @param key ensures only classes that know the key can use this constructor
 	 */
 	public Vector3D(int key) {
@@ -21,24 +21,22 @@ public class Vector3D extends Vector2D implements Three_dimensional {
 	}
 	
 	public Vector3D(double xComponent, double yComponent, double zComponent) {
-		super(xComponent, yComponent);
-		k = zComponent;
-		rectangularToPolar();
+		super(1657934);
+		setIJK(xComponent,yComponent,zComponent);
 	}
 	
 	public Vector3D(Coordinate3D pI, Coordinate3D pF) {
-		super(pF.getX()-pI.getX(),pF.getY()-pI.getY());
-		i = pF.getX() - pI.getX();
-		j = pF.getY() - pI.getY();
-		k = pF.getZ() - pI.getZ();
-		rectangularToPolar();
+		super(1657934);
+		setIJK(pF.getX() - pI.getX(),pF.getY() - pI.getY(),pF.getZ() - pI.getZ());
 	}
 	
 	public void setIJK(double i, double j, double k) {
+		//since we are setting all three we don't need to calculate rectangular
 		this.i = i;
 		this.j = j;
 		this.k = k;
-		rectangularToPolar();
+		rectangularCalculated = true;
+		polarCalculated = false;
 	}
 
 	public void setK(double newK) {
@@ -54,9 +52,12 @@ public class Vector3D extends Vector2D implements Three_dimensional {
 	 * {@summary sets the polar values of the Vector}
 	 */
 	public void setPolar(double r, double theta, double phi) {
+		//since we are setting everything we don't need to calculate polar
 		this.theta = theta;
 		this.phi = phi;
 		this.r = r;		
+		polarCalculated = true;
+		rectangularCalculated = false;
 	}
 	
 	/**
@@ -65,9 +66,10 @@ public class Vector3D extends Vector2D implements Three_dimensional {
 	 * @param phi
 	 */
 	public void setAngles(double theta, double phi) {
+		rectangularToPolar();
 		this.theta = theta;
 		this.phi = phi;
-		polarToRectangular();
+		rectangularCalculated = false;
 	}
 	
 	/**
@@ -75,14 +77,24 @@ public class Vector3D extends Vector2D implements Three_dimensional {
 	 */
 	@Override
 	protected void rectangularToPolar() {
-		r = (Math.sqrt(i*i + j*j + k*k));
 		
-		theta = Math.PI + Math.atan2(j,i);
-		
-		if (k == 0) {
-			phi = Math.PI/2;
-		}else {
-			phi = Math.acos(k/r);
+		if (! polarCalculated) {
+			
+			if (! rectangularCalculated) {
+				Exception e = new Exception("both polar and rectangular are not calculated");
+				e.printStackTrace();
+			}
+			
+			r = (Math.sqrt(i*i + j*j + k*k));
+			
+			theta = Math.PI + Math.atan2(j,i);
+			
+			if (k == 0) {
+				phi = Math.PI/2;
+			}else {
+				phi = Math.acos(k/r);
+			}
+			polarCalculated = true;
 		}
 	}
 	
@@ -91,9 +103,18 @@ public class Vector3D extends Vector2D implements Three_dimensional {
 	 */
 	@Override
 	protected void polarToRectangular() {
-		i = -getR() * Math.cos(getTheta()) * Math.sin(getPhi());
-		j = getR() * Math.sin(getTheta()) * Math.sin(getPhi());
-		k = getR() * Math.cos(getPhi());
+		if (! rectangularCalculated) {
+			
+			if (! polarCalculated) {
+				Exception e = new Exception("both polar and rectangular are not calculated");
+				e.printStackTrace();
+			}
+			
+			i = -r * Math.cos(theta) * Math.sin(phi);
+			j = r * Math.sin(theta) * Math.sin(phi);
+			k = r * Math.cos(phi);
+			rectangularCalculated = true;
+		}
 	}
 	
 	/**
@@ -245,10 +266,12 @@ public class Vector3D extends Vector2D implements Three_dimensional {
 	}
 
 	public double getK() {
+		polarToRectangular();
 		return k;
 	}
 	
 	public double getPhi() {
+		rectangularToPolar();
 		return phi;
 	}
 

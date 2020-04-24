@@ -6,7 +6,7 @@ package apgraphicslib;
  * {@summary A 1-dimensional vector in space with a magnitude but no direction. Children will be two, three, four+ dimensional}
  */
 public class Vector {
-	double r = 0;
+	protected double r = 0;
 	
 	public Vector() {}
 	

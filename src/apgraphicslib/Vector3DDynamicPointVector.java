@@ -13,6 +13,7 @@ public class Vector3DDynamicPointVector extends Vector3D {
 		super(1657934);
 		this.pI = pI;
 		this.pF = pF;
+		rectangularCalculated = true;
 	}
 	
 	/**
@@ -43,6 +44,7 @@ public class Vector3DDynamicPointVector extends Vector3D {
 		j = getJ();
 		k = getK();
 		
+		polarCalculated = false;
 		rectangularToPolar(); //calculate theta,phi
 		return theta;
 	}
@@ -52,7 +54,7 @@ public class Vector3DDynamicPointVector extends Vector3D {
 		i = getI();
 		j = getJ();
 		k = getK();
-		
+		polarCalculated = false;
 		rectangularToPolar(); //calculate theta,phi
 		return phi;
 	}
@@ -76,13 +78,42 @@ public class Vector3DDynamicPointVector extends Vector3D {
 	 * @deprecated
 	 * {@summary this doesn't do anything as DynamicPointVectors are only controlled by their points}
 	 */
+	public void setI(double i) {}
+	/**
+	 * @deprecated
+	 * {@summary this doesn't do anything as DynamicPointVectors are only controlled by their points}
+	 */
+	public void setJ(double j) {}
+	/**
+	 * @deprecated
+	 * {@summary this doesn't do anything as DynamicPointVectors are only controlled by their points}
+	 */
+	public void setK(double k) {}
+	/**
+	 * @deprecated
+	 * {@summary this doesn't do anything as DynamicPointVectors are only controlled by their points}
+	 */
+	public void setTheta(double theta) {}
+	/**
+	 * @deprecated
+	 * {@summary this doesn't do anything as DynamicPointVectors are only controlled by their points}
+	 */
+	public void setPhi(double phi) {}
+	/**
+	 * @deprecated
+	 * {@summary this doesn't do anything as DynamicPointVectors are only controlled by their points}
+	 */
 	public void setPolar(double r, double theta, double phi) {}
 	/**
 	 * @deprecated
 	 * {@summary this doesn't do anything as DynamicPointVectors are only controlled by their points}
 	 */
 	public void setAngles(double theta, double phi) {}
-	
+	/**
+	 * @deprecated
+	 * {@summary this doesn't do anything as DynamicPointVectors are only controlled by their points}
+	 */
+	public void setR() {}
 	/**
 	 * @deprecated
 	 * {@summary this doesn't do anything as DynamicPointVectors are only controlled by their points}
