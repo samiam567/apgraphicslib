@@ -3,8 +3,11 @@ package LegendOfJava;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import sun.audio.AudioPlayer;
-import sun.audio.AudioStream;
+//import sun.audio.AudioPlayer;
+//import sun.audio.AudioStream;
+
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 
 
 /**
@@ -23,9 +26,11 @@ public class AudioManager {
 	public static void playAudioFile(String filePath) {
 		InputStream audio;
 		try { 
-			audio = new FileInputStream(new File(filePath));
-			AudioStream audios = new AudioStream(audio);
-			AudioPlayer.player.start(audios);
+			File audioFile = new File(filePath);
+			
+			Clip clip = AudioSystem.getClip();
+			clip.open(AudioSystem.getAudioInputStream(audioFile));
+			clip.start();
 		}catch( Exception e) {
 			e.printStackTrace();
 		}

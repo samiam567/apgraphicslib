@@ -42,7 +42,7 @@ public class EnemyCharacter extends Character implements RoomObjectable {
 	@Override
 	protected void setBodyParts() {
 		super.setBodyParts();
-		head.textureSrc = "src/LegendOfJava/assets/enemyHead.jpg";
+		getHead().textureSrc = "src/LegendOfJava/assets/enemyHead.jpg";
 		rotatePoints(new Vector3D(0,Math.PI,0));
 		
 	}
@@ -65,13 +65,13 @@ public class EnemyCharacter extends Character implements RoomObjectable {
 		}
 		
 		double hpX, hpY;
-		hpX = head.getX() - Settings.width/2;
-		hpY = head.getY() - PlayerHead.headYSize - 10 - Settings.height/2;
+		hpX = getHead().getX() - Settings.width/2;
+		hpY = getHead().getY() - PlayerHead.headYSize - 10 - Settings.height/2;
 		
 		//as z gets bigger, the object gets further away from the viewer, and the object appears to be smaller
 		double parallaxValue = 1;
-		if (head.getZ() != 0) {
-			parallaxValue = (Settings.distanceFromScreen) / ((head.getZ()) + Settings.distanceFromScreen);
+		if (getHead().getZ() != 0) {
+			parallaxValue = (Settings.distanceFromScreen) / ((getHead().getZ()) + Settings.distanceFromScreen);
 		}
 
 		hpX *= parallaxValue;
@@ -99,8 +99,8 @@ public class EnemyCharacter extends Character implements RoomObjectable {
 	@Override
 	public void load() {
 		super.load();
-		head.rotatePoints(new Vector3D(0,Math.PI,0));
-		hpBar = new HealthBar(getDrawer(),head.getX(), head.getY() - PlayerHead.headYSize/3,this,10);
+		getHead().rotatePoints(new Vector3D(0,Math.PI,0));
+		hpBar = new HealthBar(getDrawer(),getHead().getX(), getHead().getY() - PlayerHead.headYSize/3,this,10);
 	}
 	
 	@Override

@@ -22,7 +22,6 @@ public class LegendOfJavaRunner {
 	private static HealthBar hpBar;
 	private static Room currentRoom;
 	private static Room endRoom;
-	private static int roomNumber = 0;
 	
 	public static void main(String[] args) {
 		//set the Settings:
@@ -176,8 +175,6 @@ public class LegendOfJavaRunner {
 		if (! cRoom.ppSizeSet) { // if we haven't already been to this node
 			System.out.println("Set platePointSize of " + cRoom.getName());
 			cRoom.setPPSize(ppSize);
-			//cRoom.ppSizeSet = true;
-			System.out.println("recursion!");
 			if (cRoom.nextRoom != null) {
 				setRoomPPSizeRecursive(cRoom.nextRoom, ppSize);
 			}
@@ -200,8 +197,8 @@ public class LegendOfJavaRunner {
 		System.out.println("loading next room...");
 		
 		drawer.pause();
+		Ryan.swordArm.swinging = false; //stop any sword swings
 		currentRoom.remove();
-		roomNumber++;
 		currentRoom = nextRoom;
 		console.setMessage(currentRoom.getName());
 		if (currentRoom.equals(endRoom)) {

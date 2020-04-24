@@ -19,46 +19,37 @@ public class SwordArm extends PlayerArm {
 		setSize(armXSize,armYSize,armZSize);
 		
 		
-		if (PlayerArm.swordArm == Side.left) {
-			if (parentPlayer.isMain) {
-				setPos(parentPlayer.leftArm.getX(),parentPlayer.leftArm.getY() + armYSize/2 + armZSize/2,parentPlayer.leftArm.getZ() + armYSize/2);
-			}else {
-				setPos(parentPlayer.leftArm.getX(),parentPlayer.leftArm.getY() + armYSize/2 + armZSize/2,parentPlayer.leftArm.getZ() - armYSize/2);
-			}
-		}else {
-			if (parentPlayer.isMain) {
-				setPos(parentPlayer.rightArm.getX(),parentPlayer.rightArm.getY() + armYSize/2 + armZSize/2,parentPlayer.rightArm.getZ() + armYSize/2);
-			}else {
-				setPos(parentPlayer.rightArm.getX(),parentPlayer.rightArm.getY() + armYSize/2 + armZSize/2,parentPlayer.rightArm.getZ() - armYSize/2);
-			}
-		}
+		setPositionRelativeToCharacter();
 		
 		sword = new Sword(this);
 		sword.setPointOfRotation(getCoordinates(), true);
-		parentPlayer.bodyParts.add(sword);
+		parentPlayer.getBodyParts().add(sword);
 		swinging = true;
+		setPositionRelativeToCharacter();
 	}
 
-	
+	private void setPositionRelativeToCharacter() {
+		if (PlayerArm.swordArm == Side.left) {
+			if (parentPlayer.isMain) {
+				setPos(parentPlayer.leftArm.getX(),parentPlayer.leftArm.getY() + armYSize/2 + armZSize/2,parentPlayer.leftArm.getZ() + armYSize);
+			}else {
+				setPos(parentPlayer.leftArm.getX(),parentPlayer.leftArm.getY() + armYSize/2 + armZSize/2,parentPlayer.leftArm.getZ() - armYSize);
+			}
+		}else {
+			if (parentPlayer.isMain) {
+				setPos(parentPlayer.rightArm.getX(),parentPlayer.rightArm.getY() + armYSize/2 + armZSize/2,parentPlayer.rightArm.getZ() + armYSize);
+			}else {
+				setPos(parentPlayer.rightArm.getX(),parentPlayer.rightArm.getY() + armYSize/2 + armZSize/2,parentPlayer.rightArm.getZ() - armYSize);
+			}
+		}
+	}
 
 	@Override
 	public void load() {
 		setTexture(textureSrc);
 		rotatePoints(new Vector3D(Math.PI/2, 0, 0));
 		reCalculateSize();
-		if (PlayerArm.swordArm == Side.left) {
-			if (parentPlayer.isMain) {
-				setPos(parentPlayer.leftArm.getX(),parentPlayer.leftArm.getY() + armYSize/2 + armZSize/2,parentPlayer.leftArm.getZ() + armYSize/2);
-			}else {
-				setPos(parentPlayer.leftArm.getX(),parentPlayer.leftArm.getY() + armYSize/2 + armZSize/2,parentPlayer.leftArm.getZ() - armYSize/2);
-			}
-		}else {
-			if (parentPlayer.isMain) {
-				setPos(parentPlayer.rightArm.getX(),parentPlayer.rightArm.getY() + armYSize/2 + armZSize/2,parentPlayer.rightArm.getZ() + armYSize/2);
-			}else {
-				setPos(parentPlayer.rightArm.getX(),parentPlayer.rightArm.getY() + armYSize/2 + armZSize/2,parentPlayer.rightArm.getZ() - armYSize/2);
-			}
-		}
+		setPositionRelativeToCharacter();
 	}
 	
 	@Override

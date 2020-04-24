@@ -1,5 +1,8 @@
 package apgraphicslib;
 
+import LegendOfJava.MainCharacter;
+import LegendOfJava.PlayerBodyPart;
+import LegendOfJava.PlayerBodyPartAble;
 import LegendOfJava.Pot;
 
 public class Physics_runner {
@@ -45,57 +48,58 @@ public class Physics_runner {
 		
 		
 		//Egg square2 = new Egg(drawer,Settings.width/2,Settings.height/2,0,30,2);
-		//Physics_3DTexturedPolygon square1 = new Physics_3DTexturedPolygon(drawer,Settings.width/2,Settings.height/2,0,1);
-		//square1.setName("square1");
+		/*
+		Physics_3DTexturedPolygon square1 = new Physics_3DTexturedPolygon(drawer,Settings.width/2,Settings.height/2,0,1);
+		square1.setName("square1");
 		
 	
-		/*
+		
 
-		double xSize = 330;
-		double ySize = 90;
+		double xSize = 500;
+		double ySize = 500;
 		square1.setSize(xSize,ySize);
 		square1.addPoint(-xSize/2,-ySize/2);
 		square1.addPoint(xSize/2,-ySize/2);
 		square1.addPoint(xSize/2,ySize/2);
 		square1.addPoint(-xSize/2,ySize/2);
 	
-		square1.setTexture("src/LegendOfJava/assets/sword.png");
+		square1.setTexture("src/LegendOfJava/assets/texture.jpg");
+	
 		
 		square1.rotatePoints(new Vector3D(0,0,Math.PI/2));
 		
 		
 	
-		square2.setTexture("src/LegendOfJava/assets/heart.png");
 		
-		square2.rotatePoints(new Vector3D(0,0,Math.PI/2));
-		
-		square2.setAngularVelocity(new Vector3D(0.7,0.7,0.7));
-		
-	
-		
-
-		//drawer.add(square1);
-		drawer.add(square2);
-		
-		Coordinate3D rotPoint = new Coordinate3D(400,500,0);
-
-		square1.setPointOfRotation(rotPoint,true);
+		drawer.add(square1);
 
 		*/
 		
-		Pot pot1 = new Pot(drawer,Settings.width/2, Settings.height/2,10,100,200,100,5);
+		MainCharacter Ryan = new MainCharacter(drawer);
+		Ryan.setPos(Settings.width/2, Settings.height/2);
+		drawer.add(Ryan);
+		drawer.removeMouseMotionListener(Ryan);
+		drawer.removeKeyListener(Ryan);
 		
+		Vector3D rotVec = new Vector3D(0,0.5,0);
+		for (PlayerBodyPartAble bP : Ryan.getBodyParts()) {
+			bP.setPointOfRotation(Ryan.getHead().getCoordinates(), true);
+			bP.setOrbitalAngularVelocity(rotVec);
+		}
 		
+		Coordinate3D rotPoint = new Coordinate3D(400,500,0);
+
+		//square1.setPointOfRotation(rotPoint,true);
+
+
+
 	
 		
 		
 		
 		
 		drawer.start();
-		drawer.add(pot1);
 	
-		pot1.setAngularVelocity(new Vector3D(0.2,0.2,0.2));
-		
 		//wait for close
 		while (drawer.getFrame().isActive()) {
 			try {

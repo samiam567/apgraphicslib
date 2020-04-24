@@ -13,6 +13,9 @@ public class MainCharacter extends Character implements  MouseMotionListener, Ke
 	protected static double playerSpeed = 23;
 	protected static double playerTurningSpeed = 0.85;
 	
+	private static double initXPos = Settings.width/2;
+	private static double initYPos = Settings.height - PlayerTorso.torsoYSize - PlayerHead.headYSize - 50;
+	private static double initZPos = 250;
 	public MainCharacter(Object_draw drawer) {
 		super(drawer,Settings.width/2, Settings.height - PlayerTorso.torsoYSize - PlayerHead.headYSize-50, 250);
 		isMain = true;

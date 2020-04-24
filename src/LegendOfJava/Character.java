@@ -71,7 +71,7 @@ public class Character extends Physics_3DPolygon implements Hittable {
 	public void remove() {
 		getDrawer().pause();
 		getDrawer().remove(this);
-		for (PlayerBodyPartAble bP : bodyParts) {
+		for (PlayerBodyPartAble bP : getBodyParts()) {
 			getDrawer().remove(bP);
 		}
 		getDrawer().resume();
@@ -93,7 +93,7 @@ public class Character extends Physics_3DPolygon implements Hittable {
 	
 	public void load() {
 		setBodyParts();
-		head.load();
+		getHead().load();
 		leftArm.load();
 		rightArm.load();
 		swordArm.load();
@@ -105,17 +105,17 @@ public class Character extends Physics_3DPolygon implements Hittable {
 		if (! loaded) load();
 		
 		getDrawer().add(this);
-		for (PlayerBodyPartAble bP : bodyParts) {
+		for (PlayerBodyPartAble bP : getBodyParts()) {
 			getDrawer().add(bP);
 		}
 		
 	}
 	
 	protected void setBodyParts() {
-		for (PlayerBodyPartAble bP : bodyParts) {
+		for (PlayerBodyPartAble bP : getBodyParts()) {
 			getDrawer().remove(bP);
 		}
-		bodyParts.clear();
+		getBodyParts().clear();
 		
 		if (isMain) {
 			head = new MainCharacterHead(this,ppSize); //this version is tangible
@@ -123,26 +123,26 @@ public class Character extends Physics_3DPolygon implements Hittable {
 			head = new PlayerHead(this,ppSize);
 		}
 		
-		head.setName(getName() + " head"); 
-		bodyParts.add(head);
+		getHead().setName(getName() + " head"); 
+		getBodyParts().add(getHead());
 		
 		
-		torso = new PlayerTorso(this,head.getX(), head.getY() + PlayerTorso.torsoYSize + PlayerHead.headYSize,ppSize);
+		torso = new PlayerTorso(this,getHead().getX(), getHead().getY() + PlayerTorso.torsoYSize + PlayerHead.headYSize,ppSize);
 		torso.setName(getName() + " torso");
-		bodyParts.add(torso);
+		getBodyParts().add(torso);
 		
-		leftArm = new PlayerArm(this,head.getX() - PlayerTorso.torsoXSize - PlayerArm.armXSize*2, head.getY() + PlayerHead.headYSize/2 + PlayerArm.armYSize/2, Side.left,ppSize);
+		leftArm = new PlayerArm(this,getHead().getX() - PlayerTorso.torsoXSize - PlayerArm.armXSize*2, getHead().getY() + PlayerHead.headYSize/2 + PlayerArm.armYSize/2, Side.left,ppSize);
 		leftArm.setName(getName() + " leftArm");
 		
-		rightArm = new PlayerArm(this,head.getX() + PlayerTorso.torsoXSize + PlayerArm.armXSize*2,head.getY() + PlayerHead.headYSize/2 + PlayerArm.armYSize/2, Side.right,ppSize);
+		rightArm = new PlayerArm(this,getHead().getX() + PlayerTorso.torsoXSize + PlayerArm.armXSize*2,getHead().getY() + PlayerHead.headYSize/2 + PlayerArm.armYSize/2, Side.right,ppSize);
 		rightArm.setName(getName() + " rightArm");
 		
 		swordArm = new SwordArm(this, ppSize);
 		
 		
-		bodyParts.add(leftArm);
-		bodyParts.add(rightArm);
-		bodyParts.add(swordArm);
+		getBodyParts().add(leftArm);
+		getBodyParts().add(rightArm);
+		getBodyParts().add(swordArm);
 		
 		
 		/*
@@ -150,9 +150,9 @@ public class Character extends Physics_3DPolygon implements Hittable {
 		rightLeg = new PlayerLeg(this,Side.right);
 		*/	
 		
-		setPos(head.getX(),head.getY(),head.getZ());
+		setPos(getHead().getX(),getHead().getY(),getHead().getZ());
 		
-		prevPos.setPos(head.getX(),head.getY(),head.getZ());
+		prevPos.setPos(getHead().getX(),getHead().getY(),getHead().getZ());
 	}
 	
 	
@@ -161,7 +161,7 @@ public class Character extends Physics_3DPolygon implements Hittable {
 		super.Update(frames);		
 		
 		//move the body parts along with this Character object probably the most difficult way possible
-		for (PlayerBodyPartAble bP : bodyParts) {
+		for (PlayerBodyPartAble bP : getBodyParts()) {
 			bP.setPos(bP.getX() - prevPos.getX(), bP.getY() - prevPos.getY(),bP.getZ() - prevPos.getZ());
 			bP.setPos(bP.getX() + getX(), bP.getY() + getY(),bP.getZ() + getZ());
 		}
@@ -179,6 +179,14 @@ public class Character extends Physics_3DPolygon implements Hittable {
 	public void setPPSize(int playerPPSize) {
 		ppSize = playerPPSize;
 		loaded = false;
+	}
+
+	public LinkedList<PlayerBodyPartAble> getBodyParts() {
+		return bodyParts;
+	}
+
+	public PlayerHead getHead() {
+		return head;
 	}
 
 }

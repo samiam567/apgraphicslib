@@ -9,8 +9,8 @@ public class PlayerTorso extends PlayerBodyPart {
 
 	public PlayerTorso(Character parentPlayer, double x, double y, int ppSize) {
 		super(parentPlayer, x, y,parentPlayer.getZ(), ppSize);
-
-		textureSrc = "src/LegendOfJava/assets/texture.jpg";
+		
+		textureSrc = "src/LegendOfJava/assets/shieldAndSword.jpg";
 		
 		setSize(torsoXSize,torsoYSize,torsoZSize);
 		
