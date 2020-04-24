@@ -19,7 +19,7 @@ public class MainCharacter extends Character implements  MouseMotionListener, Ke
 	 *
 	 */
 	private class JumpBackTimer extends Timer {
-		private static final double timeToJump = 0.7;
+		private static final double timeToJump = 0.4;
 
 		private double units;
 		public JumpBackTimer(MainCharacter player, double units) {
