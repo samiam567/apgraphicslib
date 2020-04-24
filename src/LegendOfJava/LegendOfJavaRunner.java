@@ -126,10 +126,10 @@ public class LegendOfJavaRunner {
 			roomPPSize = 10;
 			playerPPSize = 5;
 		}else if (options[graphicsSetting].equals("high")) {
-			roomPPSize = 5;
+			roomPPSize = 6;
 			playerPPSize = 3;
 		}else if (options[graphicsSetting].equals("extreme")) {
-			roomPPSize = 1;
+			roomPPSize = 2;
 			playerPPSize = 1;
 		}
 		

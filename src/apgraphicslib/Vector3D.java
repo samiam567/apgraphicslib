@@ -177,7 +177,7 @@ public class Vector3D extends Vector2D implements Three_dimensional {
 	}
 	
 	/**
-	 * {@code WARNING this method uses the temp protocol. If the return isn't immediately used it may be overritten causing terrible awful errors}
+	 * {@code WARNING this method uses the temp protocol. If the return isn't IMMEDIATELY used it may be overwritten causing terrible awful errors}
 	 * @return a Vector representing the scaling of this Vector by the multiple without changing this vector
 	 */
 	@Override
@@ -206,7 +206,7 @@ public class Vector3D extends Vector2D implements Three_dimensional {
 	}
 	
 	/**
-	 * {@code WARNING this method uses the temp protocol. If the return isn't immediately used it may be overritten causing terrible awful errors}
+	 * {@code WARNING this method uses the temp protocol. If the return isn't IMMEDIATELY used it may be overwritten causing terrible awful errors}
 	 * {@summary adds the passed Vector to this Vector without changing this Vector}
 	 * @return a Vector3D representing the addition of this Vector and the passed Vector
 	 */

@@ -10,8 +10,8 @@ import apgraphicslib.Settings;
 import apgraphicslib.Vector3D;
 
 public class MainCharacter extends Character implements  MouseMotionListener, KeyListener {
-	protected static double playerSpeed = 300;
-	protected static double playerTurningSpeed = 0.9;
+	protected static double playerSpeed = 1100;
+	protected static double playerTurningSpeed = 1.7;
 
 	public MainCharacter(Object_draw drawer) {
 		super(drawer,Settings.width/2, Settings.height - PlayerTorso.torsoYSize - PlayerHead.headYSize-50, 250);
