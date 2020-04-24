@@ -40,9 +40,9 @@ public class Object_draw extends JPanel {
 
 	public int inactivity_timer = 0;
 	
-	private double frameCount = 0, updateCount = 0, frameStep = 0.1, actualFPS = 1/Settings.frameTime;
+	private double updateCount = 0, frameStep = 0.1, actualFPS = Settings.targetFPS;
 	private long updateStartTime, updateEndTime, frameStartTime, frameEndTime, subCalcTime, lastPaintTime;
-	private double frameTime = Settings.frameTime;
+	private double frameTime = 1/Settings.targetFPS;
 	
 	public Object_draw() {
 		frame = new Physics_frame(this);
@@ -50,6 +50,60 @@ public class Object_draw extends JPanel {
 		threader = new Object_draw_update_thread(this);
 	}
 	
+	public void doUpdate() { //for update thread. Updates the objects
+		try {			
+			frameStartTime = System.nanoTime();	
+			prePaintUpdateObjects();
+			checkForResize();
+			repaint();
+			actualFPS = 1000000000/((double)(System.nanoTime() - lastPaintTime));
+			lastPaintTime = System.nanoTime();
+			
+			
+			if (frameStep > 1) {
+				frameStep = 1;
+				frameTime *= frameStep;
+			}else if (frameStep != 1){
+				frameTime *= Math.sqrt(Settings.targetFPS/frameTime);
+			}
+			
+			frameEndTime = System.nanoTime();	
+			
+			subCalcTime = 0;
+			for (double frameCount = 0; frameCount < 1; frameCount += frameStep) {
+				updateStartTime = System.nanoTime();
+				//updateObjects(frameStep*Settings.frameTime); //update the objects
+				updateObjects((1 / ( (int) 1/frameStep )) / getActualFPS());
+				checkForCollisions(); //check for collisions between the tangibles
+				frameCount += frameStep;
+				updateCount++;
+				
+				updateEndTime = System.nanoTime();	
+				subCalcTime += ((long)( (updateEndTime - updateStartTime)));
+			}
+			
+			subCalcTime *= frameStep;
+			
+			
+			
+			frameStep += ((double) subCalcTime) / ((1000000000/Settings.targetFPS) - (frameEndTime-frameStartTime));
+			frameStep /= 2; // the averaging of the two numbers keeps the system from freezing during big changes (like adding objects)
+			
+		
+			
+		
+	
+	    }catch(ConcurrentModificationException c) {
+	    	c.printStackTrace();
+		}catch(NullPointerException e) {
+			out.println("nullPointer in object_draw.java");
+			e.printStackTrace();
+		}catch(NoSuchElementException n) {//if the element was deleted while this process was being run	(hopefully)	
+			n.printStackTrace();
+		} 	
+		
+	}
+
 	@Override
 	public void update(Graphics page) { //I believe this gets rid of flickering
 		paint(page);
@@ -334,61 +388,6 @@ public class Object_draw extends JPanel {
 		return resizables;
 	}
 
-	public void doUpdate() { //for update thread. Updates the objects
-		try {			
-			frameStartTime = System.nanoTime();	
-			prePaintUpdateObjects();
-			checkForResize();
-			repaint();
-			actualFPS = 1000000000/((double)(System.nanoTime() - lastPaintTime));
-			lastPaintTime = System.nanoTime();
-			
-			
-			if (frameStep > 1) {
-				frameStep = 1;
-				frameTime *= frameStep;
-			}else if (frameStep != 1){
-				frameTime *= Math.sqrt(Settings.frameTime/frameTime);
-			}
-			
-			frameEndTime = System.nanoTime();	
-			
-			frameCount = 0;
-			subCalcTime = 0;
-			for (int i = 0; i < 1/frameStep; i++) {
-				updateStartTime = System.nanoTime();
-				//updateObjects(frameStep*Settings.frameTime); //update the objects
-				updateObjects((1 / ( (int) 1/frameStep )) / actualFPS);
-				checkForCollisions(); //check for collisions between the tangibles
-				frameCount += frameStep;
-				updateCount++;
-				
-				updateEndTime = System.nanoTime();	
-				subCalcTime += ((long)( (updateEndTime - updateStartTime)));
-			}
-			
-			subCalcTime *= frameStep;
-			
-			
-			
-			frameStep += ((double) subCalcTime) / (Settings.frameTime*1000000000 - (frameEndTime-frameStartTime));
-			frameStep /= 2; // the averaging of the two numbers keeps the system from freezing during big changes (like adding objects)
-			
-		
-			
-		
-
-	    }catch(ConcurrentModificationException c) {
-	    	c.printStackTrace();
-		}catch(NullPointerException e) {
-			out.println("nullPointer in object_draw.java");
-			e.printStackTrace();
-		}catch(NoSuchElementException n) {//if the element was deleted while this process was being run	(hopefully)	
-			n.printStackTrace();
-		} 	
-		
-	}
-	
 	public void paint(Graphics page) {
 		drawables.sort(new Comparator<Drawable>() {
 			@Override
@@ -425,6 +424,10 @@ public class Object_draw extends JPanel {
 
 	public Physics_frame getFrame() {
 		return frame;
+	}
+
+	public double getActualFPS() {
+		return actualFPS;
 	}
 	
 

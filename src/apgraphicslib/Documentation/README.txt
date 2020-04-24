@@ -14,4 +14,11 @@ break the pots (brown cylinders in the corner) to restore your hearts!
 Coding notes:
 ----------------
 
-Recursion is used in the method setRoomPPSizeRecursive() in the file LegendOfJavaRunner to traverse the binary tree of rooms
+
+
+----------------
+Important Methods:
+----------------
+
+All of the time control is done in Object_draw.doUpdate();
+Recursion is used in the method LegendOfJavaRunner.setRoomPPSizeRecursive() to traverse the binary tree of rooms

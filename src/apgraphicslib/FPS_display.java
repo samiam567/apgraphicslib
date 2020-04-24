@@ -13,11 +13,7 @@ public class FPS_display extends ScoreBoard {
 	}
 
 	public void paint(Graphics page) {
-		if (loops % 10 == 0) {
-			setScore(1000000000/((double)(System.nanoTime() - lastRenderTime))); //set the displayValue to the frequency this object is being painted
-		}
-		loops++;
-		lastRenderTime = System.nanoTime();
+		setScore(getDrawer().getActualFPS());
 		super.paint(page);
 		
 	}

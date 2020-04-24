@@ -15,7 +15,7 @@ public abstract class Physics_2DDrawMovable extends Physics_drawable implements 
 	 */
 	@Override
 	public void Update(double frames) {
-		getCoordinates().add(speed);
+		getCoordinates().add(speed.statMultiply(frames));
 		speed.add(acceleration.statMultiply(frames));
 	}
 	

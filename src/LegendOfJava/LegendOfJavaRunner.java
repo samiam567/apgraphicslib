@@ -26,7 +26,7 @@ public class LegendOfJavaRunner {
 	public static void main(String[] args) {
 		//set the Settings:
 		Settings.perspective = true;
-		Settings.frameTime = 1D/30; //attempt to make the FPS 30
+		Settings.targetFPS = 30; //attempt to make the FPS 30
 		Settings.width = 1000;
 		Settings.height = 800;
 		Settings.depth = 1000;

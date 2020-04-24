@@ -10,12 +10,9 @@ import apgraphicslib.Settings;
 import apgraphicslib.Vector3D;
 
 public class MainCharacter extends Character implements  MouseMotionListener, KeyListener {
-	protected static double playerSpeed = 23;
-	protected static double playerTurningSpeed = 0.85;
-	
-	private static double initXPos = Settings.width/2;
-	private static double initYPos = Settings.height - PlayerTorso.torsoYSize - PlayerHead.headYSize - 50;
-	private static double initZPos = 250;
+	protected static double playerSpeed = 300;
+	protected static double playerTurningSpeed = 0.9;
+
 	public MainCharacter(Object_draw drawer) {
 		super(drawer,Settings.width/2, Settings.height - PlayerTorso.torsoYSize - PlayerHead.headYSize-50, 250);
 		isMain = true;
