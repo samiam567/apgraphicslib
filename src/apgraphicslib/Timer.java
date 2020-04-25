@@ -28,8 +28,7 @@ public abstract class Timer extends Physics_object implements Updatable {
 		e.printStackTrace();
 	}
 	
-	private void checkTimerOver() {
-		
+	private void checkTimerOver() {	
 		if (timePassed >= timeAmount) {
 			triggerEvent();
 			getDrawer().remove(this);
