@@ -12,7 +12,7 @@ import apgraphicslib.Vector3D;
 
 public class MainCharacter extends Character implements  MouseMotionListener, KeyListener {
 	
-	private boolean hittable = true;
+	
 	/**
 	 * 
 	 * {@code creating one of these will cause the mainCharacter to jump back the passed number of units}
@@ -21,10 +21,9 @@ public class MainCharacter extends Character implements  MouseMotionListener, Ke
 	private class JumpBackTimer extends Timer {
 		private static final double timeToJump = 0.4;
 
-		private double units;
 		public JumpBackTimer(MainCharacter player, double units) {
 			super(player.getDrawer(), timeToJump, TimerUnits.seconds);
-			this.units = units;
+
 			Room.roomSpeed.setIJK(0,0,units / timeToJump);
 			
 			for (PlayerBodyPartAble bp : bodyParts) {
@@ -47,6 +46,7 @@ public class MainCharacter extends Character implements  MouseMotionListener, Ke
 		
 	}
 	
+	private boolean hittable = true; //whether or not we can currently be hit
 	protected static double playerSpeed = 1100;
 	protected static double playerTurningSpeed = 1.7;
 
