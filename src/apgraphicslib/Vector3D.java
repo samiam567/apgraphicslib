@@ -93,7 +93,7 @@ public class Vector3D extends Vector2D implements Three_dimensional {
 		*/	
 			r = (Math.sqrt(i*i + j*j + k*k));
 			
-			theta = Math.PI + Math.atan2(j,i);
+			theta = /*Math.PI +*/ Math.atan2(j,i);
 			
 			if (k == 0) {
 				phi = Math.PI/2;

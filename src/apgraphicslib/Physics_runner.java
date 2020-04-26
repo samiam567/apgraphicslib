@@ -14,7 +14,7 @@ public class Physics_runner {
 
 		@Override 
 		protected double[] equation(double theta, double phi) {
-			boolean egg = true;
+			boolean egg = false;
 			
 			
 			if (egg) {
@@ -35,7 +35,7 @@ public class Physics_runner {
 	}
 	
 	public static void main(String[] args) {
-		Settings.perspective = false;
+		Settings.perspective = true;
 		Settings.targetFPS = 60;
 
 		drawer.add(new Object_border_tether(drawer));
@@ -43,7 +43,7 @@ public class Physics_runner {
 		drawer.add(new FCPS_display(drawer, Settings.width * 0.01 + 45, Settings.height*0.05 + 15));
 		
 		
-		Egg square2 = new Egg(drawer,Settings.width/2,Settings.height/2,0,100,200,150,3);
+		Egg square2 = new Egg(drawer,Settings.width/2,Settings.height/2,0,100,200,150,5);
 		/*
 		Physics_3DTexturedPolygon square1 = new Physics_3DTexturedPolygon(drawer,Settings.width/2,Settings.height/2,0,1);
 		square1.setName("square1");
@@ -75,7 +75,7 @@ public class Physics_runner {
 		
 		drawer.add(square2);
 		
-		square2.setAngularVelocity(new Vector3D(0.00001,0.0000001,1));
+		square2.setAngularVelocity(new Vector3D(1,0,1));
 		
 		drawer.start();
 	

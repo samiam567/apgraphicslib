@@ -111,7 +111,7 @@ public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimens
 				setPos(AffineRot.planeRotPhi.a * getX() + AffineRot.planeRotPhi.b * getZ(), getY(), AffineRot.planeRotPhi.c * getX() + AffineRot.planeRotPhi.d * getZ()); //rotate to match theta
 				
 				//rotate in the plane of the Vector
-				setPos(AffineRot.planeRotation.a * getX() + AffineRot.planeRotation.b * getZ(), getY(), AffineRot.planeRotation.c * getX() + AffineRot.planeRotation.d * getZ()); //rotate to match theta
+				setPos(AffineRot.planeRotation.a * getX() + AffineRot.planeRotation.b * getY(), AffineRot.planeRotation.c * getX() + AffineRot.planeRotation.d * getY(), getZ()); //rotate to match theta
 				
 				//rotate back to original position
 				setPos(AffineRot.negativePlaneRotPhi.a * getX() + AffineRot.negativePlaneRotPhi.b * getZ(), getY(), AffineRot.negativePlaneRotPhi.c * getX() + AffineRot.negativePlaneRotPhi.d * getZ()); //rotate to match theta
