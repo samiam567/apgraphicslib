@@ -3,7 +3,7 @@ package apgraphicslib;
 import java.awt.Color;
 
 public abstract class Settings {
-	public static final String version = "2.0.9.4";
+	public static final String version = "2.0.10.1";
 	
 	public static int width = (int) (1000);
 	public static int height = (int) (800);
@@ -20,5 +20,5 @@ public abstract class Settings {
 	public static double targetFPS = 30; //a number 1D/60 will make the frameRate around 60 fps (first number MUST be a decimal) unless the engine isn't fast enough to keep up
 	public static boolean autoResizeFrame = true;
 
-	public static boolean advancedRotation = true;;
+	public static boolean advancedRotation = true; //rotation ABOUT Vectors rather than an x, y, and z rotation each with magnatude of the Vector's components
 }
