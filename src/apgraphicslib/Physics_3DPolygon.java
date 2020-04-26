@@ -6,6 +6,7 @@ public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimens
 	
 	private double zSize;
 	
+	
 	public class AffineRotation3D extends AffineRotation {
 		
 		//for the rot matrices, a 5 will be replaced by a trig function in the calculateRotation() method
@@ -29,24 +30,15 @@ public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimens
 		};
 		
 		private double[][] affRotMatrix;
+		private AffineRotation planeRotTheta = new AffineRotation(), planeRotPhi = new AffineRotation(), negativePlaneRotTheta = new AffineRotation(), negativePlaneRotPhi = new AffineRotation(), planeRotation = new AffineRotation();
+		private boolean advancedRotation = false;
+		public AffineRotation3D() {
 		
-		public AffineRotation3D(Vector3D rotation) {
-			this.rotation = rotation;
 		}
 		
-		/**
-		 * {@summary will create a AffineRotation that will rotate the points rotation radians MORE than they already are rotated}
-		 */
-		@Override
-		public void calculateRotation(Vector rotation) {
-
-			Vector3D rotTemp = ((Vector3D) rotation);
-			this.rotation = rotTemp;
+		public void calculateRotation(double xTheta, double yTheta, double zTheta) {
 			
 			
-			double xTheta = ((Vector3D) this.rotation).getI();
-			double yTheta = ((Vector3D) this.rotation).getJ();
-			double zTheta = ((Vector3D) this.rotation).getK();
 			
 			//xRotation
 			xRot[1][1] = Math.cos(xTheta);
@@ -69,7 +61,29 @@ public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimens
 			affRotMatrix = Physics_engine_toolbox.matrixMultiply(xRot, yRot);
 			affRotMatrix = Physics_engine_toolbox.matrixMultiply(affRotMatrix, zRot);
 		}
+		
+		/**
+		 * {@summary will create a AffineRotation that will rotate the points rotation radians MORE than they already are rotated AROUND the passed Vector with the manitude of the passed vector}
+		 */
+		@Override
+		public void calculateRotation(Vector rotation) {
+			Vector3D rotTemp = ((Vector3D) rotation);
+			
+			if ( (rotTemp.getI()*rotTemp.getJ() + rotTemp.getJ() * rotTemp.getK() + rotTemp.getI() * rotTemp.getK() == 0) || (! Settings.advancedRotation) ) {
+				advancedRotation = false;
+				calculateRotation(rotTemp.getI(),rotTemp.getJ(),rotTemp.getK()); //we only are rotating in one dimension
+			}else {
+				advancedRotation = true;
+				planeRotTheta.calculateRotation(new Vector(rotTemp.getTheta()));
+				planeRotPhi.calculateRotation(new Vector(rotTemp.getPhi()));
+				planeRotation.calculateRotation(new Vector(rotTemp.getR()));
+				negativePlaneRotPhi.calculateRotation(new Vector(-rotTemp.getPhi()));
+				negativePlaneRotTheta.calculateRotation(new Vector(-rotTemp.getTheta()));
+				
+			}
+		}
 	}
+	
 	protected class Point3D extends Coordinate3D implements PolyPoint {
 		//multi-purpose lists for rotation
 		private double[] rotMagsStat = new double[3];
@@ -89,17 +103,33 @@ public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimens
 		
 		public void rotate(AffineRotation rot) {
 			AffineRotation3D AffineRot = (AffineRotation3D) rot;
-			double[][] coords = {
-					{getX()}, 
-					{getY()},
-					{getZ()},
-					{0},
-			};
+			if (AffineRot.advancedRotation) {
+				
+				
+				//rotate to the plane of the Vector
+				setPos(AffineRot.planeRotTheta.a * getX() + AffineRot.planeRotTheta.b * getY(), AffineRot.planeRotTheta.c * getX() + AffineRot.planeRotTheta.d * getY()); //rotate to match phi
+				setPos(AffineRot.planeRotPhi.a * getX() + AffineRot.planeRotPhi.b * getZ(), getY(), AffineRot.planeRotPhi.c * getX() + AffineRot.planeRotPhi.d * getZ()); //rotate to match theta
+				
+				//rotate in the plane of the Vector
+				setPos(AffineRot.planeRotation.a * getX() + AffineRot.planeRotation.b * getZ(), getY(), AffineRot.planeRotation.c * getX() + AffineRot.planeRotation.d * getZ()); //rotate to match theta
+				
+				//rotate back to original position
+				setPos(AffineRot.negativePlaneRotPhi.a * getX() + AffineRot.negativePlaneRotPhi.b * getZ(), getY(), AffineRot.negativePlaneRotPhi.c * getX() + AffineRot.negativePlaneRotPhi.d * getZ()); //rotate to match theta
+				setPos(AffineRot.negativePlaneRotTheta.a * getX() + AffineRot.negativePlaneRotTheta.b * getY(), AffineRot.negativePlaneRotTheta.c * getX() + AffineRot.negativePlaneRotTheta.d * getY()); //rotate to match phi
+				
+				
+			}else {
+				double[][] coords = {
+						{getX()}, 
+						{getY()},
+						{getZ()},
+						{0},
+				};
+				
+				double[][] newCoords = Physics_engine_toolbox.matrixMultiply(AffineRot.affRotMatrix, coords,false);
+				setPos(newCoords[0][0],newCoords[1][0],newCoords[2][0]);
+			}
 			
-			double[][] newCoords = Physics_engine_toolbox.matrixMultiply(AffineRot.affRotMatrix, coords,false);
-			setPos(newCoords[0][0],newCoords[1][0],newCoords[2][0]);
-			
-			//rotate(((AffineRotation3D)rot).rotation);
 		}
 		
 		//My method
@@ -159,7 +189,7 @@ public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimens
 		orbitalAngularAcceleration = new Vector3D(0,0,0);
 		orbitalAngularVelocity = new Vector3D(0,0,0);
 		speed = new Vector3D(0,0,0);
-		rotationMatrix = new AffineRotation3D((Vector3D)rotation);
+		rotationMatrix = new AffineRotation3D();
 		pointOfRotation = coordinates;
 		pORCoordsTemp = new Coordinate3D(0,0,0);
 	}
@@ -174,7 +204,7 @@ public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimens
 		orbitalAngularAcceleration = new Vector3D(0,0,0);
 		orbitalAngularVelocity = new Vector3D(0,0,0);
 		speed = new Vector3D(0,0,0);
-		rotationMatrix = new AffineRotation3D((Vector3D)rotation);
+		rotationMatrix = new AffineRotation3D();
 		setPos(x,y,z);
 		pointOfRotation = coordinates;
 		pORCoordsTemp = new Coordinate3D(0,0,0);

@@ -14,7 +14,7 @@ public class Physics_runner {
 
 		@Override 
 		protected double[] equation(double theta, double phi) {
-			boolean egg = false;
+			boolean egg = true;
 			
 			
 			if (egg) {
@@ -35,7 +35,7 @@ public class Physics_runner {
 	}
 	
 	public static void main(String[] args) {
-		Settings.perspective = true;
+		Settings.perspective = false;
 		Settings.targetFPS = 60;
 
 		drawer.add(new Object_border_tether(drawer));
@@ -75,7 +75,7 @@ public class Physics_runner {
 		
 		drawer.add(square2);
 		
-		square2.setAngularVelocity(new Vector3D(0.3,0.3,0.3));
+		square2.setAngularVelocity(new Vector3D(0.00001,0.0000001,1));
 		
 		drawer.start();
 	

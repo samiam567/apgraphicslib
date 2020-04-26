@@ -19,4 +19,6 @@ public abstract class Settings {
 	
 	public static double targetFPS = 30; //a number 1D/60 will make the frameRate around 60 fps (first number MUST be a decimal) unless the engine isn't fast enough to keep up
 	public static boolean autoResizeFrame = true;
+
+	public static boolean advancedRotation = true;;
 }
