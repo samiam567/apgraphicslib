@@ -122,17 +122,17 @@ public class MainCharacter extends Character implements  MouseMotionListener, Ke
 		
 		if ((e.getKeyChar() == 'd') || (e.getKeyCode() == 68)) {
 			System.out.println("d");
-			((Vector3D) Room.roomAngV).setIJK(0,-1,0);
+			((Vector3D) Room.roomAngV).setIJK(0,1,0);
 			Room.roomAngV.multiply(playerTurningSpeed);
 		}if ( (e.getKeyChar() == 'a') || (e.getKeyCode() == 65)) {
 			System.out.println("a");
-			((Vector3D) Room.roomAngV).setIJK(0,1,0);
+			((Vector3D) Room.roomAngV).setIJK(0,-1,0);
 			Room.roomAngV.multiply(playerTurningSpeed);
 		}else if (e.getExtendedKeyCode() == 38) { //UP arrow key
-			((Vector3D) Room.roomAngV).setIJK(-1,0,0);
+			((Vector3D) Room.roomAngV).setIJK(1,0,0);
 			Room.roomAngV.multiply(playerTurningSpeed);
 		}else if (e.getExtendedKeyCode() == 40) { //DOWN arrow key
-			((Vector3D) Room.roomAngV).setIJK(1,0,0);
+			((Vector3D) Room.roomAngV).setIJK(-1,0,0);
 			Room.roomAngV.multiply(playerTurningSpeed);
 		}
 		
