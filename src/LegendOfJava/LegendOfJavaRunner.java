@@ -9,7 +9,6 @@ import javax.swing.JOptionPane;
 import apgraphicslib.APLabel;
 import apgraphicslib.FCPS_display;
 import apgraphicslib.FPS_display;
-import apgraphicslib.Object_border_tether;
 import apgraphicslib.Object_draw;
 import apgraphicslib.Settings;
 
@@ -27,11 +26,12 @@ public class LegendOfJavaRunner {
 		//set the Settings:
 		Settings.perspective = true;
 		Settings.advancedRotation = true;
+		Settings.JOptionPaneErrorMessages = true;
 		Settings.targetFPS = 20; //attempt to make the FPS 20
 		Settings.width = 1000;
 		Settings.height = 800;
 		Settings.depth = 1000;
-	//	Settings.autoResizeFrame = false;
+		Settings.autoResizeFrame = false;
 		
 		
 		drawer = new Object_draw();

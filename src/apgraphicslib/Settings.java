@@ -3,7 +3,7 @@ package apgraphicslib;
 import java.awt.Color;
 
 public abstract class Settings {
-	public static final String version = "2.0.10.1";
+	public static final String version = "2.0.10.2";
 	
 	public static int width = (int) (1000);
 	public static int height = (int) (800);
@@ -12,7 +12,7 @@ public abstract class Settings {
 
 	public static boolean perspective = true;
 	public static double distanceFromScreenMeters = 0.1; //0.3025; //the distance in meters the viewer is away from the screen
-	public static final double distanceFromScreen = distanceFromScreenMeters / 0.000115; //should not be changed
+	public static double distanceFromScreen = distanceFromScreenMeters / 0.000115; //should not be changed
 	
 			
 	public static Color frameColor = Color.gray;
@@ -21,4 +21,11 @@ public abstract class Settings {
 	public static boolean autoResizeFrame = true;
 
 	public static boolean advancedRotation = true; //rotation ABOUT Vectors rather than an x, y, and z rotation each with magnatude of the Vector's components
+
+	public static boolean JOptionPaneErrorMessages = true;
+	
+	public static void setDistanceFromScreenMeters(double distance) {
+		distanceFromScreenMeters = distance;
+		distanceFromScreen = distanceFromScreenMeters / 0.000115; 
+	}
 }

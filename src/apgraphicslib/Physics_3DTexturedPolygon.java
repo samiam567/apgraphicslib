@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.Comparator;
 import java.util.LinkedList;
 import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 
 public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Textured3D, Updatable {
 	
@@ -24,6 +25,7 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 				image = ImageIO.read(img_file);
 			} catch (IOException e) {
 				getDrawer().out.println("could not read img file:" + fileName);
+				if (Settings.JOptionPaneErrorMessages) JOptionPane.showMessageDialog(getDrawer(), "could not read img file:" + fileName);
 				e.printStackTrace();
 			}
 			

@@ -2,7 +2,6 @@ package LegendOfJava;
 
 import apgraphicslib.Object_draw;
 import apgraphicslib.Physics_3DTexturedEquationedPolygon;
-import apgraphicslib.Settings;
 import apgraphicslib.Vector3D;
 
 public class Pot extends Physics_3DTexturedEquationedPolygon implements Hittable, RoomObjectable {

@@ -47,8 +47,8 @@ public class MainCharacter extends Character implements  MouseMotionListener, Ke
 	}
 	
 	private boolean hittable = true; //whether or not we can currently be hit
-	protected static double playerSpeed = 1100;
-	protected static double playerTurningSpeed = 1.7;
+	protected static double playerSpeed = 1700;
+	protected static double playerTurningSpeed = 2;
 
 	public MainCharacter(Object_draw drawer) {
 		super(drawer,Settings.width/2, Settings.height - PlayerTorso.torsoYSize - PlayerHead.headYSize-50, 250);
