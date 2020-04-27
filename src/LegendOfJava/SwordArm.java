@@ -31,15 +31,15 @@ public class SwordArm extends PlayerArm {
 	private void setPositionRelativeToCharacter() {
 		if (PlayerArm.swordArm == Side.left) {
 			if (parentPlayer.isMain) {
-				setPos(parentPlayer.leftArm.getX(),parentPlayer.leftArm.getY() + armYSize/2 + armZSize/2,parentPlayer.leftArm.getZ() + armYSize);
+				setPos(parentPlayer.leftArm.getX(),parentPlayer.leftArm.getY() + armYSize/2 + armZSize/2,parentPlayer.leftArm.getZ() + 2*armYSize);
 			}else {
-				setPos(parentPlayer.leftArm.getX(),parentPlayer.leftArm.getY() + armYSize/2 + armZSize/2,parentPlayer.leftArm.getZ() - armYSize);
+				setPos(parentPlayer.leftArm.getX(),parentPlayer.leftArm.getY() + armYSize/2 + armZSize/2,parentPlayer.leftArm.getZ() - 2*armYSize);
 			}
 		}else {
 			if (parentPlayer.isMain) {
-				setPos(parentPlayer.rightArm.getX(),parentPlayer.rightArm.getY() + armYSize/2 + armZSize/2,parentPlayer.rightArm.getZ() + armYSize);
+				setPos(parentPlayer.rightArm.getX(),parentPlayer.rightArm.getY() + armYSize/2 + armZSize/2,parentPlayer.rightArm.getZ() + 2*armYSize);
 			}else {
-				setPos(parentPlayer.rightArm.getX(),parentPlayer.rightArm.getY() + armYSize/2 + armZSize/2,parentPlayer.rightArm.getZ() - armYSize);
+				setPos(parentPlayer.rightArm.getX(),parentPlayer.rightArm.getY() + armYSize/2 + armZSize/2,parentPlayer.rightArm.getZ() - 2*armYSize);
 			}
 		}
 	}
@@ -61,11 +61,12 @@ public class SwordArm extends PlayerArm {
 			if ( Math.abs(((Vector2D)rotation).getI()) < Math.PI/3) {
 				
 				if (parentPlayer.isMain) {
-					((Vector2D) angularVelocity).setI(3);
-					sword.setOrbitalAngularVelocity(angularVelocity);
-					angularVelocity.multiply(-1);
-				}else{
 					((Vector2D) angularVelocity).setI(-3);
+					sword.setOrbitalAngularVelocity(angularVelocity);
+					angularVelocity.multiply(1);
+					
+				}else{
+					((Vector2D) angularVelocity).setI(3);
 					sword.setOrbitalAngularVelocity(angularVelocity);
 				}
 			}else {

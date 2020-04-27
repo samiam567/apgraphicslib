@@ -17,7 +17,7 @@ public class HealthBar extends Physics_drawable{
 	
 	private Character character;
 	private BufferedImage img;
-	private static String imgSrc = "src/LegendOfJava/assets/heart.png";
+	private static String imgSrc = "./src/LegendOfJava/assets/heart.png";
 	private int heartSize = 25;
 	public HealthBar(Object_draw drawer, double x, double y, Character player, int heartSize) {
 		super(drawer, x, y);

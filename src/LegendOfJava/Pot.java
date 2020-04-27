@@ -15,7 +15,7 @@ public class Pot extends Physics_3DTexturedEquationedPolygon implements Hittable
 		initZ = z;
 		
 		setSize(xSize,ySize,zSize);
-		setTexture("src/LegendOfJava/assets/potTexture.jpg");
+		setTexture("./src/LegendOfJava/assets/potTexture.jpg");
 		rotatePoints(new Vector3D(Math.PI,0,0));
 	}
 

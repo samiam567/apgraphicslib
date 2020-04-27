@@ -27,7 +27,7 @@ public class LegendOfJavaRunner {
 		Settings.perspective = true;
 		Settings.advancedRotation = true;
 		Settings.JOptionPaneErrorMessages = true;
-		Settings.targetFPS = 20; //attempt to make the FPS 20
+		Settings.targetFPS = 40; //attempt to make the FPS 20
 		Settings.width = 1000;
 		Settings.height = 800;
 		Settings.depth = 1000;
@@ -37,8 +37,6 @@ public class LegendOfJavaRunner {
 		drawer = new Object_draw();
 		
 		drawer.getFrame().setBackground(Color.black);
-		
-//		drawer.add(new Object_border_tether(drawer));
 		
 		drawer.getFrame().setVisible(false);
 		

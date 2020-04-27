@@ -69,7 +69,8 @@ public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimens
 		public void calculateRotation(Vector rotation) {
 			Vector3D rotTemp = ((Vector3D) rotation);
 			
-			if ( (rotTemp.getI()*rotTemp.getJ() + rotTemp.getJ() * rotTemp.getK() + rotTemp.getI() * rotTemp.getK() == 0) || (! Settings.advancedRotation) ) {
+		//	if ((rotTemp.getI()*rotTemp.getJ() + rotTemp.getJ() * rotTemp.getK() + rotTemp.getI() * rotTemp.getK() == 0) || (! Settings.advancedRotation)) {
+			if (! Settings.advancedRotation) {
 				advancedRotation = false;
 				calculateRotation(rotTemp.getI(),rotTemp.getJ(),rotTemp.getK()); //we only are rotating in one dimension
 			}else {

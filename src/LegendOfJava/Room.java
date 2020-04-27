@@ -132,31 +132,31 @@ public class Room extends Physics_3DDrawMovable implements Updatable, Three_dime
 		
 		
 		if (nextRoom != null) {
-			frontWall.setTexture("src/LegendOfJava/assets/Dungeon wall 7by3.png");
+			frontWall.setTexture("./src/LegendOfJava/assets/Dungeon wall 7by3.png");
 		}else {
-			frontWall.setTexture("src/LegendOfJava/assets/Dungeon side wall 7by3.png");
+			frontWall.setTexture("./src/LegendOfJava/assets/Dungeon side wall 7by3.png");
 		}
 		
 		if (leftRoom != null) {
-			leftWall.setTexture("src/LegendOfJava/assets/Dungeon wall 7by3.png");
+			leftWall.setTexture("./src/LegendOfJava/assets/Dungeon wall 7by3.png");
 		}else {
-			leftWall.setTexture("src/LegendOfJava/assets/Dungeon side wall 7by3.png");
+			leftWall.setTexture("./src/LegendOfJava/assets/Dungeon side wall 7by3.png");
 		}
 		
 		if (rightRoom != null) {
-			rightWall.setTexture("src/LegendOfJava/assets/Dungeon wall 7by3.png");
+			rightWall.setTexture("./src/LegendOfJava/assets/Dungeon wall 7by3.png");
 		}else {
-			rightWall.setTexture("src/LegendOfJava/assets/Dungeon side wall 7by3.png");
+			rightWall.setTexture("./src/LegendOfJava/assets/Dungeon side wall 7by3.png");
 		}
 		
 		if (prevRoom != null) {
-			backWall.setTexture("src/LegendOfJava/assets/Dungeon wall 7by3.png");
+			backWall.setTexture("./src/LegendOfJava/assets/Dungeon wall 7by3.png");
 		} else {
-			backWall.setTexture("src/LegendOfJava/assets/Dungeon side wall 7by3.png");
+			backWall.setTexture("./src/LegendOfJava/assets/Dungeon side wall 7by3.png");
 		}
 		
-		floorWall.setTexture("src/LegendOfJava/assets/Dungeon side wall 7by3.png");
-		ceilingWall.setTexture("src/LegendOfJava/assets/Dungeon side wall 7by3.png");
+		floorWall.setTexture("./src/LegendOfJava/assets/Dungeon side wall 7by3.png");
+		ceilingWall.setTexture("./src/LegendOfJava/assets/Dungeon side wall 7by3.png");
 		loaded = false;
 	}
 	

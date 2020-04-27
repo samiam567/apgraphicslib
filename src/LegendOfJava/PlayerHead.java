@@ -1,12 +1,7 @@
 package LegendOfJava;
 
 
-import apgraphicslib.Coordinate2D;
-import apgraphicslib.Coordinate3D;
-import apgraphicslib.Physics_engine_toolbox;
 import apgraphicslib.Settings;
-import apgraphicslib.Tangible;
-import apgraphicslib.Three_dimensional;
 import apgraphicslib.Vector3D;
 
 public class PlayerHead extends PlayerBodyPart {
@@ -15,7 +10,7 @@ public class PlayerHead extends PlayerBodyPart {
 
 	public PlayerHead(Character parentPlayer, int ppSize) {
 		super(parentPlayer, parentPlayer.getX(), parentPlayer.getY(), parentPlayer.getZ(), ppSize);
-		textureSrc = "src/LegendOfJava/assets/pointyHead.jpg";
+		textureSrc = "./src/LegendOfJava/assets/pointyHead.jpg";
 		
 		
 		setSize(headXSize,headYSize,headZSize);
@@ -27,9 +22,9 @@ public class PlayerHead extends PlayerBodyPart {
 	
 	public void load() {
 		setTexture(textureSrc);
-		rotatePoints(new Vector3D(0,Math.PI/7,0));
-		rotatePoints(new Vector3D(0,0,-Math.PI/2));
-		rotatePoints(new Vector3D(0,Math.PI,0));
+		rotatePoints(new Vector3D(0,Math.PI/10,0));
+		rotatePoints(new Vector3D(0,0,Math.PI/2));
+		rotatePoints(new Vector3D(0,-Math.PI,0));
 	}
 	
 

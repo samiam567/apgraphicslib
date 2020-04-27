@@ -28,7 +28,7 @@ public class MainCharacter extends Character implements  MouseMotionListener, Ke
 			
 			for (PlayerBodyPartAble bp : bodyParts) {
 				bp.setPointOfRotation(head.getCoordinates(), true);
-				bp.setOrbitalAngularVelocity(new Vector3D(-2*Math.PI/timeToJump,0,0));
+				bp.setOrbitalAngularVelocity(new Vector3D(2*Math.PI/timeToJump,0,0));
 			}
 			
 			hittable = false;

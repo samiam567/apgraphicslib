@@ -19,7 +19,7 @@ public class PlayerArm extends PlayerBodyPart {
 		super(parent, x, y + 35, parent.getZ(), ppSize);
 		this.side = side;
 
-		textureSrc = "src/LegendOfJava/assets/strawberry.jpg";
+		textureSrc = "./src/LegendOfJava/assets/strawberry.jpg";
 		
 		if (this.side == swordArm) {
 			setSize(armXSize,armYSize/2,armZSize);
@@ -37,6 +37,8 @@ public class PlayerArm extends PlayerBodyPart {
 	
 	public void load() {
 		setTexture(textureSrc);
+		
+		if (! side.equals(swordArm)) setPos(getX(), getY() + armYSize,getZ());
 	}
 	
 	@Override
@@ -50,9 +52,9 @@ public class PlayerArm extends PlayerBodyPart {
 
 		Vector3D armSwingAngV = new Vector3D(0,0,0);
 		if (side == Side.left) {
-			armSwingAngV.setIJK(velocity*Math.sin(loops*velocity - Math.PI/2),0,0);
+			armSwingAngV.setIJK(-velocity*Math.sin(loops*velocity - Math.PI/2),0,0);
 		}else {
-			armSwingAngV.setIJK(velocity*(-Math.sin(loops*velocity - Math.PI/2)),0,0);
+			armSwingAngV.setIJK(velocity*(Math.sin(loops*velocity - Math.PI/2)),0,0);
 		}
 	//	Vector3D normalVec = new Vector3D(parentPlayer.normalPoint.getX(), parentPlayer.normalPoint.getY(),parentPlayer.normalPoint.getZ());
 	//	setAngularVelocity(Vector3D.proj((Vector3D)armSwingAngV.multiply(1),((Vector3D) normalVec).statMultiply(0.001) ));
@@ -68,7 +70,7 @@ public class PlayerArm extends PlayerBodyPart {
 	protected double[] equation(double theta,double phi) {
 		double x = getXSize() * Math.sin(theta);
 		double z = getZSize() * Math.cos(theta);
-		double y = -getYSize() + getYSize() * phi;
+		double y = -2*getYSize() + getYSize() * phi;
 		
 		return new double[] {x,y,z};		
 	}
