@@ -61,7 +61,8 @@ public class SwordArm extends PlayerArm {
 			if ( Math.abs(((Vector2D)rotation).getI()) < Math.PI/3) {
 				
 				if (parentPlayer.isMain) {
-					((Vector2D) angularVelocity).setI(-3);
+					((Vector2D) angularVelocity).setI(-5);
+					sword.setPointOfRotation(getCoordinates(), true);
 					sword.setOrbitalAngularVelocity(angularVelocity);
 					angularVelocity.multiply(1);
 					

@@ -117,7 +117,9 @@ public class MainCharacter extends Character implements  MouseMotionListener, Ke
 		}
 		
 		if (e.getKeyCode() == 16) { //SHIFT key
-			JumpBackTimer j = new JumpBackTimer(this,300);
+			if (! swordArm.swinging) {
+				JumpBackTimer j = new JumpBackTimer(this,300);
+			}
 		}
 		
 		if ((e.getKeyChar() == 'd') || (e.getKeyCode() == 68)) {

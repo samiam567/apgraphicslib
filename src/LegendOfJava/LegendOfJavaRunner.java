@@ -73,25 +73,25 @@ public class LegendOfJavaRunner {
 		room1.setName("Room 1");
 		
 		Room room1L = new Room(drawer, Ryan, 3 * Settings.width, 2 * Settings.height/2,3 * Settings.width);
-		room1L.addRoomOb(new EnemyCharacter(Ryan, 0.8 * Settings.width, Settings.depth));
-		room1L.addRoomOb(new EnemyCharacter(Ryan, 0.2 * Settings.width, Settings.depth));
+		room1L.addRoomOb(new EnemyCharacter(Ryan, 1 * Settings.width, Settings.depth));
+		room1L.addRoomOb(new EnemyCharacter(Ryan, 0 * Settings.width, Settings.depth));
 		room1.setLeftRoom(room1L);
 		room1L.setName("Room 1 L");
 		
 		Room room1L2 = new Room(drawer, Ryan, 3 * Settings.width, 2 * Settings.height/2,3 * Settings.width);
-		room1L2.addRoomOb(new EnemyCharacter(Ryan, 0.8 * Settings.width, -Settings.depth/3));
-		room1L2.addRoomOb(new EnemyCharacter(Ryan, 0.2 * Settings.width, Settings.depth));
+		room1L2.addRoomOb(new EnemyCharacter(Ryan, 1 * Settings.width, -Settings.depth/3));
+		room1L2.addRoomOb(new EnemyCharacter(Ryan, 0 * Settings.width, Settings.depth));
 		room1L.setNextRoom(room1L2);
 		room1L2.setName("Room 1 L 2");
 		
 		Room room2 = new Room(drawer, Ryan, 3 * Settings.width, 2 * Settings.height/2,3 * Settings.width);
-		room2.addRoomOb(new EnemyCharacter(Ryan, 0.8 * Settings.width, Settings.depth));
-		room2.addRoomOb(new EnemyCharacter(Ryan, 0.2 * Settings.width, Settings.depth));
+		room2.addRoomOb(new EnemyCharacter(Ryan, 1 * Settings.width, Settings.depth));
+		room2.addRoomOb(new EnemyCharacter(Ryan, 0 * Settings.width, Settings.depth));
 		room2.setName("Room 2");
 		
 		Room room3 = new Room(drawer, Ryan, 3 * Settings.width, 2 * Settings.height/2,3 * Settings.width);
-		room3.addRoomOb(new EnemyCharacter(Ryan, 0.8 * Settings.width, Settings.depth));
-		room3.addRoomOb(new EnemyCharacter(Ryan, 0.2 * Settings.width, Settings.depth));
+		room3.addRoomOb(new EnemyCharacter(Ryan, 1 * Settings.width, Settings.depth));
+		room3.addRoomOb(new EnemyCharacter(Ryan, 0 * Settings.width, Settings.depth));
 		room3.addRoomOb(new EnemyCharacter(Ryan, 0.5 * Settings.width, -0.5 * Settings.depth));
 		room3.setName("Room 3");
 		room3.setLeftRoom(room1L2);

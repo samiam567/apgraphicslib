@@ -1,14 +1,45 @@
 package LegendOfJava;
 
 import apgraphicslib.Coordinate3D;
+import apgraphicslib.Object_draw;
 import apgraphicslib.Physics_engine_toolbox;
 import apgraphicslib.Settings;
+import apgraphicslib.Timer;
 import apgraphicslib.Vector;
 import apgraphicslib.Vector3D;
 import apgraphicslib.Vector3DDynamicPointVector;
 
 
 public class EnemyCharacter extends Character implements RoomObjectable {
+	
+	private class EnemyAttackTimer extends Timer {
+		private long attackTime = 0;
+		private EnemyCharacter character;
+		public EnemyAttackTimer(EnemyCharacter character, double time) {
+			super(character.getDrawer(), time, TimerUnits.seconds);
+			this.character = character;
+		}
+		
+		public EnemyAttackTimer(EnemyCharacter character, double time, long attackTime) {
+			super(character.getDrawer(), time, TimerUnits.seconds);
+			this.character = character;
+			this.attackTime = attackTime;
+		}
+		
+		@Override
+		public void triggerEvent() {
+		
+			if (getDrawer().getDrawables().contains(character)) { //if the enemy is still alive
+				character.attack();
+				if (attackTime % 2 == 0) { //switch between waiting 1 and 3 seconds between attacks
+					new EnemyAttackTimer(character, 3, attackTime + 1);
+				}else {
+					new EnemyAttackTimer(character, 1, attackTime + 1);
+				}
+			}
+		}
+		
+	}
 	
 	private MainCharacter mainCharacter;
 	private Coordinate3D targetPoint;
@@ -37,6 +68,7 @@ public class EnemyCharacter extends Character implements RoomObjectable {
 		targSpeed = new Vector3DDynamicPointVector(getCoordinates(),targetPoint);
 		setName("enemy");
 		
+		
 	}
 	
 	@Override
@@ -60,9 +92,6 @@ public class EnemyCharacter extends Character implements RoomObjectable {
 		
 		targetPoint.setPos(getX(), getY(), getZ());	
 		
-		if (Math.random() * 10 < 0.1) {
-			attack();
-		}
 		
 		double hpX, hpY;
 		hpX = getHead().getX() - Settings.width/2;
@@ -110,6 +139,7 @@ public class EnemyCharacter extends Character implements RoomObjectable {
 		numEnemys++;
 		getDrawer().add(hpBar);
 		setPos(initX, initY, initZ);
+		new EnemyAttackTimer(this,numEnemys % 5);
 	}
 	
 	@Override
