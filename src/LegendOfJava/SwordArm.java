@@ -74,7 +74,7 @@ public class SwordArm extends PlayerArm {
 				setRotation(0,((Vector2D) rotation).getJ(),((Vector3D) rotation).getK());
 				((Vector2D) angularVelocity).setI(0);		
 				sword.setOrbitalRotation(new Vector3D(0,0,0));
-				
+				sword.setRotation(new Vector3D(0,0,0));
 				swinging = false;
 				
 				Hittable cHittable = null;
