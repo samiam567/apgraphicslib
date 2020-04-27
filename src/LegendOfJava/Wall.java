@@ -3,10 +3,13 @@ package LegendOfJava;
 import apgraphicslib.CollisionEvent;
 import apgraphicslib.Coordinate2D;
 import apgraphicslib.Coordinate3D;
+import apgraphicslib.Object_draw;
 import apgraphicslib.Physics_3DTexturedPolygon;
 import apgraphicslib.Tangible;
 import apgraphicslib.Three_dimensional;
+import apgraphicslib.Timer;
 import apgraphicslib.Vector3D;
+import apgraphicslib.Timer.TimerUnits;
 
 
 
@@ -93,16 +96,18 @@ public class Wall extends Physics_3DTexturedPolygon implements Three_dimensional
 	public void collision(CollisionEvent e) {
 		super.collision(e);
 		
-		if (getZ() > parentRoom.player.getZ()) {
-			Room.roomSpeed.setIJK(0, 0, 2*Room.roomSpeed.getR());
-		}else {
-			Room.roomSpeed.setIJK(0, 0, -2*Room.roomSpeed.getR());
-		}
-		Room.roomAngV.multiply(-1);
+		//if there is a collision with a wall, move the room away from the player
+		
+		//just go the other way...
+		Room.roomSpeed.multiply(-1.001);
+		Room.roomAngV.multiply(-1.001);
+		
 		getDrawer().pause();
 		for (Wall cWall : parentRoom.getWalls()) {
-			
-			cWall.Update(0.1);
+			cWall.Update(getDrawer().getFrameStep());
+		}
+		for (RoomObjectable cOb : parentRoom.roomObs) {
+			cOb.Update(getDrawer().getFrameStep());
 		}
 		Room.roomSpeed.setIJK(0, 0, 0);
 		getDrawer().resume();

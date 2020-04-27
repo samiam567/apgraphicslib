@@ -249,7 +249,7 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 			pp2.color = Color.PINK;
 			getDrawer().repaint();
 			try {
-				Thread.sleep(5);
+				Thread.sleep(50);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -459,8 +459,7 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 		// remove old plate points
 		getPlatePoints().clear();
 		
-		
-		
+
 		//un-find all frame points
 		try {
 			FramePoint cPoint;
@@ -486,7 +485,7 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 				
 				
 				//if our spiral guess was inside our polygon, add the plate point to the shape
-				if (framePoly.contains(getX()+x,getY()+  y)) {
+				if (framePoly.contains(getX()+x,getY()+y)) {
 					try {
 						newPoint = Texture.getRGBPoint(x,y,0,0,0,false);
 						getPlatePoints().add(newPoint);
@@ -537,7 +536,6 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 	
 	
 	// collision methods (must implement Tangible in child class to use them)
-	
 
 	public void collision(CollisionEvent e) {
 		// TODO Implement this

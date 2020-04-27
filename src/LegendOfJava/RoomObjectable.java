@@ -15,4 +15,5 @@ public interface RoomObjectable extends Physics_engine_compatible {
 	
 	public void setPointOfRotation(Coordinate2D newPointOfRotation, boolean rotateWithOrbit);
 	public void setOrbitalAngularVelocity(Vector newAngV);
+	public void Update(double frameStep);
 }
