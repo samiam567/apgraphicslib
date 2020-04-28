@@ -28,12 +28,12 @@ public class Pot extends Physics_3DTexturedEquationedPolygon implements Hittable
 
 	@Override
 	public void hit(double attackPower) {
-		AudioManager.playPotBreakAudio();
+		LOJAudioManager.playPotBreakAudio();
 		getDrawer().remove(this);
 		parentRoom.roomObs.remove(this);
 		System.out.println("pot hit!");
 		LegendOfJavaRunner.Ryan.HP++;
-		AudioManager.playHeartRestoreAudio();
+		LOJAudioManager.playHeartRestoreAudio();
 	}
 	
 	/**
@@ -42,7 +42,7 @@ public class Pot extends Physics_3DTexturedEquationedPolygon implements Hittable
 	 * @return {x, y, z}
 	 */
 	protected double[] equation(double theta,double phi) {
-		double x,y,z,r;
+		double x,y,z;
 	
 	//	x = getXSize() * (Math.cos(theta))* Math.pow(phi,1/2) * Math.sin(phi * 1.2 + 1.5) ;
 	//	z = getZSize() * (Math.sin(theta)) * Math.pow(phi,1/2) * Math.sin(phi * 1.2 + 1.5) ;

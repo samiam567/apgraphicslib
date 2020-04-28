@@ -12,9 +12,10 @@ import apgraphicslib.Physics_3DPolygon.Point3D;
 /**
  * 
  * @author apun1
- * {@summary tools to draw objects using the mouse}
+ * {@summary tools to draw objects using the mouse. Needs update to really be used well}
  * {@code you must call startCapture() before you can add points }
  */
+@Deprecated
 public class Polygon_drawer_tools extends Physics_drawable implements MouseListener, MouseMotionListener, KeyListener, Drawable {
 	private Physics_3DPolygon object;
 	private String name;

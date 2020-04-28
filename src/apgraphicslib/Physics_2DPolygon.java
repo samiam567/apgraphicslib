@@ -150,7 +150,6 @@ public class Physics_2DPolygon extends Physics_2DDrawMovable implements Updatabl
 		updatePointValueLists();
 		//orbital rotation
 		if (orbitalAngularAcceleration.getR() != 0) orbitalAngularVelocity.add(((Vector2D) orbitalAngularAcceleration).tempStatMultiply(frames));
-	//	if (orbitalAngularVelocity.getR() != 0) {
 			orbitalAngVFrames = ((Vector2D) orbitalAngularVelocity).tempStatMultiply(frames);
 			
 			orbitalRotation.add(orbitalAngVFrames);	
@@ -168,8 +167,6 @@ public class Physics_2DPolygon extends Physics_2DDrawMovable implements Updatabl
 				rotation.add(orbitalAngVFrames);
 			}
 			
-			
-	//	}
 		
 		//rotation about a point
 		if (angularAcceleration.getR() != 0) angularVelocity.add(((Vector2D) angularAcceleration).tempStatMultiply(frames));
@@ -179,8 +176,6 @@ public class Physics_2DPolygon extends Physics_2DDrawMovable implements Updatabl
 			rotation.add(angVFrames);	
 			updatePoints();
 		}
-		
-		
 		
 		updatePointValueLists();
 	}

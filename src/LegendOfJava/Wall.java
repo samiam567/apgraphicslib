@@ -3,13 +3,10 @@ package LegendOfJava;
 import apgraphicslib.CollisionEvent;
 import apgraphicslib.Coordinate2D;
 import apgraphicslib.Coordinate3D;
-import apgraphicslib.Object_draw;
 import apgraphicslib.Physics_3DTexturedPolygon;
 import apgraphicslib.Tangible;
 import apgraphicslib.Three_dimensional;
-import apgraphicslib.Timer;
 import apgraphicslib.Vector3D;
-import apgraphicslib.Timer.TimerUnits;
 
 
 

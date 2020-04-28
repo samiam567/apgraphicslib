@@ -1,6 +1,5 @@
 package apgraphicslib;
 
-import apgraphicslib.Physics_2DPolygon.PolyPoint;
 
 public abstract class Physics_3DTexturedEquationedPolygon extends Physics_3DTexturedPolygon {
 

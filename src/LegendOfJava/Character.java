@@ -82,7 +82,7 @@ public class Character extends Physics_3DPolygon implements Hittable {
 	 */
 	public void attack() {
 		if (! swordArm.swinging) {
-			AudioManager.playSwordSwingAudio();
+			LOJAudioManager.playSwordSwingAudio();
 			swordArm.swinging = true;
 		}
 	}

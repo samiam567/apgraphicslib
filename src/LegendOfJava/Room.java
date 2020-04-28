@@ -2,9 +2,6 @@ package LegendOfJava;
 
 import java.awt.Graphics;
 import java.util.LinkedList;
-
-import javax.swing.JOptionPane;
-
 import apgraphicslib.Coordinate3D;
 import apgraphicslib.Object_draw;
 import apgraphicslib.Physics_3DDrawMovable;

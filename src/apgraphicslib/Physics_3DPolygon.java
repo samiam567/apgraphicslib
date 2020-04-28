@@ -1,7 +1,5 @@
 package apgraphicslib;
 
-import apgraphicslib.Physics_2DPolygon.PolyPoint;
-
 public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimensional, Rotatable {
 	
 	private double zSize;
@@ -36,10 +34,7 @@ public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimens
 		
 		}
 		
-		public void calculateRotation(double xTheta, double yTheta, double zTheta) {
-			
-			
-			
+		public void calculateRotation(double xTheta, double yTheta, double zTheta) {	
 			//xRotation
 			xRot[1][1] = Math.cos(xTheta);
 			xRot[2][1] = -Math.sin(xTheta);
@@ -69,22 +64,25 @@ public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimens
 		public void calculateRotation(Vector rotation) {
 			Vector3D rotTemp = ((Vector3D) rotation);
 			
-		//	if ((rotTemp.getI()*rotTemp.getJ() + rotTemp.getJ() * rotTemp.getK() + rotTemp.getI() * rotTemp.getK() == 0) || (! Settings.advancedRotation)) {
-			if (! Settings.advancedRotation) {
-				advancedRotation = false;
-				calculateRotation(rotTemp.getI(),rotTemp.getJ(),rotTemp.getK()); //we only are rotating in one dimension
-			}else {
+			if (Settings.advancedRotation) {
 				advancedRotation = true;
 				planeRotTheta.calculateRotation(new Vector(rotTemp.getTheta()));
 				planeRotPhi.calculateRotation(new Vector(rotTemp.getPhi()));
 				planeRotation.calculateRotation(new Vector(rotTemp.getR()));
 				negativePlaneRotPhi.calculateRotation(new Vector(-rotTemp.getPhi()));
 				negativePlaneRotTheta.calculateRotation(new Vector(-rotTemp.getTheta()));
-				
+			}else {
+				advancedRotation = false;
+				calculateRotation(rotTemp.getI(),rotTemp.getJ(),rotTemp.getK());
 			}
 		}
 	}
 	
+	/**
+	 * {@code a 3D point designed for a Physics_3DPolygon. Can rotate itself}
+	 * @author samiam567
+	 *
+	 */
 	protected class Point3D extends Coordinate3D implements PolyPoint {
 		//multi-purpose lists for rotation
 		private double[] rotMagsStat = new double[3];
@@ -96,12 +94,10 @@ public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimens
 			
 		}	
 	
-		private double[] calculateRotation(double x, double y, double angle) {
-			double[] polar = Vector2D.rectangularToPolar(x, y);
-			return Vector2D.polarToRectangular(polar[0], polar[1] + angle);	
-		}
-		
-		
+	
+		/**
+		 * {@code rotates this point in accordance to the passed AffineRotation}
+		 */
 		public void rotate(AffineRotation rot) {
 			AffineRotation3D AffineRot = (AffineRotation3D) rot;
 			if (AffineRot.advancedRotation) {
@@ -133,7 +129,15 @@ public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimens
 			
 		}
 		
-		//My method
+		
+		@Deprecated
+		private double[] calculateRotation(double x, double y, double angle) {
+			double[] polar = Vector2D.rectangularToPolar(x, y);
+			return Vector2D.polarToRectangular(polar[0], polar[1] + angle);	
+		}
+		
+		//My method using Vectors rather than AffineRotation matrices (not used because it's slow)
+		@Deprecated
 		public void rotate(Vector rotMagn) { //rotates about the given vector, <the length of the vector> radians
 			
 			Vector3D rotVector = ((Vector3D) rotMagn);
@@ -212,7 +216,7 @@ public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimens
 	}
 	
 	/**
-	 * {@summary updates the object. All overrided versions of this should call super.Update()}
+	 * {@summary updates the object. All overridden versions of this should call super.Update()}
 	 */
 	@Override
 	public void Update(double frames) {

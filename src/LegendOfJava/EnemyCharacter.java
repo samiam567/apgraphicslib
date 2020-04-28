@@ -1,13 +1,9 @@
 package LegendOfJava;
 
-import apgraphicslib.Coordinate3D;
-import apgraphicslib.Object_draw;
-import apgraphicslib.Physics_engine_toolbox;
 import apgraphicslib.Settings;
 import apgraphicslib.Timer;
 import apgraphicslib.Vector;
 import apgraphicslib.Vector3D;
-import apgraphicslib.Vector3DDynamicPointVector;
 
 
 public class EnemyCharacter extends Character implements RoomObjectable {
@@ -41,11 +37,7 @@ public class EnemyCharacter extends Character implements RoomObjectable {
 		
 	}
 	
-	private MainCharacter mainCharacter;
-	private Coordinate3D targetPoint;
-	private double targetTheta = Math.PI/2;
 	private Room parentRoom;
-	private Vector3DDynamicPointVector targSpeed;
 	private HealthBar hpBar;
 	
 	private double initX, initY, initZ; 
@@ -63,9 +55,6 @@ public class EnemyCharacter extends Character implements RoomObjectable {
 		initY = Settings.height - PlayerTorso.torsoYSize - PlayerHead.headYSize-50;
 		initZ = z;
 		
-		mainCharacter = Char;
-		targetPoint = new Coordinate3D(0,  Settings.height - PlayerTorso.torsoYSize - PlayerHead.headYSize-50, 0);
-		targSpeed = new Vector3DDynamicPointVector(getCoordinates(),targetPoint);
 		setName("enemy");
 		
 		
@@ -83,16 +72,8 @@ public class EnemyCharacter extends Character implements RoomObjectable {
 	public void Update(double frames) {
 		super.Update(frames);
 		
-		targetTheta += 0.001;
-		double x,y,z,r = Physics_engine_toolbox.distance3D(getCoordinates(), mainCharacter.getCoordinates());
-		
-		x = mainCharacter.getX() + r*Math.cos(targetTheta + ((Vector3D)rotation).getJ());
-		y = targetPoint.getY();
-		z = mainCharacter.getZ() + r*Math.sin(targetTheta + ((Vector3D)rotation).getJ());		
-		
-		targetPoint.setPos(getX(), getY(), getZ());	
-		
-		
+	
+		//controlling the position of the HP bar above the enemy's head
 		double hpX, hpY;
 		hpX = getHead().getX() - Settings.width/2;
 		hpY = getHead().getY() - PlayerHead.headYSize - 10 - Settings.height/2;
@@ -122,7 +103,7 @@ public class EnemyCharacter extends Character implements RoomObjectable {
 	@Override
 	public void hit(double attackPower) {
 		super.hit(attackPower);
-		AudioManager.playHitAudio(); //SMACK!
+		LOJAudioManager.playHitAudio(); //SMACK!
 	}
 	
 	@Override

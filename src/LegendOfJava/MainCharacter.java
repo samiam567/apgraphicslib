@@ -70,7 +70,7 @@ public class MainCharacter extends Character implements  MouseMotionListener, Ke
 	public void hit(double attackPower) {
 		if (hittable) {
 			super.hit(attackPower);
-			AudioManager.playDamageAudio(); //OOF
+			LOJAudioManager.playDamageAudio(); //OOF
 		}
 	}
 
@@ -118,6 +118,7 @@ public class MainCharacter extends Character implements  MouseMotionListener, Ke
 		
 		if (e.getKeyCode() == 16) { //SHIFT key
 			if (! swordArm.swinging) {
+				@SuppressWarnings("unused")
 				JumpBackTimer j = new JumpBackTimer(this,300);
 			}
 		}

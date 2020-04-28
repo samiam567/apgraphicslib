@@ -9,8 +9,6 @@ import java.io.IOException;
 import java.util.LinkedList;
 import javax.imageio.ImageIO;
 
-import apgraphicslib.Physics_2DPolygon.PolyPoint;
-
 
 public class Physics_2DTexturedPolygon extends Physics_2DPolygon implements Textured, Updatable {
 	
