@@ -168,10 +168,16 @@ public class LegendOfJavaRunner {
 	}
 	
 	
-	//yayyy recursion
+	/**
+	 * {@code set the graphics settings to all of the rooms in the binary tree}
+	 * @param cRoom
+	 * @param ppSize
+	 */
 	private static void setRoomPPSizeRecursive(Room cRoom, int ppSize) {
 		
-		if (! cRoom.ppSizeSet) { // if we haven't already been to this node
+		if (cRoom.ppSizeSet) { // if we haven't already been to this node
+			//base case
+		}else {
 			System.out.println("Set platePointSize of " + cRoom.getName());
 			cRoom.setPPSize(ppSize);
 			if (cRoom.nextRoom != null) {
