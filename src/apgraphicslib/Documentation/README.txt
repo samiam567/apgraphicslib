@@ -1,5 +1,5 @@
 ----------------
-Game Tips:
+LOJ Game Tips:
 ----------------
 
 Make sure your sound is up!

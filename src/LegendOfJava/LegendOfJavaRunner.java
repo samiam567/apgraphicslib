@@ -116,20 +116,20 @@ public class LegendOfJavaRunner {
 		int graphicsSetting = JOptionPane.showOptionDialog(drawer.getFrame(), "What graphics level do you want?", "Graphics settings", 0, 0, null,options, 1);
 		
 		if (options[graphicsSetting].equals("terrible")) {
-			roomPPSize = 20;
-			playerPPSize = 15;
+			roomPPSize = 17;
+			playerPPSize = 12;
 		}else if (options[graphicsSetting].equals("low")) {
-			roomPPSize = 15;
-			playerPPSize = 10;
+			roomPPSize = 10;
+			playerPPSize = 6;
 		}else if (options[graphicsSetting].equals("medium")) {
 			roomPPSize = 10;
-			playerPPSize = 5;
+			playerPPSize = 4;
 		}else if (options[graphicsSetting].equals("high")) {
 			roomPPSize = 6;
 			playerPPSize = 3;
 		}else if (options[graphicsSetting].equals("extreme")) {
-			roomPPSize = 2;
-			playerPPSize = 1;
+			roomPPSize = 4;
+			playerPPSize = 2;
 		}
 		
 		setRoomPPSizeRecursive(room0,roomPPSize);
