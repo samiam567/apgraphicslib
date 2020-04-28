@@ -50,7 +50,6 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 			 try { 
 				 if (threeD) {
 					 pixel = image.getRGB( (int) Math.round((theta) * width/2/Math.PI/divisor ),(int) Math.round(phi * height/Math.PI/divisor) );
-					// pixel = image.getRGB((int) Math.round((x*z) *width/xSurfaceArea/divisor + width/2 ) ,((int) (Math.round(y) *height/ySurfaceArea/divisor + height/2)));
 				 }else {
 					 pixel = image.getRGB((int) Math.round(x * width/getXSize()/divisor + width/2 ) ,(int) Math.round(y *height/getYSize() /divisor + height/2));
 				 }

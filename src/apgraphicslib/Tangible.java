@@ -13,7 +13,7 @@ public interface Tangible extends Updatable, Movable, Two_dimensional {
 	 * the implementation of these methods is critical and also likely different for every application.
 	 * Write the methods so that they are as fast as possible for your application.
 	 * checkForCollision(object) is likely going to be very similar to checkForCollision(point) if not almost identical.
-	 * There is a well-written example of implementation of these methods in Physics_3DTexturedPolygon
+	 * There is a well-written example of an implementation of these methods in Physics_3DTexturedPolygon
 	 */
 	
 	/**

@@ -34,6 +34,7 @@ public class Physics_2DPolygon extends Physics_2DDrawMovable implements Updatabl
 			d = a;
 		}
 	}
+	
 	protected class Point2D extends Coordinate2D implements PolyPoint, Two_dimensional {
 		protected double prevAngle = 0;
 

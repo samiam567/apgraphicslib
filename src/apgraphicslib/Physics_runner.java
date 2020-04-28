@@ -14,7 +14,7 @@ public class Physics_runner {
 
 		@Override 
 		protected double[] equation(double theta, double phi) {
-			boolean egg = false;
+			boolean egg = true;
 			
 			
 			if (egg) {
@@ -43,35 +43,11 @@ public class Physics_runner {
 		drawer.add(new FCPS_display(drawer, Settings.width * 0.01 + 45, Settings.height*0.05 + 15));
 		
 		
-		Egg square2 = new Egg(drawer,Settings.width/2,Settings.height/2,0,100,200,150,5);
-		/*
-		Physics_3DTexturedPolygon square1 = new Physics_3DTexturedPolygon(drawer,Settings.width/2,Settings.height/2,0,1);
-		square1.setName("square1");
-		
-	
-		
+		Egg square2 = new Egg(drawer,Settings.width/2,Settings.height/2,0,100,200,150,3);
 
-		double xSize = 500;
-		double ySize = 500;
-		square1.setSize(xSize,ySize);
-		square1.addPoint(-xSize/2,-ySize/2);
-		square1.addPoint(xSize/2,-ySize/2);
-		square1.addPoint(xSize/2,ySize/2);
-		square1.addPoint(-xSize/2,ySize/2);
-	
-		square1.setTexture("src/LegendOfJava/assets/texture.jpg");
-	
-		
-		square1.rotatePoints(new Vector3D(0,0,Math.PI/2));
-		
-		
-	
-		
-		drawer.add(square1);
 
-		*/
 		
-		square2.setTexture("src/LegendOfJava/assets/shieldAndSword.jpg");
+		square2.setTexture("src/LegendOfJava/assets/texture.jpg");
 		
 		drawer.add(square2);
 		
@@ -89,7 +65,7 @@ public class Physics_runner {
 			}
 		}
 		
-	//	drawer.stop();
-	//	System.exit(1);
+		drawer.stop();
+		System.exit(1);
 	}
 }
