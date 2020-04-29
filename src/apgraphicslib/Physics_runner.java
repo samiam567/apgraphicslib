@@ -52,6 +52,7 @@ public class Physics_runner {
 		drawer.add(square2);
 		
 		square2.setAngularVelocity(new Vector3D(1,0,1));
+
 		
 		drawer.start();
 	

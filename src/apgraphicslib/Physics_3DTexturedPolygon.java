@@ -114,6 +114,7 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 	public boolean paintInProgress = false;
 	protected int collisionCheckGain = 5;
 	private double minZToPaintPoints = -Settings.distanceFromScreen;
+	private boolean isTangible = true;
 	
 	public Physics_3DTexturedPolygon(Object_draw drawer, double x, double y, double z, double ppSize) {
 		super(drawer, x, y, z);
@@ -626,6 +627,14 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 			pointCounter++;
 		}
 		return null;
+	}
+
+	public boolean getIsTangible() {
+		return isTangible;
+	}
+
+	public void setIsTangible(boolean isTangible) {
+		this.isTangible = isTangible;
 	}
 	
 

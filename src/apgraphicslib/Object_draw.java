@@ -75,7 +75,7 @@ public class Object_draw extends JPanel {
 			
 			for (double frameCount = 0; frameCount < 1; frameCount += frameStep) {
 				updateStartTime = System.nanoTime();
-				updateObjects((1 / ( (int) 1/frameStep )) / getActualFPS());
+				updateObjects(Settings.timeSpeed * ((1 / ( (int) 1/frameStep )) / getActualFPS()) );
 				checkForCollisions(); //check for collisions between the tangibles
 				frameCount += frameStep;
 				updateCount++;
@@ -88,8 +88,8 @@ public class Object_draw extends JPanel {
 			
 			
 			
-			frameStep += ((double) subCalcTime) / ((1000000000/Settings.targetFPS) - (frameEndTime-frameStartTime));
-			frameStep /= 2; // the averaging of the two numbers keeps the system from freezing during big changes (like adding objects)
+			frameStep = ((double) subCalcTime) / ((1000000000/Settings.targetFPS) - (frameEndTime-frameStartTime));
+		//	frameStep /= 2; // the averaging of the two numbers keeps the system from freezing during big changes (like adding objects)
 	
 	    }catch(ConcurrentModificationException c) {
 	    	c.printStackTrace();
@@ -102,11 +102,6 @@ public class Object_draw extends JPanel {
 		
 	}
 
-	@Override
-	public void update(Graphics page) { //I believe this gets rid of flickering
-		paint(page);
-	}
-	
 	/**
 	 * {@summary starts the updater thread. This must be called or the engine won't do anything. It should ideally be called after all objects are added}
 	 */
@@ -332,11 +327,13 @@ public class Object_draw extends JPanel {
 					o2 = tangibles.get(i);
 				}
 				
-				pointOfCollision = o1.checkForCollision(o2);
-				
-				if (! (pointOfCollision == null)) { // we have a collision
-					o2.collision(o1.getCollisionEvent(o2,pointOfCollision));
-					o1.collision(o2.getCollisionEvent(o1,pointOfCollision));
+				if (o1.getIsTangible() && o2.getIsTangible()) {
+					pointOfCollision = o1.checkForCollision(o2);
+					
+					if (! (pointOfCollision == null)) { // we have a collision
+						o2.collision(o1.getCollisionEvent(o2,pointOfCollision));
+						o1.collision(o2.getCollisionEvent(o1,pointOfCollision));
+					}
 				}
 			}
 		}
@@ -401,7 +398,7 @@ public class Object_draw extends JPanel {
 		try {
 		for (Drawable cOb : getDrawables()) {		
 			page.setColor(cOb.getColor());
-			cOb.paint(page);
+			if (cOb.getIsVisible()) cOb.paint(page);
 		}
 		}catch(ConcurrentModificationException c) {
 			out.println(c);

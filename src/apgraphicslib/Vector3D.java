@@ -37,6 +37,18 @@ public class Vector3D extends Vector2D implements Three_dimensional {
 	}
 	
 	/**
+	 * {@code sets the 2D rectangular components of this Vector3D}
+	 * @param i the new i component
+	 * @param j the new j component
+	 */
+	public void setIJ(double i, double j) {
+		polarToRectangular();
+		this.i = i;
+		this.j = j;
+		polarCalculated = false;
+	}
+	
+	/**
 	 * {@code sets the rectangular values of the vector}
 	 * @param i the new i component
 	 * @param j the new j component
@@ -60,8 +72,9 @@ public class Vector3D extends Vector2D implements Three_dimensional {
 	}
 
 	public void setK(double newK) {
+		polarToRectangular();
 		this.k = newK;
-		rectangularToPolar();
+		polarCalculated = false;
 	}
 	
 	/**

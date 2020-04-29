@@ -11,6 +11,7 @@ public abstract class Physics_drawable extends Physics_object implements Drawabl
 	protected Coordinate2D coordinates;
 	private double xSize, ySize;
 	protected double maxSize;
+	private boolean isVisible = true;
 	
 	private Color color = Color.BLACK;
 	
@@ -87,6 +88,20 @@ public abstract class Physics_drawable extends Physics_object implements Drawabl
 			return -Settings.distanceFromScreen - 0.1; //always paint 2D components on top
 		}
 	}
+
+
+
+	public boolean getIsVisible() {
+		return isVisible;
+	}
+
+
+
+	public void setIsVisible(boolean isVisible) {
+		this.isVisible = isVisible;
+	}
+	
+
 
 	
 }

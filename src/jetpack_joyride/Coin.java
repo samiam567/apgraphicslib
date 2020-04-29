@@ -4,9 +4,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
-import Physics_engine.*;
-import Physics_engine.Physics_engine_toolbox.faces;
 import Shapes.Square;
+import apgraphicslib.CollisionEvent;
 import apgraphicslib.Object_draw;
 import apgraphicslib.Settings;
 import apgraphicslib.Tangible;
@@ -14,7 +13,6 @@ import apgraphicslib.Vector2D;
 
 public class Coin extends Square implements Tangible {
 	
-	private boolean isTangible = true;
 	
 	public Coin(Object_draw drawer1, int x, int y) {
 		super(drawer1, x, y, 20);
@@ -37,9 +35,9 @@ public class Coin extends Square implements Tangible {
 				setPos(Settings.width+100, Math.random() * (Settings.height-getXSize()-150));
 				((Vector2D) getSpeed()).setI(-JetPack_JoyRide.jetpack_speed);
 			}else if ( (getX()+10 < JetPack_JoyRide.jetpack.getX()) || (getX()-50 >JetPack_JoyRide.jetpack.getX()) ) {
-				isTangible = false;
+				setIsTangible(false);
 			}else {
-				isTangible = true;
+				setIsTangible(true);
 			}
 		
 			((Vector2D) getSpeed()).setI(-JetPack_JoyRide.jetpack_speed);
@@ -51,5 +49,10 @@ public class Coin extends Square implements Tangible {
 	
 		page.fillOval((int) (getX() - getXSize()/2) ,(int) ( getY() - getYSize()/2), (int) Math.round(getXSize()),(int) Math.round(getYSize()));
 		
+	}
+
+	@Override
+	public void collision(CollisionEvent object) {
+
 	}
 }

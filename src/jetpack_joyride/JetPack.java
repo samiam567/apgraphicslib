@@ -15,7 +15,7 @@ public class JetPack extends Rectangle implements Tangible {
 	
 	public double fireSize = 0.4;
 	
-	public double power = 800;
+	public double power = 4000;
 	
 	public double current_power;
 	
@@ -27,15 +27,16 @@ public class JetPack extends Rectangle implements Tangible {
 	public void Update(double frames) {
 		super.Update(frames);
 		
-		getSpeed().setJ(0);
+		getSpeed().setI(0);
 		
 		current_power = power + JetPack_JoyRide.jetpack_speed;
 		
 		if (getY() < 0) {
 			setPos(getX(),40);
-			
+			getSpeed().setJ(1);
 		}else if (getY() + getYSize()/2 > Settings.height-40) {
-			setPos(getX(),Settings.height - 2*getYSize());
+			setPos(getX(),Settings.height - 2*getYSize() - 100);
+			getSpeed().setJ(-10);
 		}
 	}
 	

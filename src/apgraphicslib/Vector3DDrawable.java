@@ -109,11 +109,8 @@ public class Vector3DDrawable extends Vector3D implements Drawable {
 		return color;
 	}
 
-
-
-	
-
-
-
-
+	@Override
+	public boolean getIsVisible() {
+		return true;
+	}
 }

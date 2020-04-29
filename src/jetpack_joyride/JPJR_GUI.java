@@ -7,14 +7,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-import Physics_engine.Settings;
+import apgraphicslib.Settings;
+import apgraphicslib.Vector2D;
 
-public class JPJR_GUI extends JFrame{
+
+public class JPJR_GUI extends JFrame {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1629154180540245297L;
 	private JLabel label;
 	private JButton resetJetpack,restart,pause,endGame,resetJetpackPos,openShop,increaseSpeedButton;
 	public Container cp;
@@ -79,15 +84,15 @@ public class JPJR_GUI extends JFrame{
 	
 	private class ResetJetpackButton implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
-			JetPack_JoyRide.jetpack.setAccel(0, 0, 0);
-			JetPack_JoyRide.jetpack.setSpeed(0, 0, 0);
-			JetPack_JoyRide.jetpack.applyComponentForce(0, 9.8, 0);
+			JetPack_JoyRide.jetpack.setAcceleration(new Vector2D(0, 9.8));
+			JetPack_JoyRide.jetpack.setSpeed( new Vector2D(0, 0));
+			JetPack_JoyRide.jetpack.setPos(Settings.width/2,Settings.height - 100);
 		}	
 	}
 	
 	private class ResetJetpackPosButton implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
-			JetPack_JoyRide.jetpack.setPos(Settings.width/2,Settings.height - 100, 0);
+			JetPack_JoyRide.jetpack.setPos(Settings.width/2,Settings.height/2);
 		}	
 	}
 	

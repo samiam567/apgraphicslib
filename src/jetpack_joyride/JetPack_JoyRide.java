@@ -1,10 +1,8 @@
 package jetpack_joyride;
 
 import java.awt.Color;
-import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.EOFException;
@@ -16,16 +14,22 @@ import java.io.IOException;
 import java.io.InvalidClassException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ConcurrentModificationException;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
+import apgraphicslib.Drawable;
+import apgraphicslib.FCPS_display;
+import apgraphicslib.FPS_display;
+import apgraphicslib.Movable;
 import apgraphicslib.Object_draw;
+import apgraphicslib.Resizable;
+import apgraphicslib.ScoreBoard;
+import apgraphicslib.Settings;
+import apgraphicslib.Vector2D;
 
-
-public class JetPack_JoyRide {
+public class JetPack_JoyRide implements MouseListener, KeyListener{
 
 	public static final String version = "3.1.6";
 	
@@ -39,28 +43,27 @@ public class JetPack_JoyRide {
 	
 	static int coins = 0, coinsEarned = 0, game_over = 0;  // 0 is false, 1 is true, and 2 & 3 are other
 	
-	static double distance = 0, distanceHighScore = 0, frames, jetpack_speed = 40;
+	static double distance = 0, distanceHighScore = 0, frames,jetpack_startSpeed = 1000, jetpack_speed = jetpack_startSpeed;
 	
-	private static int gravityStart = 600, gravity;
+	private static int gravityStart = 4000, gravity;
 	
 	static final boolean pictureGraphics = false;
 	
 	static boolean pause = false, error = false;
 	
 	static ImageIcon jetpack_img = new ImageIcon("jetpack.txt"), coin_img = new ImageIcon("coin.txt");
-	static border_bounce boundries;
+	
 	static JetPack jetpack;
 	static Laser laser1,laser2;
-	static MIT_Laser MITLaser1;
 	static Missile Missile1;
 	static ScoreBoard coinScore,distanceScore,distanceHighScoreBoard;
 	static Coin coin1,coin2,coin3;
 	
-
+	private static long keyPressedTimes = 0;
 	
 	
 	public static void main(String[] args) throws FileNotFoundException, ClassNotFoundException, IOException {
-		init();
+		new JetPack_JoyRide();
 		System.exit(1);
 	}
 	
@@ -74,31 +77,29 @@ public class JetPack_JoyRide {
 		}
 	}
 	
-	public static void setDrawer(object_draw drawer1) {
-		drawer = drawer1;
-		drawer.setFrame(frame);
-	}
-	
-	public static void run() {
+	public JetPack_JoyRide() {
 		init();
 	}
 	
-	public static void init()  {
+	public void run() {
+		init();
+	}
+	
+	public void init()  {
 		
 		
+		
+		drawer.getFrame().setBackground(Color.black);
 		FPS_display fps = new FPS_display(drawer,30,30);
+		fps.setColor(Color.white);
 		drawer.add(fps);
 	
 		FCPS_display fcps = new FCPS_display(drawer,30,50);
+		fcps.setColor(Color.white);
+		fcps.decimalsToRound = 5;
 		drawer.add(fcps);
+
 		
-		boundries = new border_bounce(drawer);
-		
-		boundries.name = "boundries";
-		boundries.drawMethod = "listedPointsAlgorithm";
-		boundries.setPos(boundries.getXReal(),boundries.getYReal()-100,10);
-		boundries.setSize(Settings.width *1.06, Settings.height*1.15,10);
-		boundries.isVisible = false;
 		
 		coinScore = new ScoreBoard(drawer);
 		coinScore.setScore(coins);
@@ -115,100 +116,38 @@ public class JetPack_JoyRide {
 		
 		jetpack = new JetPack(drawer,Settings.width/2,Settings.height-150, 0, 20,200);
 		jetpack.setColor(Color.blue);
-		jetpack.name = "jetpack";
+		jetpack.setName("jetpack");
+		
+		JetPack_fire.loadFires(drawer);
 		
 		laser1 = new Laser(drawer,Settings.width/3,200,Settings.width/100,Settings.width/10);
-		laser1.setName("_Laser1",0);
+		laser1.setName("_Laser1");
 		laser2 = new Laser(drawer,Settings.width/2,200,Settings.width/100,Settings.width/10);
-		laser2.setName("_Laser2",0);
+		laser2.setName("_Laser2");
 		
 		
-		MITLaser1 = new MIT_Laser(drawer, 4 * Settings.width/5,200);
-		MITLaser1.setName("_MITLaser1", 0);
-		drawer.add(MITLaser1);
 		
 		
 		Missile1 = new Missile(drawer,0,200);
-		Missile1.setName("thing",0);
+		Missile1.setName("thing");
 		
 		coin1 = new Coin(drawer,350, 270);
 		coin2 = new Coin(drawer,530, 300);
 		coin3 = new Coin(drawer,760, 230);
 		
-	
-			
-		//mouseListener +==+==+==+==+==+==+==+==+==+==+==+==+==+==+==+==+==+==+==+==+==+==+==+==+==+==+==+==+==+==+==+==+==+
-				drawer.addMouseListener(new MouseListener() {
-						
-						public void mousePressed(MouseEvent arg0) {
-							  jetpack.setAccel(0, 0, 0);
-			            	  jetpack.applyComponentForce(0, -jetpack.current_power, 0);
-			            	  jetpack.fireSize = 0.75;
-			            	  drawer.inactivity_timer = 0;
-			            	  
-			            	  JetPack_fire jetPackFire = new JetPack_fire(drawer,jetpack.getX() + jetpack.getXSize()* 0.3,jetpack.getY() + jetpack.getYSize() + jetpack.getYSize()*0.2 ,Math.random() /2 ,-1);
-			            	  
-			            	  JetPack_fire jetPackFire2 = new JetPack_fire(drawer,(jetpack.getX() + jetpack.getXSize()) - jetpack.getXSize()*0.3,jetpack.getY() + jetpack.getYSize() + jetpack.getYSize()*0.2,-Math.random() / 2 ,1);
-				            
-							
-						}
-						
-						@Override
-						public void mouseReleased(MouseEvent e) {
-							jetpack.setAccel(0, 0, 0);
-							jetpack.applyComponentForce(0, jetpack.current_power, 0);
-							jetpack.applyComponentForce(0, gravity, 0);
-							jetpack.fireSize = 0.35;
-							drawer.inactivity_timer = 0;
-						}
-						
-						public void mouseClicked(MouseEvent arg0) {}
-						@Override
-						public void mouseEntered(MouseEvent e) {}
-						@Override
-						public void mouseExited(MouseEvent e) {}
-						
-				
-				});
-						
-			//key listener
-			drawer.addKeyListener(new KeyListener() {
-				   
-	              @Override
-	              public void keyPressed(KeyEvent e) {
-	            	 
-	            	  jetpack.setAccel(0, 0, 0);
-	            	  jetpack.applyComponentForce(0, -jetpack.current_power, 0);
-	            	  jetpack.fireSize = 0.75;
-	            	  drawer.inactivity_timer = 0;
-	            	  
-	            	  JetPack_fire jetPackFire = new JetPack_fire(drawer,jetpack.getX() + jetpack.getXSize()* 0.3,jetpack.getY() + jetpack.getYSize() + jetpack.getYSize()*0.2 ,Math.random() /2 ,-1);
-	            	  
-	            	  JetPack_fire jetPackFire2 = new JetPack_fire(drawer,(jetpack.getX() + jetpack.getXSize()) - jetpack.getXSize()*0.3,jetpack.getY() + jetpack.getYSize() + jetpack.getYSize()*0.2,-Math.random() / 2 ,1);
-		            	 
-	            
-	              }
-	
-				@Override
-				public void keyReleased(KeyEvent arg0) {
-				
-					jetpack.setAccel(0, 0, 0);
-					jetpack.applyComponentForce(0, jetpack.current_power, 0);
-					jetpack.applyComponentForce(0, gravity, 0);
-					jetpack.fireSize = 0.35;
-					drawer.inactivity_timer = 0;
+			  
 					
-				}
-				@Override
-				public void keyTyped(KeyEvent arg0) { 
-					drawer.inactivity_timer = 0;
-				}
-	          });	  
-					
-				
+	    drawer.getFrame().getContentPane().addMouseListener(this);
+	  	drawer.getFrame().getGlassPane().addMouseListener(this);
+	  	drawer.getFrame().addMouseListener(this);
+	  	drawer.addMouseListener(this);
+	  	
+	  	drawer.getFrame().getContentPane().addKeyListener(this);
+	  	drawer.getFrame().getGlassPane().addKeyListener(this);
+	  	drawer.getFrame().addKeyListener(this);
+	  	drawer.addKeyListener(this);
 	
 		drawer.add(jetpack);
-		drawer.add(boundries);
 		drawer.add(coinScore);
 		drawer.add(distanceScore);
 		drawer.add(distanceHighScoreBoard);
@@ -247,16 +186,18 @@ public class JetPack_JoyRide {
 		
 	
 		
-		frame.setVisible(true);
+		drawer.getFrame().setVisible(true);
 		GUI.setVisible(true);
 		
 		distance = 0;	
 		game_over = 0;
 		
-		for (physics_object pObject : drawer.getObjects()) {
+		for (Drawable pObject : drawer.getDrawables()) {
 		
-			if (pObject.getObjectName().substring(0, 1) == "_") {
-				((Physics_drawable) pObject).setSpeed(-jetpack_speed, ((Physics_drawable) pObject).getYSpeed(), 0);
+			if (pObject.getName().substring(0, 1) == "_") {
+				try {
+					((Vector2D)((Movable) pObject).getSpeed()).setI(-jetpack_speed);
+				}catch(ClassCastException c) {}
 			}
 			
 		}
@@ -271,34 +212,26 @@ public class JetPack_JoyRide {
 
 	public static void runGame() {
 		
-		jetpack.applyComponentForce(0, gravity, 0);
+
 		
 		while (game_over == 0) {
 			
 			if (! pause) {	
 					if ((jetpack.getY() < -40) || (jetpack.getY() > Settings.height*1.25)){
-						jetpack.setPos(Settings.width/2, Settings.height - 100, 0);
+						jetpack.setPos(Settings.width/2, Settings.height - 100);
 					}		
 					
 					coinScore.setScore(coins);
 					distanceScore.setScore(Math.round(distance));
 					distance += jetpack_speed;
-					jetpack_speed += (Math.pow(drawer.current_frame,1/100) / 800) * frames;
+				//	jetpack_speed += (Math.pow(drawer.current_frame,1/100) / 800) * frames;
 					
 					gravity = (int) (gravityStart + jetpack_speed);
 					
-					Settings.width = frame.getWidth();
-					Settings.height = frame.getHeight();
+					Settings.width = drawer.getFrame().getWidth();
+					Settings.height = drawer.getFrame().getHeight();
 					
-					try {
-						for (physics_object pObject : drawer.getObjects()) {
-							if (pObject.getObjectName().substring(0, 1) == "_") {
-								((Physics_drawable) pObject).setSpeed(-jetpack_speed, ((Physics_drawable) pObject).getYSpeed(), 0);
-							}
-						}
-					}catch(ConcurrentModificationException c) {
 					
-					}catch(NullPointerException n) {}
 					
 					try {
 						Thread.sleep(1);
@@ -318,7 +251,7 @@ public class JetPack_JoyRide {
 		
 		if ((game_over == 1) || (game_over == 4)) {
 			drawer.pause();
-			
+		
 			String mes = "";
 			if (distance > distanceHighScore) {
 				mes = "\n You beat the high score!";
@@ -360,10 +293,10 @@ public class JetPack_JoyRide {
 		}
 	
 
-		drawer.end();
-		frame.remove(drawer);
+		drawer.stop();
+		drawer.getFrame().remove(drawer);
 	
-		frame.dispose();
+		drawer.getFrame().dispose();
 		GUI.dispose();
 		shop.dispose();
 		
@@ -376,46 +309,26 @@ public class JetPack_JoyRide {
 		
 		double diagonal = Math.sqrt(Math.pow(Settings.width, 2) + Math.pow(Settings.height, 2));
 		
-		distanceHighScoreBoard.setPos(0.4 * Settings.width,Settings.height-100,0);
-		distanceScore.setPos(0.7 * Settings.width,Settings.height-100,0);		
-		coinScore.setPos(0.05 * Settings.width,Settings.height-100,0);
-		jetpack.setPos(Settings.width/2,Settings.height/2, 0);
-		jetpack.setSize(diagonal/50, diagonal/50, 0);
+		distanceHighScoreBoard.setPos(0.4 * Settings.width,Settings.height-100);
+		distanceScore.setPos(0.7 * Settings.width,Settings.height-100);		
+		coinScore.setPos(0.05 * Settings.width,Settings.height-100);
+		jetpack.setPos(Settings.width/2,Settings.height/2);
+		jetpack.setSize(diagonal/50, diagonal/50);
 		GUI.setLocation(Settings.width + 20, 20);
 		
-		boundries.resize();
+	
 		
 		setSettings();
 		
 		
-		for (Physics_drawable pOb : drawer.getDrawables()) {
-			if (pOb.getObjectName().substring(0, 1) == "_") {
-				try {
-					pOb = (Missile) pOb;
-					pOb.setSize(diagonal/35,diagonal/120,0);
-				}catch(ClassCastException e) {}
-				
-				try {
-					pOb = (MIT_Laser) pOb;
-					pOb.setSize(15 * diagonal/100 + diagonal/20, diagonal/10, 1);
-				}catch(ClassCastException c) {
-					try {
-						pOb = (Laser) pOb;
-						pOb.setSize(diagonal/100,diagonal/10,0);
-					}catch(ClassCastException b) {}
-				}
-				
-				try {
-					pOb = (Coin) pOb;
-					pOb.setSize(diagonal/60,diagonal/60,0);
-				}catch(ClassCastException d) {
-					
-				}
+		for (Drawable pOb : drawer.getDrawables()) {
+			try {
+				((Resizable) pOb).resize();
 
-			}
+			}catch(ClassCastException c) {}
 		}
-		Missile1.setSize(diagonal/37,diagonal/120,0);
-		MITLaser1.setSize(15 * diagonal/100 + diagonal/20, diagonal/10, 1);
+		
+	
 		shop.setLocation(Settings.width + 20, 25 + Settings.height/2);
 		shop.setSize(Settings.width/4,Settings.height/2);
 	
@@ -429,24 +342,24 @@ public class JetPack_JoyRide {
 		
 		System.out.println("Resetting game");
 		
-		jetpack.setPos(Settings.width/2,Settings.height/2, 0);
-		jetpack.setSpeed(0, 0, 0);
-		jetpack.setAccel(0,0,0);
-		jetpack.applyComponentForce(0, 9.8, 0);
+		jetpack.setPos(Settings.width/2,Settings.height/2);
+		jetpack.getSpeed().setR(0);
+		jetpack.getAcceleration().setR(0);
+		jetpack.getAcceleration().setJ(gravity);
 		
-		laser1.setPos(Math.random() * 100,Math.random() * 300,0);
-		laser2.setPos(Math.random() * Settings.width/2,Math.random() * 200,0);
-		MITLaser1.setPos(Math.random() * 4 * Settings.width/5,Math.random() * 200,0);
+		laser1.setPos(Math.random() * 100,Math.random() * 300);
+		laser2.setPos(Math.random() * Settings.width/2,Math.random() * 200);
+
 		
-		Missile1.setPos(0,200,0);
+		Missile1.setPos(0,200);
 		
-		coin1.setPos(350, 270,0);
-		coin2.setPos(530, 300,0);
-		coin3.setPos(760, 230,0);
+		coin1.setPos(350, 270);
+		coin2.setPos(530, 300);
+		coin3.setPos(760, 230);
 		
 		distance = 0;		
 		game_over = 0;
-		jetpack_speed = 40;
+		jetpack_speed = jetpack_startSpeed;
 		coinsEarned = 0;
 		
 		
@@ -459,13 +372,15 @@ public class JetPack_JoyRide {
 	}
 	
 	public static void setSettings() {
-		Settings.frameTime = 100;	
-		Settings.elasticity = 1;
-		Settings.collision_algorithm = 4;
-		Settings.rotationAlgorithm = 6;
-		Settings.timeOutTime = 5000000;
-		drawer.setFrameTimeMultiplier(100);
-		Settings.fixedFPS_FStep = false;
+		Settings.perspective = false;
+		Settings.advancedRotation = true;
+		Settings.JOptionPaneErrorMessages = false;
+		Settings.targetFPS = 60; //attempt to make the FPS 60
+		Settings.width = 1000;
+		Settings.height = 800;
+		Settings.depth = 1000;
+		Settings.autoResizeFrame = true;
+		Settings.timeSpeed = 1;
 	}
 	
 	public static void loadGame() throws ClassNotFoundException, IOException{
@@ -504,5 +419,58 @@ public class JetPack_JoyRide {
 		System.out.println("Save Complete");
 		
 	}
+	
+	 @Override
+     public void keyPressed(KeyEvent e) {
+   	 
+   	  jetpack.getAcceleration().setJ(-jetpack.current_power);
+   	  jetpack.fireSize = 0.75;
+   	  drawer.inactivity_timer = 0;
+   	  
+   	  if (keyPressedTimes % 1 == 0) {
+	   	  JetPack_fire.showFire();
+	   	  JetPack_fire.showFire();
+   	  }  	 
+   	  
+   	  keyPressedTimes++;
+   
+     }
+
+	@Override
+	public void keyReleased(KeyEvent arg0) {
+	
+		jetpack.getAcceleration().setJ(gravity);
+		jetpack.fireSize = 0.35;
+		drawer.inactivity_timer = 0;
+		
+	}
+	@Override
+	public void keyTyped(KeyEvent arg0) { 
+		drawer.inactivity_timer = 0;
+	}
+	
+	public void mousePressed(MouseEvent arg0) {
+		jetpack.getAcceleration().setR(0);
+		jetpack.getAcceleration().setJ(-jetpack.current_power);
+    	jetpack.fireSize = 0.75;
+    	
+    	  
+    	JetPack_fire.showFire();
+    	JetPack_fire.showFire();
+	}
+	
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		jetpack.getAcceleration().setR(0);
+		jetpack.getAcceleration().setJ(gravity);
+		jetpack.fireSize = 0.35;
+		drawer.inactivity_timer = 0;
+	}
+	
+	public void mouseClicked(MouseEvent arg0) {}
+	@Override
+	public void mouseEntered(MouseEvent e) {}
+	@Override
+	public void mouseExited(MouseEvent e) {}
 	
 }

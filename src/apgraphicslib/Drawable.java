@@ -25,4 +25,6 @@ public interface Drawable extends Physics_engine_compatible {
 	 * @return the paint order value
 	 */
 	public double getPaintOrderValue(); 
+	
+	public boolean getIsVisible();
 }

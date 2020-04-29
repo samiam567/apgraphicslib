@@ -79,6 +79,8 @@ public class Physics_2DPolygon extends Physics_2DDrawMovable implements Updatabl
 	protected Coordinate2D pointOfRotation = coordinates;
 
 	protected boolean rotateWithOrbit = false;
+	
+	private boolean isFilled = true;
 
 	public Physics_2DPolygon(Object_draw drawer, double x, double y) {
 		super(drawer, x, y);
@@ -150,8 +152,8 @@ public class Physics_2DPolygon extends Physics_2DDrawMovable implements Updatabl
 		
 		updatePointValueLists();
 		//orbital rotation
-		if (orbitalAngularAcceleration.getR() != 0) orbitalAngularVelocity.add(((Vector2D) orbitalAngularAcceleration).tempStatMultiply(frames));
-			orbitalAngVFrames = ((Vector2D) orbitalAngularVelocity).tempStatMultiply(frames);
+		if (orbitalAngularAcceleration.getR() != 0) orbitalAngularVelocity.add(orbitalAngularAcceleration.tempStatMultiply(frames));
+			orbitalAngVFrames = orbitalAngularVelocity.tempStatMultiply(frames);
 			
 			orbitalRotation.add(orbitalAngVFrames);	
 			
@@ -172,7 +174,7 @@ public class Physics_2DPolygon extends Physics_2DDrawMovable implements Updatabl
 		//rotation about a point
 		if (angularAcceleration.getR() != 0) angularVelocity.add(((Vector2D) angularAcceleration).tempStatMultiply(frames));
 		if ( angularVelocity.getR() != 0) {
-			angVFrames = ((Vector2D) angularVelocity).tempStatMultiply(frames);
+			angVFrames = angularVelocity.tempStatMultiply(frames);
 			rotationMatrix.calculateRotation(angVFrames);
 			rotation.add(angVFrames);	
 			updatePoints();
@@ -325,7 +327,16 @@ public class Physics_2DPolygon extends Physics_2DDrawMovable implements Updatabl
  
 	@Override
 	public void paint(Graphics page) {
-		page.drawPolygon(pointXValues, pointYValues, numPoints);
+		if (isFilled) {
+			page.fillPolygon(pointXValues, pointYValues, numPoints);
+		}else {
+			page.drawPolygon(pointXValues, pointYValues, numPoints);
+		}
+	}
+
+
+	public void setIsFilled(boolean isFilled) {
+		this.isFilled = isFilled;
 	}
 
 	

@@ -6,11 +6,17 @@ package apgraphicslib;
  * {@summary A 1-dimensional vector in space with a magnitude but no direction. Children will be two, three, four+ dimensional}
  */
 public class Vector {
+	private static Vector tempVec = new Vector(0);
+	
 	protected double r = 0;
 	
 	public Vector() {}
 	
 	public Vector(double r) {
+		this.r = r;
+	}
+	
+	public void setR(double r) {
 		this.r = r;
 	}
 	
@@ -79,6 +85,26 @@ public class Vector {
 	public String toString() {
 		return "" + getR();
 	}
+	
+	/**
+	 * scales this Vector by the multiple without changing this vector
+	 * @param outputVec make this vec into the multiple
+	 */
+	public Vector statMultiplyInto(double mult, Vector outputVec) {
+		outputVec.setR(getR() * mult);
+		return outputVec;
+	}
+
+	/**
+	 * {@code WARNING this method uses the temp protocol. If the return isn't IMMEDIATELY used it may be overwritten causing terrible awful errors}
+	 * @return a Vector representing the scaling of this Vector by the multiple without changing this vector
+	 */
+	public Vector tempStatMultiply(double multi) {
+		return statMultiplyInto(multi, tempVec);
+	}
+
+	
+
 
 
 

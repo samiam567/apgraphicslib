@@ -98,12 +98,26 @@ public class Vector2D extends Vector implements Two_dimensional {
 	 * {@summary Should NEVER be used inside a Vector class because it calls polarToRectangular()}
 	 * {@code sets the r of the vector and then calls polarToRectangular() @see polarToRectangular()}
 	 */
+	@Override
 	public void setR(double r) {
 		rectangularToPolar();
 		this.r = r;
 		rectangularCalculated = false;
 	}
 
+	
+	/**
+	 * {@code sets the rectangular components of this Vector2D}
+	 * @param i the new i component
+	 * @param j the new j component
+	 */
+	public void setIJ(double i, double j) {
+		this.i = i;
+		this.j = j;
+		rectangularCalculated = true;
+		polarCalculated = false;
+	}
+	
 	public void setI(double newI) {
 		polarToRectangular();
 		i = newI;
@@ -295,6 +309,7 @@ public class Vector2D extends Vector implements Two_dimensional {
 		Exception e = new Exception("Vectors do not have coordinates");
 		e.printStackTrace();
 	}
+
 
 	
 	

@@ -4,39 +4,43 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
-import Physics_engine.*;
-import Physics_engine.Physics_engine_toolbox.faces;
+import Shapes.Rectangle;
+import apgraphicslib.CollisionEvent;
+import apgraphicslib.Object_draw;
+import apgraphicslib.Settings;
+import apgraphicslib.Tangible;
 
-public class Laser extends rectangle{
+public class Laser extends Rectangle implements Tangible {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1946879174197910435L;
 
-	public Laser(object_draw drawer1, int x, int y, double xSize, double ySize) {
-		super(drawer1,x, y, 0, xSize, ySize, 1);
+	private boolean isTangible = true;
+	public Laser(Object_draw drawer1, int x, int y, double xSize, double ySize) {
+		super(drawer1,x, y, xSize, ySize);
 		setColor(Color.red);
-		drawMethod = "paint";
-		affectedByBorder = false;
-		name = "thing";
+		
+		setName("thing");
 		
 	}
 	
-	public void secondaryUpdate() {
-		points[0].setPos(xReal, yReal, zReal);
-		if (getXReal() < 0) {
-			setPos(Math.random() * 1500 + Settings.width+100, Math.random() * (Settings.height-getXSize()-150), getZReal());
-			setSpeed(-JetPack_JoyRide.jetpack_speed, 0,0);
+	public void Update(double frames) {
+		super.Update(frames);
+		
+		if (getX() < 0) {
+			setPos(Math.random() * 1500 + Settings.width+100, Math.random() * (Settings.height-getXSize()-150));
+			getSpeed().setI(-JetPack_JoyRide.jetpack_speed);
 		}
 		
-		else if ( (getXReal()+20 < JetPack_JoyRide.jetpack.getXReal()) || (getXReal()-50 >JetPack_JoyRide.jetpack.getXReal()) ) {
+		else if ( (getX()+20 < JetPack_JoyRide.jetpack.getX()) || (getX()-50 >JetPack_JoyRide.jetpack.getX()) ) {
 			isTangible = false;
 		}else {
 			isTangible = true;
 		}
 		
-		setSpeed(-JetPack_JoyRide.jetpack_speed, 0,0);
+		getSpeed().setI(-JetPack_JoyRide.jetpack_speed);
 	}
 		
 		
@@ -44,8 +48,11 @@ public class Laser extends rectangle{
 	
 	
 	public void paint(Graphics page) {
-		page.fillRect(getX(),getY(), (int) Math.round(xSizeAppearance),(int) Math.round(ySizeAppearance));
+		page.fillRect((int) (getX() - getXSize()/2),(int) (getY() - getYSize()/2), (int) Math.round(getXSize()),(int) Math.round(getYSize()));
 		page.setColor(Color.ORANGE);
-		page.fillRect(getX() + (int) Math.round(xSizeAppearance/4),getY() + (int) Math.round(ySizeAppearance/4), (int) Math.round(xSizeAppearance/2),(int) Math.round(ySizeAppearance/2));
+		page.fillRect((int) (getX() - getXSize()/4), (int) (getY() - getYSize()/4), (int) Math.round(getXSize()/2),(int) Math.round(getYSize()/2));
 	}
+
+	@Override
+	public void collision(CollisionEvent object) {}
 }

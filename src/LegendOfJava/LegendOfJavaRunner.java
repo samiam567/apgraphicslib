@@ -32,7 +32,7 @@ public class LegendOfJavaRunner {
 		Settings.height = 800;
 		Settings.depth = 1000;
 		Settings.autoResizeFrame = false;
-		
+		Settings.timeSpeed = 1;
 		
 		drawer = new Object_draw();
 		

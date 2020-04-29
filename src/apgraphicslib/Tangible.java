@@ -44,4 +44,6 @@ public interface Tangible extends Updatable, Movable, Two_dimensional {
 	 * @return a CollisionEvent representing the half of the collision where o2 runs into this object
 	 */
 	public CollisionEvent getCollisionEvent(Tangible o2, Coordinate2D pointOfCollision);
+
+	public boolean getIsTangible();
 }

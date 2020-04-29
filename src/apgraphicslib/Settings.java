@@ -14,6 +14,7 @@ public abstract class Settings {
 	public static double distanceFromScreenMeters = 0.1; //0.3025; //the distance in meters the viewer is away from the screen
 	public static double distanceFromScreen = distanceFromScreenMeters / 0.000115; //should not be changed
 	
+	public static double timeSpeed = 1; //speed up or slow down everything
 			
 	public static Color frameColor = Color.gray;
 	

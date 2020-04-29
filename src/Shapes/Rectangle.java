@@ -1,5 +1,6 @@
 package Shapes;
 
+
 import apgraphicslib.CollisionEvent;
 import apgraphicslib.Coordinate2D;
 import apgraphicslib.Coordinate3D;
@@ -9,8 +10,15 @@ import apgraphicslib.Physics_engine_toolbox;
 import apgraphicslib.Tangible;
 import apgraphicslib.Three_dimensional;
 
+/**
+ * {@code A rectangle. Supports rotation and collision (but you must implement Tangible}
+ * @author apun1
+ *
+ */
 public class Rectangle extends Physics_2DPolygon {
-
+	
+	private boolean isTangible = true;
+	
 	public Rectangle(Object_draw drawer, double x, double y, double xSize, double ySize) {
 		super(drawer, x, y);
 		
@@ -61,8 +69,17 @@ public class Rectangle extends Physics_2DPolygon {
 	}
 
 	public CollisionEvent getCollisionEvent(Tangible o2, Coordinate2D pointOfCollision) {
-		// TODO Auto-generated method stub
-		return null;
+		return new CollisionEvent(pointOfCollision,rotation,(Tangible) this,getSpeed());
+	}
+
+
+	public boolean getIsTangible() {
+		return isTangible;
+	}
+
+
+	public void setIsTangible(boolean isTangible) {
+		this.isTangible = isTangible;
 	}
 
 }
