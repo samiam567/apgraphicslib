@@ -44,9 +44,9 @@ public class JetPack_fire extends Square {
 	
 	
 		if (nextFireIndx % 2 == 0) {
-			fire.init(JetPack_JoyRide.jetpack.getX() + JetPack_JoyRide.jetpack.getXSize()* 0.3,JetPack_JoyRide.jetpack.getY() + JetPack_JoyRide.jetpack.getYSize() + JetPack_JoyRide.jetpack.getYSize()*0.2 ,Math.random() /2 ,-1); 
+			fire.init(JetPack_JoyRide.jetpack.getX() - JetPack_JoyRide.jetpack.getXSize()/5 ,JetPack_JoyRide.jetpack.getY() + JetPack_JoyRide.jetpack.getYSize() + JetPack_JoyRide.jetpack.getYSize()/2*0.2 ,Math.random() /2 ,-1); 
 		}else {
-			fire.init((JetPack_JoyRide.jetpack.getX() + JetPack_JoyRide.jetpack.getXSize()) - JetPack_JoyRide.jetpack.getXSize()*0.3,JetPack_JoyRide.jetpack.getY() + JetPack_JoyRide.jetpack.getYSize() + JetPack_JoyRide.jetpack.getYSize()*0.2,-Math.random() / 2 ,1); 	
+			fire.init(JetPack_JoyRide.jetpack.getX() + JetPack_JoyRide.jetpack.getXSize()/5,JetPack_JoyRide.jetpack.getY() + JetPack_JoyRide.jetpack.getYSize()/2 + JetPack_JoyRide.jetpack.getYSize()*0.2,-Math.random() / 2 ,1); 	
 		}
 		
 		fire.setIsVisible(true);

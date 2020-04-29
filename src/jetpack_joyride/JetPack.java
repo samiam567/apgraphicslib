@@ -7,11 +7,12 @@ import apgraphicslib.CollisionEvent;
 import apgraphicslib.Coordinate2D;
 import apgraphicslib.Coordinate3D;
 import apgraphicslib.Object_draw;
+import apgraphicslib.Resizable;
 import apgraphicslib.Settings;
 import apgraphicslib.Tangible;
 import apgraphicslib.Vector2D;
 
-public class JetPack extends Rectangle implements Tangible {
+public class JetPack extends Rectangle implements Tangible, Resizable {
 	
 	public double fireSize = 0.4;
 	
@@ -78,24 +79,29 @@ public class JetPack extends Rectangle implements Tangible {
 	public void paint(Graphics page) {
 
 	
-		page.fillRect((int) getX(),(int) getY(), (int) Math.round(getYSize()/2), (int) Math.round(getYSize()));
-		page.fillRect((int) Math.round(getX() + getYSize()/2) - 3, (int) getY(), (int) Math.round(getYSize()/2), (int) Math.round(getYSize()));
+		page.fillRect((int) (getX() - getXSize()/2),(int) (getY() - getYSize()/2), (int) Math.round(getYSize()/2), (int) Math.round(getYSize()));
+		page.fillRect((int) Math.round(getX()) - 3, (int) (getY() - getYSize()/2), (int) Math.round(getYSize()/2), (int) Math.round(getYSize()));
 		
 		page.setColor(Color.DARK_GRAY);
-		page.drawRect((int) getX(),(int) getY(), (int) Math.round(getYSize()/2), (int) Math.round(getYSize()));
-		page.drawRect((int) Math.round(getX() + getYSize()/2) , (int) getY(), (int) Math.round(getYSize()/2)-3, (int) Math.round(getYSize()));
+		page.drawRect((int) (getX() - getXSize()/2),(int) (getY() - getYSize()/2), (int) Math.round(getYSize()/2), (int) Math.round(getYSize()));
+		page.drawRect((int) Math.round(getX()) , (int) getY(), (int) Math.round(getYSize()/2)-3, (int) Math.round(getYSize()));
 		
 		if (fireSize > 0.4) {
 			page.setColor(Color.yellow);
-			page.fillRect((int) getX()+3,(int) ( getY()+Math.round(getYSize())), (int) Math.round(getYSize()/2)-6, (int) Math.round(fireSize*getYSize()/2));
-			page.fillRect((int) ((int) Math.round(getYSize()/2)+getX()+1),(int) ( getY()+Math.round(getYSize())), (int) Math.round(getYSize()/2)-6, (int) Math.round(fireSize*getYSize()/2));
+			page.fillRect((int)  (getX() - getXSize()/2)+3,(int) ( getY()+Math.round(getYSize()/2)), (int) Math.round(getYSize()/2)-6, (int) Math.round(fireSize*getYSize()/2));
+			page.fillRect((int) ((int) getX()+1),(int) ( getY()+Math.round(getYSize()/2)), (int) Math.round(getYSize()/2)-6, (int) Math.round(fireSize*getYSize()/2));
 		}
 		
 		page.setColor(Color.orange);
-		page.fillRect((int) (getX()+2),(int) ( getY()+Math.round(getYSize())), (int) Math.round(getYSize()/2)-4, (int) Math.round(0.45*getYSize()/2));
-		page.fillRect((int) ((int) Math.round(getYSize()/2)+getX()),(int) ( getY()+Math.round(getYSize())), (int) Math.round(getYSize()/2)-4, (int) Math.round(0.45*getYSize()/2));
+		page.fillRect((int) ((getX() - getXSize()/2)+2),(int) ( getY()+Math.round(getYSize()/2)), (int) Math.round(getYSize()/2)-4, (int) Math.round(0.45*getYSize()/2));
+		page.fillRect((int) ((int) getX()),(int) ( getY()+Math.round(getYSize()/2)), (int) Math.round(getYSize()/2)-4, (int) Math.round(0.45*getYSize()/2));
 	
 		}
+
+	@Override
+	public void resize() {
+		JetPack_JoyRide.resize();
+	}
 
 
 

@@ -292,13 +292,13 @@ public class JetPack_JoyRide implements MouseListener, KeyListener{
 			
 		}
 	
-
-		drawer.stop();
+		System.out.println("stopping");
+		drawer.stopNoWait();
 		drawer.getFrame().remove(drawer);
-	
 		drawer.getFrame().dispose();
 		GUI.dispose();
 		shop.dispose();
+		System.exit(1);
 		
 		//end
 	
@@ -316,18 +316,8 @@ public class JetPack_JoyRide implements MouseListener, KeyListener{
 		jetpack.setSize(diagonal/50, diagonal/50);
 		GUI.setLocation(Settings.width + 20, 20);
 		
-	
 		
 		setSettings();
-		
-		
-		for (Drawable pOb : drawer.getDrawables()) {
-			try {
-				((Resizable) pOb).resize();
-
-			}catch(ClassCastException c) {}
-		}
-		
 	
 		shop.setLocation(Settings.width + 20, 25 + Settings.height/2);
 		shop.setSize(Settings.width/4,Settings.height/2);
@@ -376,9 +366,6 @@ public class JetPack_JoyRide implements MouseListener, KeyListener{
 		Settings.advancedRotation = true;
 		Settings.JOptionPaneErrorMessages = false;
 		Settings.targetFPS = 60; //attempt to make the FPS 60
-		Settings.width = 1000;
-		Settings.height = 800;
-		Settings.depth = 1000;
 		Settings.autoResizeFrame = true;
 		Settings.timeSpeed = 1;
 	}

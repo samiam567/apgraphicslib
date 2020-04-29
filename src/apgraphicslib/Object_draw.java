@@ -342,8 +342,7 @@ public class Object_draw extends JPanel {
 	public void checkForResize() {				
 		if ( (Settings.width != getFrame().getWidth()) || (Settings.height != getFrame().getHeight())) {
 			if (Settings.autoResizeFrame) {
-				Settings.width = (int) (getFrame().getWidth());
-				Settings.height = (int) (getFrame().getHeight());
+				Settings.height = (getFrame().getHeight());
 				for (Resizable cObject : resizables) cObject.resize(); //resize resizable objects				
 			}
 		}
