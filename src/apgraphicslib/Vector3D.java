@@ -36,6 +36,12 @@ public class Vector3D extends Vector2D implements Three_dimensional {
 		setIJK(pF.getX() - pI.getX(),pF.getY() - pI.getY(),pF.getZ() - pI.getZ());
 	}
 	
+	/**
+	 * {@code sets the rectangular values of the vector}
+	 * @param i the new i component
+	 * @param j the new j component
+	 * @param k the new k component
+	 */
 	public void setIJK(double i, double j, double k) {
 		//since we are setting all three we don't need to calculate rectangular
 		this.i = i;
@@ -43,6 +49,14 @@ public class Vector3D extends Vector2D implements Three_dimensional {
 		this.k = k;
 		rectangularCalculated = true;
 		polarCalculated = false;
+	}
+	
+	/**
+	 * {@code sets the rectangular values to match the passed Vector3D}
+	 * @param newValuesVec
+	 */
+	public void setIJK(Vector3D newValuesVec) {
+		setIJK(newValuesVec.getI(), newValuesVec.getJ(), newValuesVec.getK());
 	}
 
 	public void setK(double newK) {
@@ -393,6 +407,8 @@ public class Vector3D extends Vector2D implements Three_dimensional {
 	public String toString() {
 		return "i: " + getI() + " , j: " + getJ() + " , k: " + getK() + " , theta: " + getTheta() + " , phi: " + getPhi();
 	}
+
+	
 
 	
 

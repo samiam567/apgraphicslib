@@ -41,7 +41,7 @@ public abstract class Physics_2DDrawMovable extends Physics_drawable implements 
 	}
 
 	@Override
-	public Vector getSpeed() {
+	public Vector2D getSpeed() {
 		return speed;
 	}
 

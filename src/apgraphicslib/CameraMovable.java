@@ -1,3 +1,3 @@
 package apgraphicslib;
 
-public interface CameraMovable extends Rotatable, Movable {}
+public interface CameraMovable extends Rotatable, Movable, Three_dimensional {}

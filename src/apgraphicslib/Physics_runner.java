@@ -6,7 +6,7 @@ public class Physics_runner {
 
 	
 	@SuppressWarnings("unused")
-	private static class Egg extends Physics_3DTexturedEquationedPolygon {
+	private static class Egg extends Physics_3DTexturedEquationedPolygon implements CameraMovable{
 		public Egg(Object_draw drawer, double x, double y, double z,double xSize, double ySize, double zSize, double ppSize) {
 			super(drawer, x, y, z,xSize, ppSize);
 			setSize(xSize, ySize, zSize);
@@ -44,8 +44,8 @@ public class Physics_runner {
 		
 		
 		Egg square2 = new Egg(drawer,Settings.width/2,Settings.height/2,0,100,200,150,3);
-
-
+		
+		drawer.add(new Camera(drawer));
 		
 		square2.setTexture("src/LegendOfJava/assets/texture.jpg");
 		

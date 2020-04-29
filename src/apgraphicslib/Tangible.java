@@ -21,7 +21,7 @@ public interface Tangible extends Updatable, Movable, Two_dimensional {
 	 * @param object the object to check if this one is collided with
 	 * @return the point of contact or null if the objects are not collided
 	 */
-	public Coordinate3D checkForCollision(Tangible current_object);
+	public Coordinate2D checkForCollision(Tangible current_object);
 	
 	/**
 	 * @param point the coordinate to check if it is in the object
