@@ -84,7 +84,7 @@ public class JetPack extends Rectangle implements Tangible, Resizable {
 		
 		page.setColor(Color.DARK_GRAY);
 		page.drawRect((int) (getX() - getXSize()/2),(int) (getY() - getYSize()/2), (int) Math.round(getYSize()/2), (int) Math.round(getYSize()));
-		page.drawRect((int) Math.round(getX()) , (int) getY(), (int) Math.round(getYSize()/2)-3, (int) Math.round(getYSize()));
+		page.drawRect((int) Math.round(getX()) , (int) (getY() - getYSize()/2), (int) Math.round(getYSize()/2)-3, (int) Math.round(getYSize()));
 		
 		if (fireSize > 0.4) {
 			page.setColor(Color.yellow);
