@@ -1,5 +1,6 @@
 package danceDanceRevolution;
 
+import java.awt.Color;
 import java.util.ArrayList;
 
 import apgraphicslib.Object_draw;
@@ -13,8 +14,12 @@ public class DDRRunner {
 	static Song currentSong;
 	
 	public static void main(String[] args) {
+		Settings.perspective = false;
+		Settings.targetFPS = 60;
+		Settings.frameColor = Color.black;
+		
 	//	Song song = new Song(drawer,"./src/danceDanceRevolution/assets/" + JOptionPane.showInputDialog(drawer, "What song?") + ".dat");
-		Song song = new Song(drawer,"./src/danceDanceRevolution/assets/Sultans Of Swing.dat");
+		Song song = new Song(drawer,"./src/danceDanceRevolution/assets/september.dat");
 	//	Song song = new Song(drawer,"./src/danceDanceRevolution/assets/Only The Good Die Young (Mom).dat");
 	
 		

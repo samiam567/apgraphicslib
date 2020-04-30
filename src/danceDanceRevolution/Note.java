@@ -6,7 +6,7 @@ import apgraphicslib.Resizable;
 import apgraphicslib.Settings;
 
 public class Note extends Physics_2DTexturedPolygon implements Resizable {
-	private static double NotePPSize = 2;
+	private static double NotePPSize = 3;
 	public static double noteSize = Settings.width/5;
 	private String textureSrc = "noTexture";
 	
@@ -44,7 +44,6 @@ public class Note extends Physics_2DTexturedPolygon implements Resizable {
 	@Override
 	public void Update(double frames) {		
 		getCoordinates().add(speed.tempStatMultiply(frames));
-		speed.add(acceleration.tempStatMultiply(frames));	
 	}
 	
 	@Override
