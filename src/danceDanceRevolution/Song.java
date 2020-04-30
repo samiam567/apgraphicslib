@@ -32,7 +32,7 @@ public class Song extends Physics_object implements KeyListener{
 	RightNote rightNoteTarget;
 
 	private String audioSrc, leftNotesStr, upNotesStr, downNotesStr, rightNotesStr;
-	private double difficulty, tempo;
+	private double difficulty, tempo, startDiff;
 	
 	public Song(Object_draw drawer, String songSrc) {
 		super(drawer);
@@ -55,6 +55,7 @@ public class Song extends Physics_object implements KeyListener{
 			audioSrc = scan.next();
 			difficulty = Double.parseDouble(scan.next());
 			tempo = Double.parseDouble(scan.next());
+			startDiff = Double.parseDouble(scan.next());
 			scan.nextLine();
 			leftNotesStr = scan.nextLine();
 			downNotesStr = scan.nextLine();
@@ -76,8 +77,9 @@ public class Song extends Physics_object implements KeyListener{
 	}
 
 	public void addNotes() {
+		double audioLatency = 0.1 * tempo;
 		double noteDistMultiplier = Note.noteSize;
-		double noteStart = Note.noteSize * 5;
+		double noteStart = Note.noteSize * 5 + audioLatency + startDiff * tempo;
 		
 		//leftNotes
 		Scanner leftScan = new Scanner(leftNotesStr);

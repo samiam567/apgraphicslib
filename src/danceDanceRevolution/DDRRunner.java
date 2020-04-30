@@ -2,8 +2,6 @@ package danceDanceRevolution;
 
 import java.util.ArrayList;
 
-import javax.swing.JOptionPane;
-
 import apgraphicslib.Object_draw;
 import apgraphicslib.Settings;
 
@@ -15,9 +13,10 @@ public class DDRRunner {
 	static Song currentSong;
 	
 	public static void main(String[] args) {
-		//Song song = new Song(drawer,"./src/danceDanceRevolution/assets/" + JOptionPane.showInputDialog(drawer, "What song?") + ".dat");
-		Song song = new Song(drawer,"./src/danceDanceRevolution/assets/september.dat");
-		
+	//	Song song = new Song(drawer,"./src/danceDanceRevolution/assets/" + JOptionPane.showInputDialog(drawer, "What song?") + ".dat");
+		Song song = new Song(drawer,"./src/danceDanceRevolution/assets/Sultans Of Swing.dat");
+	//	Song song = new Song(drawer,"./src/danceDanceRevolution/assets/Only The Good Die Young (Mom).dat");
+	
 		
 		song.play();
 		System.out.println(song);
