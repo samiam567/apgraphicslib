@@ -15,7 +15,8 @@ public class DDRRunner {
 	static Song currentSong;
 	
 	public static void main(String[] args) {
-		Song song = new Song(drawer,"./src/danceDanceRevolution/assets/" + JOptionPane.showInputDialog(drawer, "What song?") + ".dat");
+		//Song song = new Song(drawer,"./src/danceDanceRevolution/assets/" + JOptionPane.showInputDialog(drawer, "What song?") + ".dat");
+		Song song = new Song(drawer,"./src/danceDanceRevolution/assets/september.dat");
 		
 		
 		song.play();

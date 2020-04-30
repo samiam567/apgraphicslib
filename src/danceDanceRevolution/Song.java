@@ -77,6 +77,7 @@ public class Song extends Physics_object implements KeyListener{
 
 	public void addNotes() {
 		double noteDistMultiplier = Note.noteSize;
+		double noteStart = Note.noteSize * 5;
 		
 		//leftNotes
 		Scanner leftScan = new Scanner(leftNotesStr);
@@ -84,10 +85,12 @@ public class Song extends Physics_object implements KeyListener{
 		
 		LeftNote newLftNote;
 		while (leftScan.hasNext()) {
-			newLftNote = new LeftNote(getDrawer(),tempo * 4 + leftScan.nextDouble()*noteDistMultiplier, tempo, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
-			leftNotes.add(newLftNote);
-			allNotes.add(newLftNote);
-			System.out.println("note added");
+			try {
+				newLftNote = new LeftNote(getDrawer(),noteStart + Double.parseDouble(leftScan.next())*noteDistMultiplier, tempo, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
+				leftNotes.add(newLftNote);
+				allNotes.add(newLftNote);
+				System.out.println("note added");
+			}catch(NumberFormatException n ) {}
 		}
 		
 		
@@ -97,10 +100,12 @@ public class Song extends Physics_object implements KeyListener{
 		
 		DownNote newDwnNote;
 		while (downScan.hasNext()) {
-			newDwnNote = new DownNote(getDrawer(),tempo * 4 + downScan.nextDouble()*noteDistMultiplier, tempo, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
-			downNotes.add(newDwnNote);
-			allNotes.add(newDwnNote);
-			System.out.println("note added");
+			try {
+				newDwnNote = new DownNote(getDrawer(),noteStart + Double.parseDouble(downScan.next())*noteDistMultiplier, tempo, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
+				downNotes.add(newDwnNote);
+				allNotes.add(newDwnNote);
+				System.out.println("note added");
+			}catch(NumberFormatException n ) {}
 		}
 		
 		
@@ -110,10 +115,12 @@ public class Song extends Physics_object implements KeyListener{
 		
 		UpNote newUpNote;
 		while (upScan.hasNext()) {
-			newUpNote = new UpNote(getDrawer(),tempo * 4 + upScan.nextDouble()*noteDistMultiplier, tempo, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
-			upNotes.add(newUpNote);
-			allNotes.add(newUpNote);
-			System.out.println("note added");
+			try {
+				newUpNote = new UpNote(getDrawer(),noteStart + Double.parseDouble(upScan.next())*noteDistMultiplier, tempo, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
+				upNotes.add(newUpNote);
+				allNotes.add(newUpNote);
+				System.out.println("note added");
+			}catch(NumberFormatException n ) {}
 		}
 		
 		
@@ -123,10 +130,12 @@ public class Song extends Physics_object implements KeyListener{
 		
 		RightNote newRgtNote;
 		while (rightScan.hasNext()) {
-			newRgtNote = new RightNote(getDrawer(),tempo * 4 + rightScan.nextDouble()*noteDistMultiplier, tempo, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
-			rightNotes.add(newRgtNote);
-			allNotes.add(newRgtNote);
-			System.out.println("note added");
+			try {
+				newRgtNote = new RightNote(getDrawer(),noteStart + Double.parseDouble(rightScan.next())*noteDistMultiplier, tempo, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
+				rightNotes.add(newRgtNote);
+				allNotes.add(newRgtNote);
+				System.out.println("note added");
+			}catch(NumberFormatException n ) {}
 		}
 		
 		leftScan.close();
