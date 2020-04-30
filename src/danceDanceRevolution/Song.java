@@ -77,9 +77,17 @@ public class Song extends Physics_object implements KeyListener{
 	}
 
 	public void addNotes() {
-		double audioLatency = 0.1 * tempo;
 		double noteDistMultiplier = Note.noteSize;
-		double noteStart = Note.noteSize * 5 + audioLatency + startDiff * tempo;
+		double audioLatency;
+		
+		boolean desktop = false;
+		if (desktop) {
+			audioLatency = 0.1 * noteDistMultiplier;
+		}else {
+			audioLatency = 2.6 * noteDistMultiplier;
+		}
+		
+		double noteStart = Note.noteSize * 4 + audioLatency + startDiff * noteDistMultiplier;
 		
 		//leftNotes
 		Scanner leftScan = new Scanner(leftNotesStr);
