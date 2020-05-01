@@ -79,6 +79,14 @@ public class Song extends Physics_object implements KeyListener{
 		
 	}
 
+	public Song(Object_draw drawer) {
+		super(drawer);
+		boolean Error = true;
+		while (Error)
+			audioSrc = "";
+			
+	}
+
 	public void addNotes() {
 		double noteDistMultiplier = Note.noteSize;
 		double audioLatency;

@@ -29,12 +29,14 @@ public class DDRRunner {
 		score.setColor(Color.green);
 		drawer.add(score);
 		
-		String[] songChoices = {"september","Sultans Of Swing","Only The Good Die Young (Mom)", "Star Wars (Emily)", "Other"};
+		String[] songChoices = {"september","Sultans Of Swing","Only The Good Die Young (Mom)", "Star Wars (Emily)", "Other", "Create new song"};
 		String songChoice = songChoices[JOptionPane.showOptionDialog(drawer, "Which Song do you want?", "Choose a song", 1, 1, null, songChoices, 0)];
 		
 		Song song;
-		if (songChoice.contentEquals("Other")) {
+		if (songChoice.equals("Other")) {
 			song = new Song(drawer,"./src/danceDanceRevolution/assets/" + JOptionPane.showInputDialog(drawer, "What song?") + ".dat");
+		}else if (songChoice.equals("Create new song")) {
+			song = new Song(drawer);
 		}else {
 			song = new Song(drawer,"./src/danceDanceRevolution/assets/" + songChoice + ".dat");
 		}
