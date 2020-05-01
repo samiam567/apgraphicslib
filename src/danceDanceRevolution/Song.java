@@ -18,7 +18,7 @@ import apgraphicslib.Settings;
 public class Song extends Physics_object implements KeyListener{
 	
 	//if these arrows on the mat are pressed down 
-	private boolean left = false, down = false, up = false, right = false;
+	private boolean left = false, down = false, up = false, right = false, tempoTrigger = false;
 	
 	private LinkedList<LeftNote> leftNotes = new LinkedList<LeftNote>();
 	private LinkedList<DownNote> downNotes = new LinkedList<DownNote>();
@@ -81,9 +81,56 @@ public class Song extends Physics_object implements KeyListener{
 
 	public Song(Object_draw drawer) {
 		super(drawer);
-		boolean Error = true;
-		while (Error)
-			audioSrc = "";
+		
+		
+		audioSrc = "./src/danceDanceRevolution/assets/" + JOptionPane.showInputDialog(drawer,"What is the song name?") + ".wav";
+		
+		JOptionPane.showMessageDialog(drawer, "press any key on the beat to record the temp of the song");
+		int loopTimes = Physics_engine_toolbox.getIntegerFromUser(drawer.getFrame(), "How many data points do you want to collect? (the more data points the more accurate it will be)");
+		long nanoStart = System.nanoTime();
+		tempo = 0;
+		int times = 0;
+		
+		try {
+			AudioManager.playAudioFile(audioSrc);
+		}catch(Exception e) {
+			System.out.println("exception caught!");
+		}
+		
+		
+		getDrawer().getFrame().getContentPane().addKeyListener(this);
+		getDrawer().getFrame().getGlassPane().addKeyListener(this);
+		getDrawer().getFrame().addKeyListener(this);
+		getDrawer().addKeyListener(this);
+		
+		while (! tempoTrigger) { 
+			//wait for the first key press
+			try {
+				Thread.sleep(1);
+			}catch(InterruptedException i) {}
+		}
+		nanoStart = System.nanoTime();
+		while (times < loopTimes) {
+			System.out.println("e");
+			if (tempoTrigger == true) {
+				tempo += (System.nanoTime() - nanoStart) / 1000000000;
+				nanoStart = System.nanoTime();
+				tempoTrigger = false;
+				times++;
+				System.out.println("data point added");
+			}
+			
+			try {
+				Thread.sleep(1);
+			}catch(InterruptedException i) {}
+		}
+		tempo /= loopTimes;
+		JOptionPane.showMessageDialog(drawer, "Tempo: " + tempo);
+		
+		getDrawer().getFrame().getContentPane().removeKeyListener(this);
+		getDrawer().getFrame().getGlassPane().removeKeyListener(this);
+		getDrawer().getFrame().removeKeyListener(this);
+		getDrawer().removeKeyListener(this);
 			
 	}
 
@@ -184,6 +231,7 @@ public class Song extends Physics_object implements KeyListener{
 
 	@Override
 	public void keyPressed(KeyEvent arg0) {
+		tempoTrigger = true;
 		if (arg0.getKeyCode() == 37) { //LEFT
 			if (! left) {
 				left = true;

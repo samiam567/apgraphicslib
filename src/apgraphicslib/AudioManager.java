@@ -3,6 +3,7 @@ package apgraphicslib;
 import java.io.File;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.swing.JOptionPane;
 
 
 /**
@@ -20,6 +21,9 @@ public class AudioManager {
 			clip.open(AudioSystem.getAudioInputStream(audioFile));
 			clip.start();
 		}catch( Exception e) {
+			if (Settings.JOptionPaneErrorMessages) {
+				JOptionPane.showMessageDialog(null, "Could not read audio file: " + filePath);
+			}
 			e.printStackTrace();
 		}
 	}
