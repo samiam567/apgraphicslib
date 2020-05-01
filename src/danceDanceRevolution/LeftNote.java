@@ -6,9 +6,9 @@ import apgraphicslib.Vector;
 
 public class LeftNote extends Note {
 
-	private static double leftNoteXPos = Settings.width/5;
+	
 	public LeftNote(Object_draw drawer, double y, double noteSpeed, String textureSrc) {
-		super(drawer, leftNoteXPos, y, noteSpeed, textureSrc);
+		super(drawer, Settings.width/5, y, noteSpeed, textureSrc);
 		
 	}
 	

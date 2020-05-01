@@ -3,25 +3,41 @@ package danceDanceRevolution;
 import java.awt.Color;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 import apgraphicslib.Object_draw;
+import apgraphicslib.ScoreBoard;
 import apgraphicslib.Settings;
 
 public class DDRRunner {
-	private static Object_draw drawer = new Object_draw();
+	private static Object_draw drawer;
 	
-	private ArrayList<Song> songs = new ArrayList<Song>();
 	
 	static Song currentSong;
 	
+	static ScoreBoard score;
 	public static void main(String[] args) {
+		Settings.width = 1200;
+		Settings.height = 1000;
 		Settings.perspective = false;
 		Settings.targetFPS = 60;
+		
+		drawer = new Object_draw();
 		drawer.getFrame().setBackground(Color.black);
 		
-	//	Song song = new Song(drawer,"./src/danceDanceRevolution/assets/" + JOptionPane.showInputDialog(drawer, "What song?") + ".dat");
-		Song song = new Song(drawer,"./src/danceDanceRevolution/assets/Sultans Of Swing.dat");
-	//	Song song = new Song(drawer,"./src/danceDanceRevolution/assets/Only The Good Die Young (Mom).dat");
-	
+		score = new ScoreBoard(drawer,100,100,"Score",0);
+		score.setColor(Color.green);
+		drawer.add(score);
+		
+		String[] songChoices = {"september","Sultans Of Swing","Only The Good Die Young (Mom)", "Star Wars (Emily)", "Other"};
+		String songChoice = songChoices[JOptionPane.showOptionDialog(drawer, "Which Song do you want?", "Choose a song", 1, 1, null, songChoices, 0)];
+		
+		Song song;
+		if (songChoice.contentEquals("Other")) {
+			song = new Song(drawer,"./src/danceDanceRevolution/assets/" + JOptionPane.showInputDialog(drawer, "What song?") + ".dat");
+		}else {
+			song = new Song(drawer,"./src/danceDanceRevolution/assets/" + songChoice + ".dat");
+		}
 		
 		song.play();
 		System.out.println(song);

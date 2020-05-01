@@ -6,9 +6,8 @@ import apgraphicslib.Vector;
 
 public class RightNote extends Note {
 	
-	private static double rightNoteXPos = 4*Settings.width/5;
 	public RightNote(Object_draw drawer, double y, double noteSpeed, String textureSrc) {
-		super(drawer, rightNoteXPos, y, noteSpeed, textureSrc);
+		super(drawer,  4*Settings.width/5, y, noteSpeed, textureSrc);
 		
 	}
 	

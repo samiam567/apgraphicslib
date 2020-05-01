@@ -37,10 +37,13 @@ public class Song extends Physics_object implements KeyListener{
 	public Song(Object_draw drawer, String songSrc) {
 		super(drawer);
 		
-		leftNoteTarget = new LeftNote(drawer,100,0,"./src/danceDanceRevolution/assets/arrowTargetTexture.png");
-		downNoteTarget = new DownNote(drawer,100,0,"./src/danceDanceRevolution/assets/arrowTargetTexture.png");
-		upNoteTarget = new UpNote(drawer,100,0,"./src/danceDanceRevolution/assets/arrowTargetTexture.png");
-		rightNoteTarget = new RightNote(drawer,100,0,"./src/danceDanceRevolution/assets/arrowTargetTexture.png");
+		Note.noteSize = Settings.width/5;
+		leftNoteTarget = new LeftNote(drawer,10 + Note.noteSize/2,0,"./src/danceDanceRevolution/assets/arrowTargetTextureGreen.png");
+		
+		downNoteTarget = new DownNote(drawer,10 + Note.noteSize/2,0,"./src/danceDanceRevolution/assets/arrowTargetTextureGreen.png");
+		upNoteTarget = new UpNote(drawer,10 + Note.noteSize/2,0,"./src/danceDanceRevolution/assets/arrowTargetTextureGreen.png");
+		rightNoteTarget = new RightNote(drawer,10 + Note.noteSize/2,0,"./src/danceDanceRevolution/assets/arrowTargetTextureGreen.png");
+		
 		
 		allNotes.add(leftNoteTarget);
 		allNotes.add(downNoteTarget);
@@ -87,7 +90,7 @@ public class Song extends Physics_object implements KeyListener{
 			audioLatency = 2.6 * noteDistMultiplier;
 		}
 		
-		double noteStart = Note.noteSize * 4 + audioLatency + startDiff * noteDistMultiplier;
+		double noteStart = Note.noteSize/2 - 100 + Note.noteSize * 4 + audioLatency + startDiff * noteDistMultiplier;
 		
 		//leftNotes
 		Scanner leftScan = new Scanner(leftNotesStr);
@@ -96,7 +99,7 @@ public class Song extends Physics_object implements KeyListener{
 		LeftNote newLftNote;
 		while (leftScan.hasNext()) {
 			try {
-				newLftNote = new LeftNote(getDrawer(),noteStart + Double.parseDouble(leftScan.next())*noteDistMultiplier, tempo, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
+				newLftNote = new LeftNote(getDrawer(),noteStart + Double.parseDouble(leftScan.next())*noteDistMultiplier, tempo * Note.noteSize/200, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
 				leftNotes.add(newLftNote);
 				allNotes.add(newLftNote);
 				System.out.println("note added");
@@ -111,7 +114,7 @@ public class Song extends Physics_object implements KeyListener{
 		DownNote newDwnNote;
 		while (downScan.hasNext()) {
 			try {
-				newDwnNote = new DownNote(getDrawer(),noteStart + Double.parseDouble(downScan.next())*noteDistMultiplier, tempo, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
+				newDwnNote = new DownNote(getDrawer(),noteStart + Double.parseDouble(downScan.next())*noteDistMultiplier, tempo * Note.noteSize/200, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
 				downNotes.add(newDwnNote);
 				allNotes.add(newDwnNote);
 				System.out.println("note added");
@@ -126,7 +129,7 @@ public class Song extends Physics_object implements KeyListener{
 		UpNote newUpNote;
 		while (upScan.hasNext()) {
 			try {
-				newUpNote = new UpNote(getDrawer(),noteStart + Double.parseDouble(upScan.next())*noteDistMultiplier, tempo, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
+				newUpNote = new UpNote(getDrawer(),noteStart + Double.parseDouble(upScan.next())*noteDistMultiplier, tempo * Note.noteSize/200, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
 				upNotes.add(newUpNote);
 				allNotes.add(newUpNote);
 				System.out.println("note added");
@@ -141,7 +144,7 @@ public class Song extends Physics_object implements KeyListener{
 		RightNote newRgtNote;
 		while (rightScan.hasNext()) {
 			try {
-				newRgtNote = new RightNote(getDrawer(),noteStart + Double.parseDouble(rightScan.next())*noteDistMultiplier, tempo, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
+				newRgtNote = new RightNote(getDrawer(),noteStart + Double.parseDouble(rightScan.next())*noteDistMultiplier, tempo * Note.noteSize/200, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
 				rightNotes.add(newRgtNote);
 				allNotes.add(newRgtNote);
 				System.out.println("note added");
@@ -177,9 +180,11 @@ public class Song extends Physics_object implements KeyListener{
 			if (! left) {
 				left = true;
 				for (Note n : leftNotes) {
-					if (Physics_engine_toolbox.distance2D(n.getCoordinates(), leftNoteTarget.getCoordinates()) < Note.noteSize/4) {
+					double distance = Physics_engine_toolbox.distance2D(n.getCoordinates(), leftNoteTarget.getCoordinates());
+					if (distance < Note.noteSize/4) {
 						getDrawer().remove(n);
 						leftNotes.remove(n);
+						DDRRunner.score.AddScore(1000/distance);
 						break;
 					}
 				}
@@ -190,9 +195,11 @@ public class Song extends Physics_object implements KeyListener{
 			if (! down) {
 				down = true;
 				for (Note n : downNotes) {
-					if (Physics_engine_toolbox.distance2D(n.getCoordinates(), downNoteTarget.getCoordinates()) < Note.noteSize/4) {
+					double distance = Physics_engine_toolbox.distance2D(n.getCoordinates(), downNoteTarget.getCoordinates());
+					if (distance < Note.noteSize/4) {
 						getDrawer().remove(n);
 						downNotes.remove(n);
+						DDRRunner.score.AddScore(1000/distance);
 						break;
 					}
 				}
@@ -203,9 +210,11 @@ public class Song extends Physics_object implements KeyListener{
 			if (! up) {
 				up = true;
 				for (Note n : upNotes) {
-					if (Physics_engine_toolbox.distance2D(n.getCoordinates(), upNoteTarget.getCoordinates()) < Note.noteSize/4) {
+					double distance = Physics_engine_toolbox.distance2D(n.getCoordinates(), upNoteTarget.getCoordinates());
+					if (distance < Note.noteSize/4) {
 						getDrawer().remove(n);
 						upNotes.remove(n);
+						DDRRunner.score.AddScore(1000/distance);
 						break;
 					}
 				}
@@ -216,9 +225,11 @@ public class Song extends Physics_object implements KeyListener{
 			if (! right) {
 				right = true;
 				for (Note n : rightNotes) {
-					if (Physics_engine_toolbox.distance2D(n.getCoordinates(), rightNoteTarget.getCoordinates()) < Note.noteSize/4) {
+					double distance = Physics_engine_toolbox.distance2D(n.getCoordinates(), rightNoteTarget.getCoordinates());
+					if (distance < Note.noteSize/4) {
 						getDrawer().remove(n);
 						rightNotes.remove(n);
+						DDRRunner.score.AddScore(1000/distance);
 						break;
 					}
 				}

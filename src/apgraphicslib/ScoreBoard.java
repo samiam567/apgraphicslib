@@ -14,9 +14,9 @@ public class ScoreBoard extends APLabel implements Updatable {
 		score_phrase = score_phrase1;
 	}
 	
-	public void AddScore(int addition)
+	public void AddScore(double distance)
 	{
-		score = score + addition;
+		score = score + distance;
 	}
 	
 
