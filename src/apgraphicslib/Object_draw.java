@@ -41,7 +41,7 @@ public class Object_draw extends JPanel {
 	public int inactivity_timer = 0;
 	
 	private double updateCount = 0, frameStep = 0.1, actualFPS = Settings.targetFPS;
-	private long updateStartTime, updateEndTime, frameStartTime, frameEndTime, subCalcTime, lastPaintTime;
+	private long current_frame = 0, updateStartTime, updateEndTime, frameStartTime, frameEndTime, subCalcTime, lastPaintTime;
 	private double frameTime = 1/Settings.targetFPS;
 	
 	public Object_draw() {
@@ -56,6 +56,7 @@ public class Object_draw extends JPanel {
 			prePaintUpdateObjects();
 			checkForResize();
 			repaint(); //paint the objects onto the screen
+			current_frame++;
 			actualFPS = 1000000000/((double)(System.nanoTime() - lastPaintTime));
 			lastPaintTime = System.nanoTime();
 			
@@ -109,6 +110,7 @@ public class Object_draw extends JPanel {
 		threader.state = 1;
 		try {
 			threader.start();
+			current_frame = 0; //reset the current_frame counter
 		}catch(IllegalThreadStateException i) {
 			System.out.println(i + " in Object_draw.start()");
 			resume();
@@ -423,6 +425,10 @@ public class Object_draw extends JPanel {
 
 	public double getActualFPS() {
 		return actualFPS;
+	}
+
+	public double getCurrentFrame() {
+		return current_frame;
 	}
 	
 

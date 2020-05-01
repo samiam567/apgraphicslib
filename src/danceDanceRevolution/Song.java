@@ -1,10 +1,19 @@
 package danceDanceRevolution;
 
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Scanner;
 
 import javax.swing.JOptionPane;
@@ -17,8 +26,9 @@ import apgraphicslib.Settings;
 
 public class Song extends Physics_object implements KeyListener{
 	
+	private double audioLatency = 2.6, noteStart, noteSpeed;
 	//if these arrows on the mat are pressed down 
-	private boolean left = false, down = false, up = false, right = false, tempoTrigger = false;
+	private boolean left = false, down = false, up = false, right = false, noteCapturing = false;
 	
 	private LinkedList<LeftNote> leftNotes = new LinkedList<LeftNote>();
 	private LinkedList<DownNote> downNotes = new LinkedList<DownNote>();
@@ -26,17 +36,34 @@ public class Song extends Physics_object implements KeyListener{
 	private LinkedList<RightNote> rightNotes = new LinkedList<RightNote>();
 	private LinkedList<Note> allNotes = new LinkedList<Note>();
 	
+	private enum NoteDirections {left, down, up, right};
+	
 	LeftNote leftNoteTarget;
 	DownNote downNoteTarget;
 	UpNote upNoteTarget;
 	RightNote rightNoteTarget;
 
-	private String audioSrc, leftNotesStr, upNotesStr, downNotesStr, rightNotesStr;
-	private double difficulty, tempo, startDiff;
+	private String songSrc, audioSrc, leftNotesStr, upNotesStr, downNotesStr, rightNotesStr;
+	private double difficulty, tempo;
+	private static double startDiff;
 	
 	public Song(Object_draw drawer, String songSrc) {
 		super(drawer);
+		loadSong(songSrc);
 		
+	}
+		
+	private void calculateNoteValues() {
+		
+		noteStart = Note.noteSize/2 - 100 + Note.noteSize * 4 + audioLatency * Note.noteSize + startDiff * Note.noteSize;
+		noteSpeed = tempo * Note.noteSize / 60;
+	}
+	
+	private void loadSong(String songSrc) {
+		Object_draw drawer = getDrawer();
+		
+		
+		this.songSrc = songSrc;
 		Note.noteSize = Settings.width/5;
 		leftNoteTarget = new LeftNote(drawer,10 + Note.noteSize/2,0,"./src/danceDanceRevolution/assets/arrowTargetTextureGreen.png");
 		
@@ -65,6 +92,7 @@ public class Song extends Physics_object implements KeyListener{
 			upNotesStr = scan.nextLine();
 			rightNotesStr = scan.nextLine();
 			
+			calculateNoteValues();
 			addNotes();
 			
 			scan.close();
@@ -79,74 +107,158 @@ public class Song extends Physics_object implements KeyListener{
 		
 	}
 
+	private void logNote(NoteDirections direction, double noteFrame) {
+		
+		double noteDistMultiplier = Note.noteSize;
+		
+		double noteBeatPos = noteFrame / 60 / getDrawer().getActualFPS() * tempo /2;
+		
+		System.out.println("logging note (unrounded): " + noteBeatPos);
+		
+		noteBeatPos = ((double)Math.round(noteBeatPos*4))/4; //make 0.25 the smallest increment
+		
+		System.out.println("logging note: " + noteBeatPos);
+		try {
+			Path path = Paths.get(songSrc);
+			List<String> lines;
+		
+			lines = Files.readAllLines(path, StandardCharsets.UTF_8);
+
+			double noteY = startDiff + noteBeatPos*noteDistMultiplier;
+			
+			if (direction.equals(NoteDirections.left)) {
+				
+				try {
+					LeftNote newLftNote = new LeftNote(getDrawer(),noteY, 0, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
+					leftNotes.add(newLftNote);
+					allNotes.add(newLftNote);
+					System.out.println("note added");
+				}catch(NumberFormatException n ) {}
+			
+			}else if (direction.equals(NoteDirections.down)) {
+				try {
+					DownNote newDwnNote = new DownNote(getDrawer(),noteY, 0, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
+					downNotes.add(newDwnNote);
+					allNotes.add(newDwnNote);
+					System.out.println("note added");
+				}catch(NumberFormatException n ) {}
+			
+			}else if (direction.equals(NoteDirections.up)) {
+				try {
+					UpNote newUpNote = new UpNote(getDrawer(),noteY, 0, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
+					upNotes.add(newUpNote);
+					allNotes.add(newUpNote);
+					System.out.println("note added");
+				}catch(NumberFormatException n ) {}
+			
+			}else if (direction.equals(NoteDirections.right)) {
+				try {
+					RightNote newRghtNote = new RightNote(getDrawer(),noteY, 0, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
+					rightNotes.add(newRghtNote);
+					allNotes.add(newRghtNote);
+					System.out.println("note added");
+				}catch(NumberFormatException n ) {}
+			
+			}
+			
+			
+			
+			
+			System.out.println("note logged");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
 	public Song(Object_draw drawer) {
 		super(drawer);
 		
 		
-		audioSrc = "./src/danceDanceRevolution/assets/" + JOptionPane.showInputDialog(drawer,"What is the song name?") + ".wav";
+		songSrc = "./src/danceDanceRevolution/assets/" + JOptionPane.showInputDialog(drawer,"What is the song name?") + ".dat";
 		
-		JOptionPane.showMessageDialog(drawer, "press any key on the beat to record the temp of the song");
-		int loopTimes = Physics_engine_toolbox.getIntegerFromUser(drawer.getFrame(), "How many data points do you want to collect? (the more data points the more accurate it will be)");
-		long nanoStart = System.nanoTime();
-		tempo = 0;
-		int times = 0;
-		
-		try {
-			AudioManager.playAudioFile(audioSrc);
+		try { //if the song already exists we will try to load it in
+			loadSong(songSrc);
+			loadNotes();
 		}catch(Exception e) {
-			System.out.println("exception caught!");
+			audioSrc = "./src/danceDanceRevolution/assets/" + JOptionPane.showInputDialog(drawer,"What is the audio file?") + ".wav";	
+			tempo = Physics_engine_toolbox.getDoubleFromUser(getDrawer().getFrame(), "What is the tempo? (in bpm) look it up!");
 		}
 		
+		calculateNoteValues();
+		
+		JOptionPane.showMessageDialog(getDrawer(), "Now capturing. Press ENTER to save capture");
 		
 		getDrawer().getFrame().getContentPane().addKeyListener(this);
 		getDrawer().getFrame().getGlassPane().addKeyListener(this);
 		getDrawer().getFrame().addKeyListener(this);
 		getDrawer().addKeyListener(this);
 		
-		while (! tempoTrigger) { 
-			//wait for the first key press
+		
+		noteCapturing = true;
+		
+		AudioManager.playAudioFile(audioSrc);
+		drawer.restart();
+		
+		while (noteCapturing) {
 			try {
-				Thread.sleep(1);
-			}catch(InterruptedException i) {}
-		}
-		nanoStart = System.nanoTime();
-		while (times < loopTimes) {
-			System.out.println("e");
-			if (tempoTrigger == true) {
-				tempo += (System.nanoTime() - nanoStart) / 1000000000;
-				nanoStart = System.nanoTime();
-				tempoTrigger = false;
-				times++;
-				System.out.println("data point added");
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			
-			try {
-				Thread.sleep(1);
-			}catch(InterruptedException i) {}
 		}
-		tempo /= loopTimes;
-		JOptionPane.showMessageDialog(drawer, "Tempo: " + tempo);
+
+		System.out.println("input end");
+
 		
 		getDrawer().getFrame().getContentPane().removeKeyListener(this);
 		getDrawer().getFrame().getGlassPane().removeKeyListener(this);
 		getDrawer().getFrame().removeKeyListener(this);
 		getDrawer().removeKeyListener(this);
+		
+		outputSong();
 			
 	}
 
-	public void addNotes() {
-		double noteDistMultiplier = Note.noteSize;
-		double audioLatency;
+	private void outputSong() {
 		
-		boolean desktop = false;
-		if (desktop) {
-			audioLatency = 0.1 * noteDistMultiplier;
-		}else {
-			audioLatency = 2.6 * noteDistMultiplier;
+		String songOut = "";
+		songOut += audioSrc + "," + difficulty + "," + tempo + "," + startDiff + "," + "\n";
+		
+		for (Note cN : leftNotes) {
+			songOut += ((cN.getInitY()-noteStart)/ Note.noteSize) + ",";
+		}
+		songOut += "\n";
+		for (Note cN : downNotes) {
+			songOut += ((cN.getInitY()-noteStart)/ Note.noteSize) + ",";
+		}
+		songOut += "\n";
+		for (Note cN : upNotes) {
+			songOut += ((cN.getInitY()-noteStart)/ Note.noteSize) + ",";
+		}
+		songOut += "\n";
+		for (Note cN : rightNotes) {
+			songOut += ((cN.getInitY()-noteStart)/ Note.noteSize) + ",";
 		}
 		
-		double noteStart = Note.noteSize/2 - 100 + Note.noteSize * 4 + audioLatency + startDiff * noteDistMultiplier;
-		
+		try {
+			PrintWriter writer = new PrintWriter(new File(songSrc));
+			writer.print(songOut);
+			writer.close();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.out.println("song logged");
+	}
+
+
+	public void addNotes() {
+		double noteDistMultiplier = Note.noteSize;
+		double noteSpeed = tempo * Note.noteSize / 60;
+	
 		//leftNotes
 		Scanner leftScan = new Scanner(leftNotesStr);
 		leftScan.useDelimiter(",");
@@ -154,7 +266,7 @@ public class Song extends Physics_object implements KeyListener{
 		LeftNote newLftNote;
 		while (leftScan.hasNext()) {
 			try {
-				newLftNote = new LeftNote(getDrawer(),noteStart + Double.parseDouble(leftScan.next())*noteDistMultiplier, tempo * Note.noteSize/200, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
+				newLftNote = new LeftNote(getDrawer(),noteStart + Double.parseDouble(leftScan.next())*noteDistMultiplier, noteSpeed, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
 				leftNotes.add(newLftNote);
 				allNotes.add(newLftNote);
 				System.out.println("note added");
@@ -169,7 +281,7 @@ public class Song extends Physics_object implements KeyListener{
 		DownNote newDwnNote;
 		while (downScan.hasNext()) {
 			try {
-				newDwnNote = new DownNote(getDrawer(),noteStart + Double.parseDouble(downScan.next())*noteDistMultiplier, tempo * Note.noteSize/200, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
+				newDwnNote = new DownNote(getDrawer(),noteStart + Double.parseDouble(downScan.next())*noteDistMultiplier, noteSpeed, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
 				downNotes.add(newDwnNote);
 				allNotes.add(newDwnNote);
 				System.out.println("note added");
@@ -184,7 +296,7 @@ public class Song extends Physics_object implements KeyListener{
 		UpNote newUpNote;
 		while (upScan.hasNext()) {
 			try {
-				newUpNote = new UpNote(getDrawer(),noteStart + Double.parseDouble(upScan.next())*noteDistMultiplier, tempo * Note.noteSize/200, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
+				newUpNote = new UpNote(getDrawer(),noteStart + Double.parseDouble(upScan.next())*noteDistMultiplier, noteSpeed, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
 				upNotes.add(newUpNote);
 				allNotes.add(newUpNote);
 				System.out.println("note added");
@@ -199,7 +311,7 @@ public class Song extends Physics_object implements KeyListener{
 		RightNote newRgtNote;
 		while (rightScan.hasNext()) {
 			try {
-				newRgtNote = new RightNote(getDrawer(),noteStart + Double.parseDouble(rightScan.next())*noteDistMultiplier, tempo * Note.noteSize/200, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
+				newRgtNote = new RightNote(getDrawer(),noteStart + Double.parseDouble(rightScan.next())*noteDistMultiplier, noteSpeed, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
 				rightNotes.add(newRgtNote);
 				allNotes.add(newRgtNote);
 				System.out.println("note added");
@@ -213,35 +325,48 @@ public class Song extends Physics_object implements KeyListener{
 		
 	}
 	
+	public void loadNotes() {
+		for (Note note : allNotes) {
+			note.run();
+		}
+	}
 	public void play() {
 		DDRRunner.currentSong = this;
 		for (Note note : allNotes) {
 			note.run();
 		}
-		getDrawer().start();
-		AudioManager.playAudioFile(audioSrc);
-		
 		getDrawer().getFrame().getContentPane().addKeyListener(this);
 		getDrawer().getFrame().getGlassPane().addKeyListener(this);
 		getDrawer().getFrame().addKeyListener(this);
 		getDrawer().addKeyListener(this);
+		
+		
+		AudioManager.playAudioFile(audioSrc);
+		getDrawer().start();
+	
 	}
 	
 	
 
+
 	@Override
 	public void keyPressed(KeyEvent arg0) {
-		tempoTrigger = true;
+		
 		if (arg0.getKeyCode() == 37) { //LEFT
 			if (! left) {
 				left = true;
-				for (Note n : leftNotes) {
-					double distance = Physics_engine_toolbox.distance2D(n.getCoordinates(), leftNoteTarget.getCoordinates());
-					if (distance < Note.noteSize/4) {
-						getDrawer().remove(n);
-						leftNotes.remove(n);
-						DDRRunner.score.AddScore(1000/distance);
-						break;
+				
+				if (noteCapturing) {
+					logNote(NoteDirections.left,getDrawer().getCurrentFrame());
+				}else {
+					for (Note n : leftNotes) {
+						double distance = Physics_engine_toolbox.distance2D(n.getCoordinates(), leftNoteTarget.getCoordinates());
+						if (distance < Note.noteSize/4) {
+							getDrawer().remove(n);
+							leftNotes.remove(n);
+							DDRRunner.score.AddScore(1000/distance);
+							break;
+						}
 					}
 				}
 			}
@@ -250,13 +375,18 @@ public class Song extends Physics_object implements KeyListener{
 		if (arg0.getKeyCode() == 40) { //DOWN
 			if (! down) {
 				down = true;
-				for (Note n : downNotes) {
-					double distance = Physics_engine_toolbox.distance2D(n.getCoordinates(), downNoteTarget.getCoordinates());
-					if (distance < Note.noteSize/4) {
-						getDrawer().remove(n);
-						downNotes.remove(n);
-						DDRRunner.score.AddScore(1000/distance);
-						break;
+				
+				if (noteCapturing) {
+					logNote(NoteDirections.down,getDrawer().getCurrentFrame());
+				}else {
+					for (Note n : downNotes) {
+						double distance = Physics_engine_toolbox.distance2D(n.getCoordinates(), downNoteTarget.getCoordinates());
+						if (distance < Note.noteSize/4) {
+							getDrawer().remove(n);
+							downNotes.remove(n);
+							DDRRunner.score.AddScore(1000/distance);
+							break;
+						}
 					}
 				}
 			}
@@ -265,13 +395,18 @@ public class Song extends Physics_object implements KeyListener{
 		if (arg0.getKeyCode() == 38) { //UP
 			if (! up) {
 				up = true;
-				for (Note n : upNotes) {
-					double distance = Physics_engine_toolbox.distance2D(n.getCoordinates(), upNoteTarget.getCoordinates());
-					if (distance < Note.noteSize/4) {
-						getDrawer().remove(n);
-						upNotes.remove(n);
-						DDRRunner.score.AddScore(1000/distance);
-						break;
+				
+				if (noteCapturing) {
+					logNote(NoteDirections.up,getDrawer().getCurrentFrame());
+				}else {
+					for (Note n : upNotes) {
+						double distance = Physics_engine_toolbox.distance2D(n.getCoordinates(), upNoteTarget.getCoordinates());
+						if (distance < Note.noteSize/4) {
+							getDrawer().remove(n);
+							upNotes.remove(n);
+							DDRRunner.score.AddScore(1000/distance);
+							break;
+						}
 					}
 				}
 			}
@@ -280,17 +415,27 @@ public class Song extends Physics_object implements KeyListener{
 		if (arg0.getKeyCode() == 39) { //RIGHT
 			if (! right) {
 				right = true;
-				for (Note n : rightNotes) {
-					double distance = Physics_engine_toolbox.distance2D(n.getCoordinates(), rightNoteTarget.getCoordinates());
-					if (distance < Note.noteSize/4) {
-						getDrawer().remove(n);
-						rightNotes.remove(n);
-						DDRRunner.score.AddScore(1000/distance);
-						break;
+				
+				if (noteCapturing) {
+					logNote(NoteDirections.right,getDrawer().getCurrentFrame());
+				}else {
+					for (Note n : rightNotes) {
+						double distance = Physics_engine_toolbox.distance2D(n.getCoordinates(), rightNoteTarget.getCoordinates());
+						if (distance < Note.noteSize/4) {
+							getDrawer().remove(n);
+							rightNotes.remove(n);
+							DDRRunner.score.AddScore(1000/distance);
+							break;
+						}
 					}
 				}
 				
 			}
+		}
+		
+		if (arg0.getKeyCode() == 10) { //ENTER
+			System.out.println("ENTER");
+			noteCapturing = false;
 		}
 		
 	}

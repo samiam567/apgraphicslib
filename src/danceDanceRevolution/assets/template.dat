@@ -1,0 +1,5 @@
+./src/danceDanceRevolution/assets/[audioFileNameHere].wav,[difficulty],[tempo (bpm)],
+[leftNote1BeatPosition],[leftNote2BeatPosition],[leftNote3BeatPosition],
+[downNote1BeatPosition],[downNote2BeatPosition],[downNote3BeatPosition],
+[upNote1BeatPosition],[upNote2BeatPosition],[upNote3BeatPosition],
+[rightNote1BeatPosition],[rightNote2BeatPosition],[rightNote3BeatPosition],

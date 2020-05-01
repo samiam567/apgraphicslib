@@ -17,8 +17,8 @@ public class DDRRunner {
 	
 	static ScoreBoard score;
 	public static void main(String[] args) {
-		Settings.width = 1200;
-		Settings.height = 1000;
+	//	Settings.width = 1200;
+	//	Settings.height = 1000;
 		Settings.perspective = false;
 		Settings.targetFPS = 60;
 		
@@ -37,6 +37,7 @@ public class DDRRunner {
 			song = new Song(drawer,"./src/danceDanceRevolution/assets/" + JOptionPane.showInputDialog(drawer, "What song?") + ".dat");
 		}else if (songChoice.equals("Create new song")) {
 			song = new Song(drawer);
+			System.exit(1);
 		}else {
 			song = new Song(drawer,"./src/danceDanceRevolution/assets/" + songChoice + ".dat");
 		}
