@@ -14,7 +14,7 @@ public class Physics_runner {
 
 		@Override 
 		protected double[] equation(double theta, double phi) {
-			boolean egg = true;
+			boolean egg = false;
 			
 			
 			if (egg) {

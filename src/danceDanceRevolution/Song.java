@@ -116,7 +116,7 @@ public class Song extends Physics_object implements KeyListener{
 		
 	//	System.out.println("logging note (unrounded : " + noteBeatPos);
 		
-	//	noteBeatPos = ((double)Math.round(noteBeatPos*4))/4; //make 0.5 the smallest increment
+		noteBeatPos = ((double)Math.round(noteBeatPos*4))/4; //make 0.5 the smallest increment
 		
 //		System.out.println("logging note: " + noteBeatPos);
 
