@@ -56,7 +56,6 @@ public class Object_draw extends JPanel {
 			prePaintUpdateObjects();
 			checkForResize();
 			repaint(); //paint the objects onto the screen
-			current_frame++;
 			actualFPS = 1000000000/((double)(System.nanoTime() - lastPaintTime));
 			lastPaintTime = System.nanoTime();
 			
@@ -91,7 +90,7 @@ public class Object_draw extends JPanel {
 			
 			frameStep = ((double) subCalcTime) / ((1000000000/Settings.targetFPS) - (frameEndTime-frameStartTime));
 		//	frameStep /= 2; // the averaging of the two numbers keeps the system from freezing during big changes (like adding objects)
-	
+			current_frame++;
 	    }catch(ConcurrentModificationException c) {
 	    	c.printStackTrace();
 		}catch(NullPointerException e) {
@@ -429,6 +428,10 @@ public class Object_draw extends JPanel {
 
 	public double getCurrentFrame() {
 		return current_frame;
+	}
+	
+	public void resetFrameCounter() {
+		current_frame = 0;
 	}
 	
 
