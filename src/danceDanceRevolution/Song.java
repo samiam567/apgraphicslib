@@ -111,65 +111,25 @@ public class Song extends Physics_object implements KeyListener{
 		
 		double noteDistMultiplier = Note.noteSize;
 		
-		double noteBeatPos = noteFrame / 60 / getDrawer().getActualFPS() * tempo /2;
+		double noteBeatPos = noteFrame / 60 / getDrawer().getActualFPS() * tempo /2 - 4;
 		
 		System.out.println("logging note (unrounded): " + noteBeatPos);
 		
 		noteBeatPos = ((double)Math.round(noteBeatPos*4))/4; //make 0.25 the smallest increment
 		
 		System.out.println("logging note: " + noteBeatPos);
-		try {
-			Path path = Paths.get(songSrc);
-			List<String> lines;
-		
-			lines = Files.readAllLines(path, StandardCharsets.UTF_8);
 
-			double noteY = startDiff + noteBeatPos*noteDistMultiplier;
-			
-			if (direction.equals(NoteDirections.left)) {
-				
-				try {
-					LeftNote newLftNote = new LeftNote(getDrawer(),noteY, 0, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
-					leftNotes.add(newLftNote);
-					allNotes.add(newLftNote);
-					System.out.println("note added");
-				}catch(NumberFormatException n ) {}
-			
-			}else if (direction.equals(NoteDirections.down)) {
-				try {
-					DownNote newDwnNote = new DownNote(getDrawer(),noteY, 0, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
-					downNotes.add(newDwnNote);
-					allNotes.add(newDwnNote);
-					System.out.println("note added");
-				}catch(NumberFormatException n ) {}
-			
-			}else if (direction.equals(NoteDirections.up)) {
-				try {
-					UpNote newUpNote = new UpNote(getDrawer(),noteY, 0, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
-					upNotes.add(newUpNote);
-					allNotes.add(newUpNote);
-					System.out.println("note added");
-				}catch(NumberFormatException n ) {}
-			
-			}else if (direction.equals(NoteDirections.right)) {
-				try {
-					RightNote newRghtNote = new RightNote(getDrawer(),noteY, 0, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
-					rightNotes.add(newRghtNote);
-					allNotes.add(newRghtNote);
-					System.out.println("note added");
-				}catch(NumberFormatException n ) {}
-			
-			}
-			
-			
-			
-			
-			System.out.println("note logged");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (direction.equals(NoteDirections.left)) {				
+			leftNotesStr += "" + noteBeatPos + ",";
+		}else if (direction.equals(NoteDirections.down)) {
+			downNotesStr += "" + noteBeatPos + ",";
+		}else if (direction.equals(NoteDirections.up)) {
+			upNotesStr += "" + noteBeatPos + ",";
+		}else if (direction.equals(NoteDirections.right)) {
+			rightNotesStr += "" + noteBeatPos + ",";
 		}
-		
+						
+		System.out.println("note logged");		
 	}
 
 	public Song(Object_draw drawer) {
@@ -227,21 +187,10 @@ public class Song extends Physics_object implements KeyListener{
 		String songOut = "";
 		songOut += audioSrc + "," + difficulty + "," + tempo + "," + startDiff + "," + "\n";
 		
-		for (Note cN : leftNotes) {
-			songOut += ((cN.getInitY()-noteStart)/ Note.noteSize) + ",";
-		}
-		songOut += "\n";
-		for (Note cN : downNotes) {
-			songOut += ((cN.getInitY()-noteStart)/ Note.noteSize) + ",";
-		}
-		songOut += "\n";
-		for (Note cN : upNotes) {
-			songOut += ((cN.getInitY()-noteStart)/ Note.noteSize) + ",";
-		}
-		songOut += "\n";
-		for (Note cN : rightNotes) {
-			songOut += ((cN.getInitY()-noteStart)/ Note.noteSize) + ",";
-		}
+
+		songOut += leftNotesStr + "\n" + downNotesStr + "\n" + upNotesStr + "\n" + rightNotesStr;
+
+		
 		
 		try {
 			PrintWriter writer = new PrintWriter(new File(songSrc));
