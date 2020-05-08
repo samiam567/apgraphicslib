@@ -35,7 +35,7 @@ public class Vector2D extends Vector implements Two_dimensional {
 	 */
 	protected void rectangularToPolar() {
 		if (! polarCalculated) {
-			theta = Math.PI + Math.atan2(j,i);
+			theta = Math.atan2(j,i);
 			r = Math.sqrt(Math.pow(i, 2) + Math.pow(j, 2));
 			polarCalculated = true;
 		}
@@ -202,6 +202,7 @@ public class Vector2D extends Vector implements Two_dimensional {
 	 */
 	public Vector2D multiply(double multi) {
 		setR(getR() * multi);
+		rectangularCalculated = false;
 		return this;
 	}
 	
@@ -251,6 +252,11 @@ public class Vector2D extends Vector implements Two_dimensional {
 	@Override
 	public double getYSize() {	
 		return getJ();
+	}
+	
+	@Override
+	public String toString() {
+		return "i: " + getI() + ", j: " + getJ() + ", r: " + getR() + ", theta: "  + getTheta();
 	}
 	
 	/**

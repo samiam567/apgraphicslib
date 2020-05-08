@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 import apgraphicslib.Object_draw;
 import apgraphicslib.ScoreBoard;
 import apgraphicslib.Settings;
+import apgraphicslib.Vector2D;
 
 public class DDRRunner {
 	private static Object_draw drawer;
@@ -17,6 +18,7 @@ public class DDRRunner {
 	
 	static ScoreBoard score;
 	public static void main(String[] args) {
+		
 	//	Settings.width = 1200;
 	//	Settings.height = 1000;
 		Settings.perspective = false;

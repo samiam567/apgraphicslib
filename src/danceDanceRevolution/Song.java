@@ -28,7 +28,9 @@ public class Song extends Physics_object implements KeyListener{
 	
 	private double audioLatency = 2.6, noteStart, noteSpeed;
 	//if these arrows on the mat are pressed down 
-	private boolean left = false, down = false, up = false, right = false, noteCapturing = false;
+	private boolean left = false, down = false, up = false, right = false;
+	
+	double noteCapturing = 0; //0 if not notecapturing, playbackspeed if capturing
 	
 	private LinkedList<LeftNote> leftNotes = new LinkedList<LeftNote>();
 	private LinkedList<DownNote> downNotes = new LinkedList<DownNote>();
@@ -108,13 +110,13 @@ public class Song extends Physics_object implements KeyListener{
 		
 	}
 
-	private void logNote(NoteDirections direction, double noteFrame) {
+	private void logNote(NoteDirections direction, double noteFrame, double playBackSpeed) {
 		
-
+		
 	
-		double noteBeatPos = noteFrame / getDrawer().getActualFPS() * tempo/120 - audioLatency - startDiff - 3.5;
+		double noteBeatPos = noteFrame / getDrawer().getActualFPS() * (playBackSpeed * tempo)/120 - audioLatency - startDiff - 3.5;
 		
-	//	System.out.println("logging note (unrounded : " + noteBeatPos);
+		System.out.println("logging note (unrounded : " + noteBeatPos);
 		
 		noteBeatPos = ((double)Math.round(noteBeatPos*4))/4; //make 0.5 the smallest increment
 		
@@ -136,12 +138,14 @@ public class Song extends Physics_object implements KeyListener{
 	public Song(Object_draw drawer) {
 		super(drawer);
 		
+		double playBackSpeed = 1;
+		
 		
 		songSrc = "./src/danceDanceRevolution/assets/" + JOptionPane.showInputDialog(drawer,"What is the song name?") + ".dat";
 		
 		try { //if the song already exists we will try to load it in
 			loadSong(songSrc);
-			loadNotes();
+			loadNotes(playBackSpeed);
 		}catch(Exception e) {
 			audioSrc = "./src/danceDanceRevolution/assets/" + JOptionPane.showInputDialog(drawer,"What is the audio file?") + ".wav";	
 			tempo = Physics_engine_toolbox.getDoubleFromUser(getDrawer().getFrame(), "What is the tempo? (in bpm) look it up!");
@@ -157,13 +161,13 @@ public class Song extends Physics_object implements KeyListener{
 		getDrawer().addKeyListener(this);
 		
 		
-		noteCapturing = true;
+		noteCapturing = playBackSpeed;
 		
-		AudioManager.playAudioFile(audioSrc);
+		AudioManager.playAudioFile(audioSrc,playBackSpeed);
 		drawer.restart();
 		drawer.resetFrameCounter();
 		
-		while (noteCapturing) {
+		while (noteCapturing != 0) {
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {
@@ -281,6 +285,14 @@ public class Song extends Physics_object implements KeyListener{
 			note.run();
 		}
 	}
+	
+	public void loadNotes(double playBackSpeed) {
+		for (Note note : allNotes) {
+			note.run();
+			note.getSpeed().multiply(playBackSpeed);
+		}
+	}
+	
 	public void play() {
 		DDRRunner.currentSong = this;
 		for (Note note : allNotes) {
@@ -310,8 +322,8 @@ public class Song extends Physics_object implements KeyListener{
 			if (! left) {
 				left = true;
 				
-				if (noteCapturing) {
-					logNote(NoteDirections.left,currentFrame);
+				if (noteCapturing != 0) {
+					logNote(NoteDirections.left,currentFrame, noteCapturing);
 				}else {
 					for (Note n : leftNotes) {
 						double distance = Physics_engine_toolbox.distance2D(n.getCoordinates(), leftNoteTarget.getCoordinates());
@@ -330,8 +342,8 @@ public class Song extends Physics_object implements KeyListener{
 			if (! down) {
 				down = true;
 				
-				if (noteCapturing) {
-					logNote(NoteDirections.down,currentFrame);
+				if (noteCapturing != 0) {
+					logNote(NoteDirections.down,currentFrame, noteCapturing);
 				}else {
 					for (Note n : downNotes) {
 						double distance = Physics_engine_toolbox.distance2D(n.getCoordinates(), downNoteTarget.getCoordinates());
@@ -350,8 +362,8 @@ public class Song extends Physics_object implements KeyListener{
 			if (! up) {
 				up = true;
 				
-				if (noteCapturing) {
-					logNote(NoteDirections.up,currentFrame);
+				if (noteCapturing != 0) {
+					logNote(NoteDirections.up,currentFrame, noteCapturing);
 				}else {
 					for (Note n : upNotes) {
 						double distance = Physics_engine_toolbox.distance2D(n.getCoordinates(), upNoteTarget.getCoordinates());
@@ -370,8 +382,8 @@ public class Song extends Physics_object implements KeyListener{
 			if (! right) {
 				right = true;
 				
-				if (noteCapturing) {
-					logNote(NoteDirections.right,currentFrame);
+				if (noteCapturing != 0) {
+					logNote(NoteDirections.right,currentFrame, noteCapturing);
 				}else {
 					for (Note n : rightNotes) {
 						double distance = Physics_engine_toolbox.distance2D(n.getCoordinates(), rightNoteTarget.getCoordinates());
@@ -389,7 +401,7 @@ public class Song extends Physics_object implements KeyListener{
 		
 		if (arg0.getKeyCode() == 10) { //ENTER
 			System.out.println("ENTER");
-			noteCapturing = false;
+			noteCapturing = 0;
 		}
 		
 	}
