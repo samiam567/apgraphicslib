@@ -26,7 +26,7 @@ import apgraphicslib.Settings;
 
 public class Song extends Physics_object implements KeyListener{
 	
-	private double audioLatency = 1.8 * 1000, noteStart, noteSpeed;
+	private double audioLatency = 900, noteStart, noteSpeed;
 	//if these arrows on the mat are pressed down 
 	private boolean left = false, down = false, up = false, right = false;
 	
@@ -56,11 +56,13 @@ public class Song extends Physics_object implements KeyListener{
 		loadSong(songSrc);
 		
 	}
+	
+	
 		
 	private void calculateNoteValues() {
 		
 		noteStart = (startDiff+4) * Note.noteSize + 100;//Note.noteSize/2 - 100 + Note.noteSize * 4 + audioLatency * Note.noteSize + startDiff * Note.noteSize;
-		noteSpeed = tempo * Note.noteSize / 60;
+		noteSpeed = getTempo() * Note.noteSize / 60;
 		beats = 0;
 	}
 	
@@ -88,17 +90,23 @@ public class Song extends Physics_object implements KeyListener{
 			scan.useDelimiter(",");
 			
 			audioSrc = scan.next();
-			difficulty = Double.parseDouble(scan.next());
-			tempo = Double.parseDouble(scan.next());
-			startDiff = Double.parseDouble(scan.next());
-			scan.nextLine();
-			leftNotesStr = scan.nextLine();
-			downNotesStr = scan.nextLine();
-			upNotesStr = scan.nextLine();
-			rightNotesStr = scan.nextLine();
 			
-			calculateNoteValues();
-			addNotes();
+			try { //if this is an Aubio file the first token will be the tempo
+				tempo = Double.parseDouble(audioSrc); 
+				SongGenerator.generateSongInto(songSrc,this);
+			}catch(NumberFormatException n) { //if the first token is not a number it is a user file
+				difficulty = Double.parseDouble(scan.next());
+				tempo = Double.parseDouble(scan.next());
+				startDiff = Double.parseDouble(scan.next());
+				scan.nextLine();
+				leftNotesStr = scan.nextLine();
+				downNotesStr = scan.nextLine();
+				upNotesStr = scan.nextLine();
+				rightNotesStr = scan.nextLine();
+				
+				calculateNoteValues();
+				addNotes();
+			}
 			
 			scan.close();
 		} catch (FileNotFoundException e) {
@@ -173,7 +181,7 @@ public class Song extends Physics_object implements KeyListener{
 	private void outputSong() {
 		
 		String songOut = "";
-		songOut += audioSrc + "," + difficulty + "," + tempo + "," + startDiff + "," + "\n";
+		songOut += audioSrc + "," + difficulty + "," + getTempo() + "," + startDiff + "," + "\n";
 		
 
 		songOut += leftNotesStr + "\n" + downNotesStr + "\n" + upNotesStr + "\n" + rightNotesStr;
@@ -296,14 +304,14 @@ public class Song extends Physics_object implements KeyListener{
 		getDrawer().resetFrameCounter();
 		
 		try {
-			Thread.sleep((long) (60.0 * (11 + startDiff) / (tempo*playBackSpeed) ) * 1000 );
+			Thread.sleep((long) (60.0 * (11 + startDiff) / (getTempo()*playBackSpeed) ) * 1000 );
 		}catch(InterruptedException e) {}
 		
 		
 
 		while (AudioManager.isPlaying()) {	
 			try {
-				Thread.sleep((long) (15000*2/tempo/playBackSpeed));
+				Thread.sleep((long) (15000*2/getTempo()/playBackSpeed));
 			}catch(InterruptedException c) {}
 			beats+=0.25;
 		}
@@ -445,6 +453,38 @@ public class Song extends Physics_object implements KeyListener{
 	
 	@Override
 	public String toString() {
-		return "audioSrc: " + audioSrc + "\nDifficulty: " + difficulty + "\nTempo: " + tempo + "\nleftNotes: " + leftNotesStr + "\ndownNotes: " + downNotesStr + "\nupNotes: " + upNotesStr +  "\nrightNotes: " + rightNotesStr;
+		return "audioSrc: " + audioSrc + "\nDifficulty: " + difficulty + "\nTempo: " + getTempo() + "\nleftNotes: " + leftNotesStr + "\ndownNotes: " + downNotesStr + "\nupNotes: " + upNotesStr +  "\nrightNotes: " + rightNotesStr;
+	}
+	
+	public LinkedList<LeftNote> getLeftNotes() {
+		return leftNotes;
+	}
+	
+	public LinkedList<DownNote> getDownNotes() {
+		return downNotes;
+	}
+	
+	public LinkedList<UpNote> getUpNotes() {
+		return upNotes;
+	}
+	
+	public LinkedList<RightNote> getRightNotes() {
+		return rightNotes;
+	}
+
+	public void setAudioSrc(String newAudioSrc) {
+		audioSrc = newAudioSrc;
+	}
+
+
+
+	public double getTempo() {
+		return tempo;
+	}
+
+
+
+	public LinkedList<Note> getAllNotes() {
+		return allNotes;
 	}
 }

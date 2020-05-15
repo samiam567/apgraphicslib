@@ -365,6 +365,58 @@ public class Physics_engine_toolbox {
 		return null;
 	}
 
+	public static double[] resizeArray(double[] array, int size) {
+		double[] prevArray = array;
+		array = new double[size];
+		
+		double refillSize;
+		if (size > prevArray.length) {
+			refillSize = prevArray.length;
+		}else {
+			refillSize = size;
+		}
+		
+		for (int i = 0; i < refillSize; i++) {
+			array[i] = prevArray[i];
+		}
+		
+		return array;
+	}
+	
+	/**
+	 * @deprecated
+	 * {@code WARNING not tested; test before use, only works for rectangular arrays}
+	 * @param array the array to resize
+	 * @param x  the size in accordance to [x][y]
+	 * @param y  the size in accordance to [x][y]
+	 * @return the resized array
+	 */
+	public static double[][] resizeArray(double[][] array, int x, int y) {
+		double[][] prevArray = array;
+		array = new double[x][y];
+		
+		double xSize,ySize;
+		if (x > prevArray.length) {
+			xSize = prevArray.length;
+		}else {
+			xSize = x;
+		}
+		
+		if (y > prevArray[0].length) {
+			ySize = prevArray[0].length;
+		}else {
+			ySize = y;
+		}
+		
+		for (int xIndx = 0; xIndx < xSize; xIndx++) {
+			for (int yIndx = 0; yIndx < ySize; yIndx++) {
+				array[xIndx][yIndx] = prevArray[xIndx][yIndx];
+			}
+		}
+		
+		return array;
+	}
+
 
 
 }
