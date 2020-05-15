@@ -21,6 +21,8 @@ public class Note extends Physics_2DTexturedPolygon implements Resizable {
 		addPoint(-noteSize/2, noteSize/2);
 		addPoint(noteSize/2, noteSize/2);
 		addPoint(noteSize/2, -noteSize/2);
+		
+		run();
 	}
 	
 	public double getInitY() {

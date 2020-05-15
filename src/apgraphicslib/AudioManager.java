@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
+import java.util.LinkedList;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -24,8 +25,9 @@ import javax.swing.JOptionPane;
  */
 public class AudioManager {
 	
-	private static Clip clip;
+	public static Clip clip;
 	
+	private static boolean isPlaying = false;
 	
 	private static class AudioThread extends Thread {
 		
@@ -63,12 +65,18 @@ public class AudioManager {
 	}
 	
 	public static void playAudioFile(String filePath, double playBackSpeed) {
+		try {
+			clip = AudioSystem.getClip();
+		} catch (LineUnavailableException e) {
+			e.printStackTrace();
+		}
 	    AudioThread t = new AudioThread(filePath, playBackSpeed);
 	    t.start();
 	}
 	
 	
 	public static void playAudioFileWaitForEnd(String filePath, double playBackSpeed) {
+		isPlaying = true;
 		try {
 		      File fileIn = new File(filePath);
 		      AudioInputStream audioInputStream=AudioSystem.getAudioInputStream(fileIn);
@@ -82,7 +90,7 @@ public class AudioManager {
 		      if(line!=null) {
 		        line.open(format);
 		        line.start();
-		        while(true) {
+		        while(isPlaying) {
 		          int k=audioInputStream.read(data, 0, data.length);
 		          if(k<0) break;
 		          line.write(data, 0, k);
@@ -92,6 +100,8 @@ public class AudioManager {
 		      }
 		    }
 		    catch(Exception ex) { ex.printStackTrace(); }
+		
+		isPlaying = false;
 	}
 	
 	/**
@@ -159,12 +169,38 @@ public class AudioManager {
     }
 	
 	public static void playAudioFileWaitForEnd(String filePath) {
+		isPlaying = true;
 		playAudioFile(filePath);
 		
 		while(clip.isOpen()) {
 			try {
-				Thread.sleep(1);
+				Thread.sleep(10);
 			}catch(InterruptedException i) {}
 		}
+		
+		isPlaying = false;
+	}
+	
+	public static void stop() {
+		clip.close();
+		isPlaying = false;
+		
+		//wait for all song threads to stop execution
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
+	/**
+	 * {@code only works with playback speed varying versions and waitforend normal version}
+	 * @return
+	 */
+	@Deprecated
+	public static boolean isPlaying() {
+		return isPlaying;
 	}
 }

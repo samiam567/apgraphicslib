@@ -26,11 +26,13 @@ import apgraphicslib.Settings;
 
 public class Song extends Physics_object implements KeyListener{
 	
-	private double audioLatency = 2.6, noteStart, noteSpeed;
+	private double audioLatency = 1.8 * 1000, noteStart, noteSpeed;
 	//if these arrows on the mat are pressed down 
 	private boolean left = false, down = false, up = false, right = false;
 	
-	double noteCapturing = 0; //0 if not notecapturing, playbackspeed if capturing
+	private boolean noteCapturing = false; //0 if not notecapturing, playbackspeed if capturing
+	
+	private double beats;
 	
 	private LinkedList<LeftNote> leftNotes = new LinkedList<LeftNote>();
 	private LinkedList<DownNote> downNotes = new LinkedList<DownNote>();
@@ -47,7 +49,6 @@ public class Song extends Physics_object implements KeyListener{
 
 	private String songSrc, audioSrc, leftNotesStr, upNotesStr, downNotesStr, rightNotesStr;
 	private double difficulty, tempo;
-	private double currentFrame;
 	private static double startDiff;
 	
 	public Song(Object_draw drawer, String songSrc) {
@@ -58,8 +59,9 @@ public class Song extends Physics_object implements KeyListener{
 		
 	private void calculateNoteValues() {
 		
-		noteStart = Note.noteSize/2 - 100 + Note.noteSize * 4 + audioLatency * Note.noteSize + startDiff * Note.noteSize;
+		noteStart = (startDiff+4) * Note.noteSize + 100;//Note.noteSize/2 - 100 + Note.noteSize * 4 + audioLatency * Note.noteSize + startDiff * Note.noteSize;
 		noteSpeed = tempo * Note.noteSize / 60;
+		beats = 0;
 	}
 	
 	private void loadSong(String songSrc) {
@@ -110,17 +112,14 @@ public class Song extends Physics_object implements KeyListener{
 		
 	}
 
-	private void logNote(NoteDirections direction, double noteFrame, double playBackSpeed) {
+	private void logNote(NoteDirections direction) {
 		
-		
-	
-		double noteBeatPos = noteFrame / getDrawer().getActualFPS() * (playBackSpeed * tempo)/120 - audioLatency - startDiff - 3.5;
-		
-		System.out.println("logging note (unrounded : " + noteBeatPos);
+		double noteBeatPos = beats;
+//		System.out.println("logging note (unrounded : " + noteBeatPos);
 		
 		noteBeatPos = ((double)Math.round(noteBeatPos*4))/4; //make 0.5 the smallest increment
 		
-//		System.out.println("logging note: " + noteBeatPos);
+	//	System.out.println("logging note: " + noteBeatPos);
 
 		if (direction.equals(NoteDirections.left)) {				
 			leftNotesStr += "" + noteBeatPos + ",";
@@ -138,13 +137,15 @@ public class Song extends Physics_object implements KeyListener{
 	public Song(Object_draw drawer) {
 		super(drawer);
 		
-		double playBackSpeed = 1;
+		double playBackSpeed = 0.5;
 		
 		
 		songSrc = "./src/danceDanceRevolution/assets/" + JOptionPane.showInputDialog(drawer,"What is the song name?") + ".dat";
 		
+		
 		try { //if the song already exists we will try to load it in
 			loadSong(songSrc);
+			calculateNoteValues();
 			loadNotes(playBackSpeed);
 		}catch(Exception e) {
 			audioSrc = "./src/danceDanceRevolution/assets/" + JOptionPane.showInputDialog(drawer,"What is the audio file?") + ".wav";	
@@ -155,34 +156,15 @@ public class Song extends Physics_object implements KeyListener{
 		
 		JOptionPane.showMessageDialog(getDrawer(), "Now capturing. Press ENTER to save capture");
 		
-		getDrawer().getFrame().getContentPane().addKeyListener(this);
-		getDrawer().getFrame().getGlassPane().addKeyListener(this);
-		getDrawer().getFrame().addKeyListener(this);
-		getDrawer().addKeyListener(this);
 		
 		
-		noteCapturing = playBackSpeed;
+		noteCapturing = true;
 		
-		AudioManager.playAudioFile(audioSrc,playBackSpeed);
-		drawer.restart();
-		drawer.resetFrameCounter();
+		play(playBackSpeed);
 		
-		while (noteCapturing != 0) {
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
 		System.out.println("input end");
 
 		
-		getDrawer().getFrame().getContentPane().removeKeyListener(this);
-		getDrawer().getFrame().getGlassPane().removeKeyListener(this);
-		getDrawer().getFrame().removeKeyListener(this);
-		getDrawer().removeKeyListener(this);
 		
 		outputSong();
 			
@@ -212,7 +194,7 @@ public class Song extends Physics_object implements KeyListener{
 
 	public void addNotes() {
 		double noteDistMultiplier = Note.noteSize;
-		double noteSpeed = tempo * Note.noteSize / 60;
+	
 	
 		//leftNotes
 		Scanner leftScan = new Scanner(leftNotesStr);
@@ -293,19 +275,45 @@ public class Song extends Physics_object implements KeyListener{
 		}
 	}
 	
-	public void play() {
+	public void play(double playBackSpeed) {
+		
 		DDRRunner.currentSong = this;
-		for (Note note : allNotes) {
-			note.run();
-		}
+	
 		getDrawer().getFrame().getContentPane().addKeyListener(this);
 		getDrawer().getFrame().getGlassPane().addKeyListener(this);
 		getDrawer().getFrame().addKeyListener(this);
 		getDrawer().addKeyListener(this);
 		
 		
-		AudioManager.playAudioFile(audioSrc);
+		AudioManager.playAudioFile(audioSrc, playBackSpeed);
+		
+		getDrawer().repaint();
+		try {
+			Thread.sleep((long) (audioLatency));
+		}catch(InterruptedException e) {}
+		
 		getDrawer().start();
+		getDrawer().resetFrameCounter();
+		
+		try {
+			Thread.sleep((long) (60.0 * (11 + startDiff) / (tempo*playBackSpeed) ) * 1000 );
+		}catch(InterruptedException e) {}
+		
+		
+
+		while (AudioManager.isPlaying()) {	
+			try {
+				Thread.sleep((long) (15000*2/tempo/playBackSpeed));
+			}catch(InterruptedException c) {}
+			beats+=0.25;
+		}
+		
+		
+		getDrawer().getFrame().getContentPane().removeKeyListener(this);
+		getDrawer().getFrame().getGlassPane().removeKeyListener(this);
+		getDrawer().getFrame().removeKeyListener(this);
+		getDrawer().removeKeyListener(this);
+		
 	
 	}
 	
@@ -314,18 +322,19 @@ public class Song extends Physics_object implements KeyListener{
 
 	@Override
 	public void keyPressed(KeyEvent arg0) {
-		currentFrame = getDrawer().getCurrentFrame();
-		 
+		
+
 		if (arg0.getKeyCode() == 37) { //LEFT
 			
 			
 			if (! left) {
 				left = true;
 				
-				if (noteCapturing != 0) {
-					logNote(NoteDirections.left,currentFrame, noteCapturing);
+				if (noteCapturing) {
+					logNote(NoteDirections.left);
 				}else {
 					for (Note n : leftNotes) {
+						
 						double distance = Physics_engine_toolbox.distance2D(n.getCoordinates(), leftNoteTarget.getCoordinates());
 						if (distance < Note.noteSize/4) {
 							getDrawer().remove(n);
@@ -335,15 +344,17 @@ public class Song extends Physics_object implements KeyListener{
 						}
 					}
 				}
+				
 			}
+			
 		}
 		
 		if (arg0.getKeyCode() == 40) { //DOWN
 			if (! down) {
 				down = true;
 				
-				if (noteCapturing != 0) {
-					logNote(NoteDirections.down,currentFrame, noteCapturing);
+				if (noteCapturing) {
+					logNote(NoteDirections.down);
 				}else {
 					for (Note n : downNotes) {
 						double distance = Physics_engine_toolbox.distance2D(n.getCoordinates(), downNoteTarget.getCoordinates());
@@ -362,8 +373,8 @@ public class Song extends Physics_object implements KeyListener{
 			if (! up) {
 				up = true;
 				
-				if (noteCapturing != 0) {
-					logNote(NoteDirections.up,currentFrame, noteCapturing);
+				if (noteCapturing) {
+					logNote(NoteDirections.up);
 				}else {
 					for (Note n : upNotes) {
 						double distance = Physics_engine_toolbox.distance2D(n.getCoordinates(), upNoteTarget.getCoordinates());
@@ -382,8 +393,8 @@ public class Song extends Physics_object implements KeyListener{
 			if (! right) {
 				right = true;
 				
-				if (noteCapturing != 0) {
-					logNote(NoteDirections.right,currentFrame, noteCapturing);
+				if (noteCapturing) {
+					logNote(NoteDirections.right);
 				}else {
 					for (Note n : rightNotes) {
 						double distance = Physics_engine_toolbox.distance2D(n.getCoordinates(), rightNoteTarget.getCoordinates());
@@ -401,7 +412,7 @@ public class Song extends Physics_object implements KeyListener{
 		
 		if (arg0.getKeyCode() == 10) { //ENTER
 			System.out.println("ENTER");
-			noteCapturing = 0;
+			AudioManager.stop();
 		}
 		
 	}
