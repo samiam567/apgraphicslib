@@ -22,7 +22,7 @@ public class DDRRunner {
 	//	Settings.width = 1200;
 	//	Settings.height = 1000;
 		Settings.perspective = false;
-		Settings.targetFPS = 60;
+		Settings.targetFPS = 120;
 		
 		drawer = new Object_draw();
 		drawer.getFrame().setBackground(Color.black);
@@ -44,7 +44,7 @@ public class DDRRunner {
 			song = new Song(drawer,"./src/danceDanceRevolution/assets/" + songChoice + ".dat");
 		}
 		
-		song.play();
+		song.play(1);
 		System.out.println(song);
 	
 		while (drawer.getFrame().isShowing()) {
