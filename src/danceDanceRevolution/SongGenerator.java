@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class SongGenerator {
 	
 	private static int notesToSkip = 0;
-	private static int notesToRead = 300;
+	private static int notesToRead = 150;
 	
 	private static double[][] notePitches;
 
