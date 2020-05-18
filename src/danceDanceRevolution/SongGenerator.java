@@ -14,8 +14,8 @@ public class SongGenerator {
 	
 	
 	//this is the difficulty
-	private static int notesPerBeat = 4; //this is the difficulty
-	private static double timeInBetweenNotes = 0.25; //this is in beats
+	private static int notesPerBeat = 10; //this is the difficulty
+	private static double timeInBetweenNotes = 0.125; //this is in beats
 	
 	private static double[][] notePitches;
 
@@ -92,9 +92,8 @@ public class SongGenerator {
 				//make sure there is more than timeInBetweenNotes in between each notes
 				if (noteTimeStamp - prevTimeStamp < timeToWaitInBetweenNotes/2) {
 					notesToReadIn++; //we didn't read this note so it doesn't count in our counter
+					System.out.println("noteSkipped1");
 					continue;
-				}else {
-					prevTimeStamp = noteTimeStamp;
 					
 				}
 				
@@ -103,8 +102,9 @@ public class SongGenerator {
 				if ( ((int) Math.round((noteTimeStamp/2)/(timePerBeat))) == beat) {
 					if (notesThisBeat >= notesPerBeat) { //we have too many notes in this second
 						notesToReadIn++; //we didn't read this note so it doesn't count in our counter
-						timeToWaitInBetweenNotes = 2*timeInBetweenNotes/notesPerBeat; //wait more before the next note
+						//timeToWaitInBetweenNotes = 10*timeInBetweenNotes/notesPerBeat; //wait more before the next note
 						notesThisBeat--;
+						System.out.println("noteSkipped2");
 						continue;
 					}else {
 						notesThisBeat++;
@@ -117,7 +117,7 @@ public class SongGenerator {
 				
 			
 				
-				
+				prevTimeStamp = noteTimeStamp;
 				
 				
 				System.out.print(noteTimeStamp);

@@ -56,6 +56,11 @@ public class Note extends Physics_2DTexturedPolygon implements Resizable {
 	@Override
 	public void Update(double frames) {		
 		getCoordinates().add(speed.tempStatMultiply(frames));
+		
+	}
+	
+	@Override
+	public void prePaintUpdate() {
 		if (getY() < 0) {
 			reposition();
 		}

@@ -269,6 +269,15 @@ public class Song extends Physics_2DDrawMovable implements KeyListener{
 		rightScan.close();
 	}
 	
+	/**
+	 * {@code since we will have tons of notes, override the rotation calculations}
+	 */
+	@Override
+	public void Update(double frames) {		
+		getCoordinates().add(speed.tempStatMultiply(frames));
+		
+	}
+	
 	public void addNotes() {
 		LeftNote newLftNote;
 		DownNote newDwnNote;
@@ -364,6 +373,9 @@ public class Song extends Physics_2DDrawMovable implements KeyListener{
 		getDrawer().getFrame().removeKeyListener(this);
 		getDrawer().removeKeyListener(this);
 		
+		getDrawer().stop();
+		
+		getDrawer().getFrame().setVisible(false);
 	
 	}
 	
