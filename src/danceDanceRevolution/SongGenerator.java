@@ -12,6 +12,11 @@ public class SongGenerator {
 	private static int notesToSkip = 0;
 	private static int notesToRead = 150;
 	
+	
+	//this is the difficulty
+	private static int notesPerBeat = 2; 
+	private static double timeInBetweenNotes = 0.25;
+	
 	private static double[][] notePitches;
 
 	public static void generateSongInto(String audioSrc, Song target) {
@@ -26,10 +31,10 @@ public class SongGenerator {
 		
 		
 		
-		double noteSpeed = target.getTempo() * Note.noteSize / 60 , noteTimeStamp, notePitch;
+		double noteSpeed = target.getTempo() * Note.noteSize / 30 , noteTimeStamp, notePitch;
 		double startPos = 10 + Note.noteSize/2;// make the zero point at the pos of the noteTargets
 		
-		int noteDirection, prevNoteDirection = -1;
+		int noteDirection;
 		
 		
 		ArrayList<Double> noteTimes = new ArrayList<Double>();
@@ -70,14 +75,49 @@ public class SongGenerator {
 			}
 			notePitches = resizeNotePitches(notePitches, notePitchIndx); //cut off the extra from notePitches
 	
+			int  notesToReadIn = notesToRead;
+			
+			int notesThisBeat = 0;
+			double beat = 0, timePerSecond; //notes per second method
 			
 			
+			double prevTimeStamp = 0, timePerBeat = 120/target.getTempo();
 			
-			for (int i = 0; ((i < noteTimes.size()) && (i < notesToRead)); i++ ) { 
+			timeInBetweenNotes *= 60/target.getTempo();			
+			
+			for (int i = 0; ((i < noteTimes.size()) && (i < notesToReadIn)); i++ ) { 
 				
 								
-				noteTimeStamp = noteTimes.get(i);
+				noteTimeStamp = noteTimes.get(i)/2;
 				notePitch = getPitch(noteTimeStamp, 0, notePitches.length);
+				
+				
+				
+				
+				
+				//make sure there is more than timeInBetweenNotes in between each notes
+				if (noteTimeStamp - prevTimeStamp < timeInBetweenNotes/2) {
+					notesToReadIn++; //we didn't read this note so it doesn't count in our counter
+					continue;
+				}else {
+					prevTimeStamp = noteTimeStamp;
+				}
+				
+				
+				//make sure we don't get too many notes this beat
+				if ( ((int) ((noteTimeStamp)/timePerBeat)) == beat) {
+					if (notesThisBeat > notesPerBeat) { //we have too many notes in this second
+						notesToReadIn++; //we didn't read this note so it doesn't count in our counter
+						continue;
+					}else {
+						notesThisBeat++;
+					}
+				}else {
+					beat = ((int) ((noteTimeStamp)/timePerBeat));
+					notesThisBeat = 0;
+				}
+				
+			
 				
 				
 				
@@ -101,14 +141,6 @@ public class SongGenerator {
 					noteDirection = (int) (Math.round(notePitch) % 4);	
 				}
 				System.out.println(noteDirection);
-				
-				
-				//Don't repeat notes
-				if (noteDirection == prevNoteDirection) {
-					noteDirection = -1;
-				}else {
-					prevNoteDirection = noteDirection;
-				}
 				
 				
 				if ( (noteDirection == 0) || (noteDirection == 4) || (noteDirection == 6) || (noteDirection == 8) ) {

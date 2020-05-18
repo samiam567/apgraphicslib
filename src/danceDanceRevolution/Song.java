@@ -26,7 +26,7 @@ import apgraphicslib.Settings;
 
 public class Song extends Physics_object implements KeyListener{
 	
-	private double audioLatency = 850, noteStart, noteSpeed;
+	private double audioLatency = 200, noteStart, noteSpeed;
 	//if these arrows on the mat are pressed down 
 	private boolean left = false, down = false, up = false, right = false;
 	
