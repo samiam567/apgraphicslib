@@ -6,8 +6,8 @@ import apgraphicslib.Vector;
 
 public class RightNote extends Note {
 	
-	public RightNote(Object_draw drawer, double y, double noteSpeed, String textureSrc) {
-		super(drawer,  4*Settings.width/5, y, noteSpeed, textureSrc);
+	public RightNote(Song parent, double y, double noteSpeed, String textureSrc) {
+		super(parent,  4*Settings.width/5, y, noteSpeed, textureSrc);
 		
 	}
 	

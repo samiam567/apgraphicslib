@@ -32,16 +32,16 @@ public class DDRRunner {
 		drawer.add(score);
 		
 		String[] songChoices = {"September AubioMix","Sultans Of Swing AubioMix","Only The Good Die Young AubioMix","Aint Even Done With the Night AubioMix", "Main Theme AubioMix","Other", "Create new song"};
-		String songChoice = songChoices[JOptionPane.showOptionDialog(drawer, "Which Song do you want?", "Choose a song", 1, 1, null, songChoices, 0)];
+		String songChoice = (String) JOptionPane.showInputDialog(drawer, "Which Song do you want?", "Choose a song",  JOptionPane.PLAIN_MESSAGE, null, songChoices, songChoices[0]);
 		
 		Song song;
 		if (songChoice.equals("Other")) {
-			song = new Song(drawer,"./src/danceDanceRevolution/assets/" + JOptionPane.showInputDialog(drawer, "What song?") + ".dat");
+			song = new Song(drawer,"./src/danceDanceRevolution/assets/Songs/" + JOptionPane.showInputDialog(drawer, "What song?") + ".dat");
 		}else if (songChoice.equals("Create new song")) {
 			song = new Song(drawer);
 			System.exit(1);
 		}else {
-			song = new Song(drawer,"./src/danceDanceRevolution/assets/" + songChoice + ".dat");
+			song = new Song(drawer,"./src/danceDanceRevolution/assets/Songs/" + songChoice + ".dat");
 		}
 		
 		song.play(1);
@@ -61,19 +61,5 @@ public class DDRRunner {
 		
 	}
 	
-	@Deprecated
-	private static void noteTest() {
-		double noteSpeed = 100;
-		UpNote up = new UpNote(drawer,Settings.height/5,noteSpeed,"./src/danceDanceRevolution/assets/arrowTexturePurple.png");
-		up.run();
-		
-		LeftNote left = new LeftNote(drawer,2*Settings.height/5,noteSpeed,"./src/danceDanceRevolution/assets/arrowTexturePurple.png");
-		left.run();
-		
-		DownNote down = new DownNote(drawer,1.5*Settings.height/5,noteSpeed,"./src/danceDanceRevolution/assets/arrowTexturePurple.png");
-		down.run();
-
-		RightNote right = new RightNote(drawer,2.5*Settings.height/5,noteSpeed,"./src/danceDanceRevolution/assets/arrowTexturePurple.png");
-		right.run();
-	}
+	
 }

@@ -7,8 +7,8 @@ import apgraphicslib.Vector;
 public class LeftNote extends Note {
 
 	
-	public LeftNote(Object_draw drawer, double y, double noteSpeed, String textureSrc) {
-		super(drawer, Settings.width/5, y, noteSpeed, textureSrc);
+	public LeftNote(Song parent, double y, double noteSpeed, String textureSrc) {
+		super(parent, Settings.width/5, y, noteSpeed, textureSrc);
 		
 	}
 	

@@ -1,6 +1,5 @@
 package danceDanceRevolution;
 
-import apgraphicslib.Object_draw;
 import apgraphicslib.Physics_2DTexturedPolygon;
 import apgraphicslib.Resizable;
 import apgraphicslib.Settings;
@@ -10,11 +9,14 @@ public class Note extends Physics_2DTexturedPolygon implements Resizable {
 	public static double noteSize = Settings.width/5;
 	private String textureSrc = "noTexture";
 	
+	private Song parentSong;
+	
 	private double noteSpeed, initY;
 	protected boolean loaded = false;
-	public Note(Object_draw drawer, double x, double y, double noteSpeed, String textureSrc) {
-		super(drawer, x, y, NotePPSize);
+	public Note(Song parent, double x, double y, double noteSpeed, String textureSrc) {
+		super(parent.getDrawer(), x, y, NotePPSize);
 		initY = y;
+		this.parentSong = parent;
 		this.textureSrc = textureSrc;
 		this.noteSpeed = noteSpeed;
 		addPoint(-noteSize/2, -noteSize/2);
@@ -44,6 +46,9 @@ public class Note extends Physics_2DTexturedPolygon implements Resizable {
 		getSpeed().setJ(-noteSpeed);
 	}
 	
+	protected void reposition() {
+		// implemented by children
+	}
 	
 	/**
 	 * {@code since we will have tons of notes, override the rotation calculations}
@@ -51,6 +56,9 @@ public class Note extends Physics_2DTexturedPolygon implements Resizable {
 	@Override
 	public void Update(double frames) {		
 		getCoordinates().add(speed.tempStatMultiply(frames));
+		if (getY() < 0) {
+			reposition();
+		}
 	}
 	
 	@Override

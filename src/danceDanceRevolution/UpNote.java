@@ -6,8 +6,8 @@ import apgraphicslib.Vector;
 
 public class UpNote extends Note {
 	
-	public UpNote(Object_draw drawer, double y, double noteSpeed, String textureSrc) {
-		super(drawer, 3*Settings.width/5, y, noteSpeed, textureSrc);
+	public UpNote(Song parent, double y, double noteSpeed, String textureSrc) {
+		super(parent, 3*Settings.width/5, y, noteSpeed, textureSrc);
 		
 	}
 	

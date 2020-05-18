@@ -14,8 +14,8 @@ public class SongGenerator {
 	
 	
 	//this is the difficulty
-	private static int notesPerBeat = 2; 
-	private static double timeInBetweenNotes = 0.25;
+	private static int notesPerBeat = 3; //this is the difficulty
+	private static double timeInBetweenNotes = 0.25; //this is in beats
 	
 	private static double[][] notePitches;
 
@@ -32,7 +32,7 @@ public class SongGenerator {
 		
 		
 		double noteSpeed = target.getTempo() * Note.noteSize / 30 , noteTimeStamp, notePitch;
-		double startPos = 10 + Note.noteSize/2;// make the zero point at the pos of the noteTargets
+		double startPos = 10 + Note.noteSize/2; // make the zero point at the pos of the noteTargets
 		
 		int noteDirection;
 		
@@ -78,12 +78,14 @@ public class SongGenerator {
 			int  notesToReadIn = notesToRead;
 			
 			int notesThisBeat = 0;
-			double beat = 0, timePerSecond; //notes per second method
 			
 			
-			double prevTimeStamp = 0, timePerBeat = 120/target.getTempo();
 			
-			timeInBetweenNotes *= 60/target.getTempo();			
+			double prevTimeStamp = 0,beat = 0, timePerBeat = 240/target.getTempo();
+			
+			timeInBetweenNotes *= 60/target.getTempo(); //convert wait time to seconds
+			
+			double timeToWaitInBetweenNotes = timeInBetweenNotes;			
 			
 			for (int i = 0; ((i < noteTimes.size()) && (i < notesToReadIn)); i++ ) { 
 				
@@ -98,22 +100,27 @@ public class SongGenerator {
 				//make sure there is more than timeInBetweenNotes in between each notes
 				if (noteTimeStamp - prevTimeStamp < timeInBetweenNotes/2) {
 					notesToReadIn++; //we didn't read this note so it doesn't count in our counter
+						
 					continue;
 				}else {
 					prevTimeStamp = noteTimeStamp;
+					
 				}
 				
 				
 				//make sure we don't get too many notes this beat
-				if ( ((int) ((noteTimeStamp)/timePerBeat)) == beat) {
-					if (notesThisBeat > notesPerBeat) { //we have too many notes in this second
+				if ( ((int) Math.round((noteTimeStamp/2)/(timePerBeat))) == beat) {
+					if (notesThisBeat >= notesPerBeat) { //we have too many notes in this second
 						notesToReadIn++; //we didn't read this note so it doesn't count in our counter
+						timeToWaitInBetweenNotes = 10*timeInBetweenNotes/notesPerBeat; //wait more before the next note
+						notesThisBeat--;
 						continue;
 					}else {
 						notesThisBeat++;
+						timeToWaitInBetweenNotes = timeInBetweenNotes; 
 					}
 				}else {
-					beat = ((int) ((noteTimeStamp)/timePerBeat));
+					beat = ((int) Math.round((noteTimeStamp/2)/(timePerBeat)));
 					notesThisBeat = 0;
 				}
 				
@@ -145,25 +152,25 @@ public class SongGenerator {
 				
 				if ( (noteDirection == 0) || (noteDirection == 4) || (noteDirection == 6) || (noteDirection == 8) ) {
 					//left
-					LeftNote newLftNote = new LeftNote(target.getDrawer(),startPos + noteTimeStamp*noteSpeed, noteSpeed, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
+					LeftNote newLftNote = new LeftNote(target,startPos + noteTimeStamp*noteSpeed, noteSpeed, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
 					leftNotes.add(newLftNote);
 					allNotes.add(newLftNote);
 				}
 				if ( (noteDirection == 1) || (noteDirection == 5) || (noteDirection == 6) || (noteDirection == 9) ) {
 					//down
-					DownNote newDwnNote = new DownNote(target.getDrawer(),startPos + noteTimeStamp*noteSpeed, noteSpeed, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
+					DownNote newDwnNote = new DownNote(target,startPos + noteTimeStamp*noteSpeed, noteSpeed, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
 					downNotes.add(newDwnNote);
 					allNotes.add(newDwnNote);
 				}
 				if ( (noteDirection == 2) || (noteDirection == 5) || (noteDirection == 7) || (noteDirection == 8) ) {
 					//up
-					UpNote newUpNote = new UpNote(target.getDrawer(),startPos + noteTimeStamp*noteSpeed, noteSpeed, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
+					UpNote newUpNote = new UpNote(target,startPos + noteTimeStamp*noteSpeed, noteSpeed, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
 					upNotes.add(newUpNote);
 					allNotes.add(newUpNote);
 				}
 				if ( (noteDirection == 3) || (noteDirection == 4) || (noteDirection == 7) || (noteDirection == 9) ) {
 					//right
-					RightNote newRgtNote = new RightNote(target.getDrawer(),startPos + noteTimeStamp*noteSpeed, noteSpeed, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
+					RightNote newRgtNote = new RightNote(target,startPos + noteTimeStamp*noteSpeed, noteSpeed, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
 					rightNotes.add(newRgtNote);
 					allNotes.add(newRgtNote);
 				}
