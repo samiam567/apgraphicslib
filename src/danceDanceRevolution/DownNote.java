@@ -1,5 +1,7 @@
 package danceDanceRevolution;
 
+import java.util.NoSuchElementException;
+
 import apgraphicslib.Object_draw;
 import apgraphicslib.Settings;
 
@@ -10,5 +12,15 @@ public class DownNote extends Note {
 		
 	}
 	
+	
+	@Override
+	public void reposition() {
+		try {
+			getCoordinates().setY(parentSong.dPosQueue.remove() + parentSong.getY());
+			super.reposition();
+		}catch(NoSuchElementException n) {
+			getDrawer().remove(this);
+		}
+	}
 
 }

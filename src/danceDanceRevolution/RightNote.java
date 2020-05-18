@@ -1,5 +1,7 @@
 package danceDanceRevolution;
 
+import java.util.NoSuchElementException;
+
 import apgraphicslib.Object_draw;
 import apgraphicslib.Settings;
 import apgraphicslib.Vector;
@@ -17,5 +19,17 @@ public class RightNote extends Note {
 			super.load();
 			rotatePoints(new Vector(-Math.PI/2));
 		}
+	}
+	
+	
+	@Override
+	public void reposition() {
+		try {
+			getCoordinates().setY(parentSong.rPosQueue.remove() + parentSong.getY());
+			super.reposition();
+		}catch(NoSuchElementException n) {
+			getDrawer().remove(this);
+		}
+		
 	}
 }

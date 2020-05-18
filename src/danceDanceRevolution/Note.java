@@ -9,7 +9,7 @@ public class Note extends Physics_2DTexturedPolygon implements Resizable {
 	public static double noteSize = Settings.width/5;
 	private String textureSrc = "noTexture";
 	
-	private Song parentSong;
+	protected Song parentSong;
 	
 	private double noteSpeed, initY;
 	protected boolean loaded = false;
@@ -46,7 +46,7 @@ public class Note extends Physics_2DTexturedPolygon implements Resizable {
 		getSpeed().setJ(-noteSpeed);
 	}
 	
-	protected void reposition() {
+	public void reposition() {
 		// implemented by children
 	}
 	

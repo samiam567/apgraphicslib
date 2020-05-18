@@ -37,10 +37,10 @@ public class Song extends Physics_2DDrawMovable implements KeyListener{
 	
 	private double beats;
 	
-	private Queue<Double> lPosQueue = new LinkedList<Double>();
-	private Queue<Double> dPosQueue = new LinkedList<Double>();
-	private Queue<Double> uPosQueue = new LinkedList<Double>();
-	private Queue<Double> rPosQueue = new LinkedList<Double>();
+	public Queue<Double> lPosQueue = new LinkedList<Double>();
+	public Queue<Double> dPosQueue = new LinkedList<Double>();
+	public Queue<Double> uPosQueue = new LinkedList<Double>();
+	public Queue<Double> rPosQueue = new LinkedList<Double>();
 	
 	
 	private LinkedList<LeftNote> leftNotes = new LinkedList<LeftNote>();
@@ -101,6 +101,10 @@ public class Song extends Physics_2DDrawMovable implements KeyListener{
 			try { //if this is an Aubio file the first token will be the tempo
 				tempo = Double.parseDouble(audioSrc); 
 				SongGenerator.generateSongInto(songSrc,this);
+				calculateNoteValues();
+				addNotes();
+				loadNotes();
+			
 			}catch(NumberFormatException n) { //if the first token is not a number it is a user file
 				difficulty = Double.parseDouble(scan.next());
 				tempo = Double.parseDouble(scan.next());
@@ -112,6 +116,7 @@ public class Song extends Physics_2DDrawMovable implements KeyListener{
 				rightNotesStr = scan.nextLine();
 				
 				calculateNoteValues();
+				readNotes();
 				addNotes();
 			}
 			
@@ -207,7 +212,7 @@ public class Song extends Physics_2DDrawMovable implements KeyListener{
 	}
 
 
-	public void addNotes() {
+	public void readNotes() {
 		double noteDistMultiplier = Note.noteSize;
 	
 	
@@ -215,13 +220,10 @@ public class Song extends Physics_2DDrawMovable implements KeyListener{
 		Scanner leftScan = new Scanner(leftNotesStr);
 		leftScan.useDelimiter(",");
 		
-		LeftNote newLftNote;
+		
 		while (leftScan.hasNext()) {
 			try {
-				newLftNote = new LeftNote(this,noteStart + Double.parseDouble(leftScan.next())*noteDistMultiplier, noteSpeed, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
-				leftNotes.add(newLftNote);
-				allNotes.add(newLftNote);
-				System.out.println("note added");
+				lPosQueue.add(noteStart + Double.parseDouble(leftScan.next())*noteDistMultiplier);
 			}catch(NumberFormatException n ) {}
 		}
 		
@@ -230,13 +232,10 @@ public class Song extends Physics_2DDrawMovable implements KeyListener{
 		Scanner downScan = new Scanner(downNotesStr);
 		downScan.useDelimiter(",");
 		
-		DownNote newDwnNote;
+		
 		while (downScan.hasNext()) {
 			try {
-				newDwnNote = new DownNote(this,noteStart + Double.parseDouble(downScan.next())*noteDistMultiplier, noteSpeed, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
-				downNotes.add(newDwnNote);
-				allNotes.add(newDwnNote);
-				System.out.println("note added");
+				dPosQueue.add(noteStart + Double.parseDouble(downScan.next())*noteDistMultiplier);
 			}catch(NumberFormatException n ) {}
 		}
 		
@@ -245,13 +244,10 @@ public class Song extends Physics_2DDrawMovable implements KeyListener{
 		Scanner upScan = new Scanner(upNotesStr);
 		upScan.useDelimiter(",");
 		
-		UpNote newUpNote;
+		
 		while (upScan.hasNext()) {
 			try {
-				newUpNote = new UpNote(this,noteStart + Double.parseDouble(upScan.next())*noteDistMultiplier, noteSpeed, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
-				upNotes.add(newUpNote);
-				allNotes.add(newUpNote);
-				System.out.println("note added");
+				uPosQueue.add(noteStart + Double.parseDouble(upScan.next())*noteDistMultiplier);
 			}catch(NumberFormatException n ) {}
 		}
 		
@@ -260,13 +256,10 @@ public class Song extends Physics_2DDrawMovable implements KeyListener{
 		Scanner rightScan = new Scanner(rightNotesStr);
 		rightScan.useDelimiter(",");
 		
-		RightNote newRgtNote;
+		
 		while (rightScan.hasNext()) {
 			try {
-				newRgtNote = new RightNote(this,noteStart + Double.parseDouble(rightScan.next())*noteDistMultiplier, noteSpeed, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
-				rightNotes.add(newRgtNote);
-				allNotes.add(newRgtNote);
-				System.out.println("note added");
+				rPosQueue.add(noteStart + Double.parseDouble(rightScan.next())*noteDistMultiplier);
 			}catch(NumberFormatException n ) {}
 		}
 		
@@ -274,6 +267,42 @@ public class Song extends Physics_2DDrawMovable implements KeyListener{
 		downScan.close();
 		upScan.close();
 		rightScan.close();
+	}
+	
+	public void addNotes() {
+		LeftNote newLftNote;
+		DownNote newDwnNote;
+		UpNote newUpNote;
+		RightNote newRgtNote;
+		
+		int notesToAdd = 3;
+		for (int i = 0; i < notesToAdd; i++) {
+			newLftNote = new LeftNote(this,lPosQueue.remove(), noteSpeed, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
+			leftNotes.add(newLftNote);
+			allNotes.add(newLftNote);
+			System.out.println("note added");
+		}
+		
+		for (int i = 0; i < notesToAdd; i++) {
+			newDwnNote = new DownNote(this,dPosQueue.remove(), noteSpeed, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
+			downNotes.add(newDwnNote);
+			allNotes.add(newDwnNote);
+			System.out.println("note added");
+		}
+		
+		for (int i = 0; i < notesToAdd; i++) {
+			newUpNote = new UpNote(this,uPosQueue.remove(), noteSpeed, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
+			upNotes.add(newUpNote);
+			allNotes.add(newUpNote);
+			System.out.println("note added");
+		}
+		
+		for (int i = 0; i < notesToAdd; i++) {
+			newRgtNote = new RightNote(this,rPosQueue.remove(), noteSpeed, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
+			rightNotes.add(newRgtNote);
+			allNotes.add(newRgtNote);
+			System.out.println("note added");
+		}
 		
 	}
 	
@@ -295,6 +324,7 @@ public class Song extends Physics_2DDrawMovable implements KeyListener{
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void play(double playBackSpeed) {
 		
 		DDRRunner.currentSong = this;
@@ -357,8 +387,7 @@ public class Song extends Physics_2DDrawMovable implements KeyListener{
 						
 						double distance = Physics_engine_toolbox.distance2D(n.getCoordinates(), leftNoteTarget.getCoordinates());
 						if (distance < Note.noteSize/4) {
-							getDrawer().remove(n);
-							leftNotes.remove(n);
+							n.reposition();
 							DDRRunner.score.AddScore(1000/distance);
 							break;
 						}
@@ -379,8 +408,7 @@ public class Song extends Physics_2DDrawMovable implements KeyListener{
 					for (Note n : downNotes) {
 						double distance = Physics_engine_toolbox.distance2D(n.getCoordinates(), downNoteTarget.getCoordinates());
 						if (distance < Note.noteSize/4) {
-							getDrawer().remove(n);
-							downNotes.remove(n);
+							n.reposition();
 							DDRRunner.score.AddScore(1000/distance);
 							break;
 						}
@@ -399,8 +427,7 @@ public class Song extends Physics_2DDrawMovable implements KeyListener{
 					for (Note n : upNotes) {
 						double distance = Physics_engine_toolbox.distance2D(n.getCoordinates(), upNoteTarget.getCoordinates());
 						if (distance < Note.noteSize/4) {
-							getDrawer().remove(n);
-							upNotes.remove(n);
+							n.reposition();
 							DDRRunner.score.AddScore(1000/distance);
 							break;
 						}
@@ -419,8 +446,7 @@ public class Song extends Physics_2DDrawMovable implements KeyListener{
 					for (Note n : rightNotes) {
 						double distance = Physics_engine_toolbox.distance2D(n.getCoordinates(), rightNoteTarget.getCoordinates());
 						if (distance < Note.noteSize/4) {
-							getDrawer().remove(n);
-							rightNotes.remove(n);
+							n.reposition();
 							DDRRunner.score.AddScore(1000/distance);
 							break;
 						}

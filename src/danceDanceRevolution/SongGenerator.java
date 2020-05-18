@@ -10,25 +10,17 @@ import java.util.Scanner;
 public class SongGenerator {
 	
 	private static int notesToSkip = 0;
-	private static int notesToRead = 150;
+	private static int notesToRead = 1000;
 	
 	
 	//this is the difficulty
-	private static int notesPerBeat = 3; //this is the difficulty
+	private static int notesPerBeat = 4; //this is the difficulty
 	private static double timeInBetweenNotes = 0.25; //this is in beats
 	
 	private static double[][] notePitches;
 
 	public static void generateSongInto(String audioSrc, Song target) {
-		
-		LinkedList<Note> allNotes = target.getAllNotes();
-		LinkedList<LeftNote> leftNotes = target.getLeftNotes();
-		LinkedList<DownNote> downNotes = target.getDownNotes();
-		LinkedList<UpNote> upNotes = target.getUpNotes();
-		LinkedList<RightNote> rightNotes = target.getRightNotes();
-		
-	
-		
+			
 		
 		
 		double noteSpeed = target.getTempo() * Note.noteSize / 30 , noteTimeStamp, notePitch;
@@ -98,9 +90,8 @@ public class SongGenerator {
 				
 				
 				//make sure there is more than timeInBetweenNotes in between each notes
-				if (noteTimeStamp - prevTimeStamp < timeInBetweenNotes/2) {
+				if (noteTimeStamp - prevTimeStamp < timeToWaitInBetweenNotes/2) {
 					notesToReadIn++; //we didn't read this note so it doesn't count in our counter
-						
 					continue;
 				}else {
 					prevTimeStamp = noteTimeStamp;
@@ -112,7 +103,7 @@ public class SongGenerator {
 				if ( ((int) Math.round((noteTimeStamp/2)/(timePerBeat))) == beat) {
 					if (notesThisBeat >= notesPerBeat) { //we have too many notes in this second
 						notesToReadIn++; //we didn't read this note so it doesn't count in our counter
-						timeToWaitInBetweenNotes = 10*timeInBetweenNotes/notesPerBeat; //wait more before the next note
+						timeToWaitInBetweenNotes = 2*timeInBetweenNotes/notesPerBeat; //wait more before the next note
 						notesThisBeat--;
 						continue;
 					}else {
@@ -152,27 +143,19 @@ public class SongGenerator {
 				
 				if ( (noteDirection == 0) || (noteDirection == 4) || (noteDirection == 6) || (noteDirection == 8) ) {
 					//left
-					LeftNote newLftNote = new LeftNote(target,startPos + noteTimeStamp*noteSpeed, noteSpeed, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
-					leftNotes.add(newLftNote);
-					allNotes.add(newLftNote);
+					target.lPosQueue.add(startPos + noteTimeStamp*noteSpeed);
 				}
 				if ( (noteDirection == 1) || (noteDirection == 5) || (noteDirection == 6) || (noteDirection == 9) ) {
 					//down
-					DownNote newDwnNote = new DownNote(target,startPos + noteTimeStamp*noteSpeed, noteSpeed, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
-					downNotes.add(newDwnNote);
-					allNotes.add(newDwnNote);
+					target.dPosQueue.add(startPos + noteTimeStamp*noteSpeed);
 				}
 				if ( (noteDirection == 2) || (noteDirection == 5) || (noteDirection == 7) || (noteDirection == 8) ) {
 					//up
-					UpNote newUpNote = new UpNote(target,startPos + noteTimeStamp*noteSpeed, noteSpeed, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
-					upNotes.add(newUpNote);
-					allNotes.add(newUpNote);
+					target.uPosQueue.add(startPos + noteTimeStamp*noteSpeed);
 				}
 				if ( (noteDirection == 3) || (noteDirection == 4) || (noteDirection == 7) || (noteDirection == 9) ) {
 					//right
-					RightNote newRgtNote = new RightNote(target,startPos + noteTimeStamp*noteSpeed, noteSpeed, "./src/danceDanceRevolution/assets/arrowTexturePurple.png");
-					rightNotes.add(newRgtNote);
-					allNotes.add(newRgtNote);
+					target.rPosQueue.add(startPos + noteTimeStamp*noteSpeed);
 				}
 				
 			}
