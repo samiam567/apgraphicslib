@@ -14,7 +14,7 @@ public class SongGenerator {
 	
 	
 	//this is the difficulty
-	private static int notesPerBeat = 10; //this is the difficulty
+	private static int notesPerBeat = 4; //this is the difficulty
 	private static double timeInBetweenNotes = 0.25; //this is in beats
 	
 	private static double[][] notePitches;
@@ -82,7 +82,7 @@ public class SongGenerator {
 			for (int i = 0; ((i < noteTimes.size()) && (i < notesToReadIn)); i++ ) { 
 				
 								
-				noteTimeStamp = noteTimes.get(i)/2;
+				noteTimeStamp = noteTimes.get(i)/4;
 				notePitch = getPitch(noteTimeStamp, 0, notePitches.length);
 				
 				

@@ -31,7 +31,7 @@ public class DDRRunner {
 		score.setColor(Color.green);
 		drawer.add(score);
 		
-		String[] songChoices = {"September AubioMix","Sultans Of Swing AubioMix","Only The Good Die Young AubioMix","Aint Even Done With the Night AubioMix", "Main Theme AubioMix","Other", "Create new song"};
+		String[] songChoices = {"September AubioMix","Sultans Of Swing AubioMix","Only The Good Die Young AubioMix","Aint Even Done With the Night AubioMix","Axel F AubioMix", "Happy AubioMix", "Faster AubioMix", "Get Lucky AubioMix", "SexyBack AubioMix", "Main Theme AubioMix","Other", "Create new song"};
 		String songChoice = (String) JOptionPane.showInputDialog(drawer, "Which Song do you want?", "Choose a song",  JOptionPane.PLAIN_MESSAGE, null, songChoices, songChoices[0]);
 		
 		Song song;
