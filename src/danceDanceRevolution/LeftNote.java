@@ -31,6 +31,7 @@ public class LeftNote extends Note {
 			super.reposition();
 		}catch(NoSuchElementException n) {
 			getDrawer().remove(this);
+			setIsVisible(false);
 		}
 	}
 }
