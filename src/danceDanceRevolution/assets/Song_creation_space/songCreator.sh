@@ -12,7 +12,8 @@ for audioSrcName in ./*.wav; do
 		echo "./src/danceDanceRevolution/assets/audioFiles/${audioSrcName:2}" >> "$outFileName"
 		aubio onset "$audioSrcName" >> "$outFileName"
 		echo "," >> "$outFileName"
-		aubio pitch "$audioSrcName" >> "$outFileName"		
+		aubio pitch "$audioSrcName" >> "$outFileName"
+		mv "$audioSrcName" "../audioFiles/$audioSrcName"		
 	fi
 
 
