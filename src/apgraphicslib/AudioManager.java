@@ -104,69 +104,8 @@ public class AudioManager {
 		isPlaying = false;
 	}
 	
-	/**
-	 * {@code only works in fast speed}
-	 * @param filePath
-	 * @param playBackSpeed
-	 */
-	@Deprecated
-	public static void playAudioFile(String filePath, double playBackSpeed, int u) {
-		
-		try {
-			System.out.println("Playback Rate: " + playBackSpeed);
 	
-			File audioFile = new File(filePath);
-	        System.out.println("URL: ");
-	        AudioInputStream ais = AudioSystem.getAudioInputStream(audioFile);
-	        AudioFormat af = ais.getFormat();
-	
-	        int frameSize = af.getFrameSize();
-	
-	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-	        byte[] b = new byte[2^16];
-	        int read = 1;
-	        
-	      
-	        while( read>-1 ) {
-	      
-	        	read = ais.read(b);
-				
-		        if (read>0) {
-		            baos.write(b, 0, read);
-		        }
-	        }
-	      
-	        System.out.println("End entire: \t" + new Date());
-	
-	        byte[] b1 = baos.toByteArray();
-	        byte[] b2 = new byte[(int) (b1.length/playBackSpeed)];
-	        for (int ii=0; ii<b2.length/frameSize; ii++) {
-	            for (int jj=0; jj<frameSize; jj++) {
-	                b2[(ii*frameSize)+jj] = b1[(int) ((ii*frameSize*playBackSpeed)+jj)];
-	            }
-	        }
-	        System.out.println("End sub-sample: \t" + new Date());
-	
-	        ByteArrayInputStream bais = new ByteArrayInputStream(b2);
-	        AudioInputStream aisAccelerated =
-	            new AudioInputStream(bais, af, b2.length);
-	        
-			clip = AudioSystem.getClip();
-			clip.open(aisAccelerated);
-		    clip.loop((int) (2*playBackSpeed));
-		    clip.start();
-
-        } catch (LineUnavailableException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnsupportedAudioFileException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    }
+    
 	
 	public static void playAudioFileWaitForEnd(String filePath) {
 		isPlaying = true;
@@ -179,6 +118,7 @@ public class AudioManager {
 		}
 		
 		isPlaying = false;
+		
 	}
 	
 	public static void stop() {

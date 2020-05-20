@@ -72,7 +72,7 @@ public class SongGenerator {
 			
 			
 			
-			double prevTimeStamp = 0,beat = 0, timePerBeat = 60/target.getTempo();
+			double prevTimeStamp = 0,beat = 0, timePerBeat = 2 * 60/target.getTempo();
 			
 			timeInBetweenNotes *= 240/target.getTempo(); //convert wait time to seconds
 			
@@ -88,37 +88,40 @@ public class SongGenerator {
 				
 				
 				
-				//make sure there is more than timeInBetweenNotes in between each notes
-				if (noteTimeStamp - prevTimeStamp < timeToWaitInBetweenNotes/2) {
-					
-					System.out.println("noteSkipped1");
-					continue;
-					
-				}
+				
 				
 				System.out.print(noteTimeStamp + " -> ");
 				System.out.println(((int) Math.round((noteTimeStamp/2)/(timePerBeat))));
 				System.out.println(notesThisBeat);
+				
 				//make sure we don't get too many notes this beat
-				if ( ((int) Math.round((noteTimeStamp/2)/(timePerBeat))) == beat) {
+				if ( ((int) ((noteTimeStamp)/(timePerBeat))) == beat) {
 					if (notesThisBeat >= notesPerBeat) { //we have too many notes in this second
 
-						//timeToWaitInBetweenNotes = 10*timeInBetweenNotes/notesPerBeat; //wait more before the next note
+						timeToWaitInBetweenNotes = 10*timeInBetweenNotes; //wait more before the next note
 						
 						System.out.println("noteSkipped2");
-						continue;
+					
 					}else {
-						notesThisBeat++;
 						timeToWaitInBetweenNotes = timeInBetweenNotes; 
 					}
 				}else {
-					beat = ((int) Math.round((noteTimeStamp/2)/(timePerBeat)));
+					beat = ((int) ((noteTimeStamp)/(timePerBeat)));
 					notesThisBeat = 0;
 				}
 				
-			
 				
-				prevTimeStamp = noteTimeStamp;
+				//make sure there is more than timeInBetweenNotes in between each notes
+				if (noteTimeStamp - prevTimeStamp < timeToWaitInBetweenNotes/2) {
+					System.out.println("noteSkipped1");
+					continue;
+					
+				}else {
+					prevTimeStamp = noteTimeStamp;
+				}
+			
+				notesThisBeat++;
+				
 				
 				
 				System.out.print(noteTimeStamp);
