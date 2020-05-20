@@ -31,7 +31,7 @@ public class DDRRunner {
 		score.setColor(Color.green);
 		drawer.add(score);
 		
-		String[] songChoices = {"quit", "September AubioMix","Sultans Of Swing AubioMix","Only The Good Die Young AubioMix","Aint Even Done With the Night AubioMix","Bohemian Rhapsody AubioMix","Gangnam Style AubioMix","Axel F AubioMix", "Happy AubioMix", "Faster AubioMix", "Get Lucky AubioMix", "SexyBack AubioMix", "If I Never See Your Face Again AubioMix","Jump Jump Jump AubioMix", "Wheres the Exit AubioMix", "Never Gonna Give You Up AubioMix", "Pirates of the Carribean Piano AubioMix","Main Theme AubioMix","Other", "Create new song"};
+		String[] songChoices = {"quit", "September AubioMix","Sultans Of Swing AubioMix","Only The Good Die Young AubioMix","Aint Even Done With the Night AubioMix","Bohemian Rhapsody AubioMix","Gangnam Style AubioMix","Axel F AubioMix", "Happy AubioMix", "Faster AubioMix", "Get Lucky AubioMix", "SexyBack AubioMix", "If I Never See Your Face Again AubioMix", "Faith AubioMix", "Wake Up Call AubioMix", "Party In The USA AubioMix","Jump Jump Jump AubioMix", "Wheres the Exit AubioMix", "Never Gonna Give You Up AubioMix", "Pirates of the Carribean Piano AubioMix","Main Theme AubioMix","Other", "Create new song"};
 		
 		String songChoice = (String) JOptionPane.showInputDialog(drawer, "Which Song do you want?", "Choose a song",  JOptionPane.PLAIN_MESSAGE, null, songChoices, songChoices[0]);
 	
