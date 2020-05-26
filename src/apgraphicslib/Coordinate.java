@@ -8,10 +8,10 @@ package apgraphicslib;
  *
  */
 public abstract class Coordinate implements One_dimensional {
-	public double x;
+	protected double x;
 	
-	public void add(Vector tempStatMultiply) {
-		
+	public void setX(double x) {
+		this.x = x;
 	}
 	
 	public double getX() {

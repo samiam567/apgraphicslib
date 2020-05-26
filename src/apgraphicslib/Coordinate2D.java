@@ -8,7 +8,6 @@ package apgraphicslib;
  *
  */
 public class Coordinate2D extends Coordinate implements Two_dimensional {
-	protected double x;
 	protected double y;
 	
 	public Coordinate2D(double x, double y) {
