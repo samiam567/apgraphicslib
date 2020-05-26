@@ -2,7 +2,7 @@ package apgraphicslib;
 
 public class Physics_runner {
 
-	private static Object_draw drawer = new Object_draw();
+	private static Object_draw drawer;
 
 	
 	@SuppressWarnings("unused")
@@ -45,7 +45,8 @@ public class Physics_runner {
 		
 		Egg square2 = new Egg(drawer,Settings.width/2,Settings.height/2,0,100,200,150,3);
 		
-		drawer.add(new Camera(drawer));
+		Camera2D cam = new Camera2D(new Coordinate3D(Settings.width/2,Settings.height/2,0));
+		drawer = new Object_draw(cam);
 		
 		square2.setTexture("src/LegendOfJava/assets/texture.jpg");
 		

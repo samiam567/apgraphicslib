@@ -12,7 +12,8 @@ public class SongGenerator {
 	private static int notesToSkip = 0;
 	
 	//this is the difficulty
-	private static int notesPerBeat = 10; //this is the difficulty
+	private static int notesPerBeat = 30;
+		
 	private static double timeInBetweenNotes = 0.25; //this is in beats
 	
 	private static double[][] notePitches;
@@ -147,19 +148,19 @@ public class SongGenerator {
 				
 				if ( (noteDirection == 0) || (noteDirection == 4) || (noteDirection == 6) || (noteDirection == 8) ) {
 					//left
-					target.lPosQueue.add(startPos + noteTimeStamp*target.noteSpeed);
+					target.lPosQueue.add(startPos + (target.getAudioLatency()/1000 + noteTimeStamp)*target.noteSpeed);
 				}
 				if ( (noteDirection == 1) || (noteDirection == 5) || (noteDirection == 6) || (noteDirection == 9) ) {
 					//down
-					target.dPosQueue.add(startPos + noteTimeStamp*target.noteSpeed);
+					target.dPosQueue.add(startPos + (target.getAudioLatency()/1000 + noteTimeStamp)*target.noteSpeed);
 				}
 				if ( (noteDirection == 2) || (noteDirection == 5) || (noteDirection == 7) || (noteDirection == 8) ) {
 					//up
-					target.uPosQueue.add(startPos + noteTimeStamp*target.noteSpeed);
+					target.uPosQueue.add(startPos + (target.getAudioLatency()/1000 + noteTimeStamp)*target.noteSpeed);
 				}
 				if ( (noteDirection == 3) || (noteDirection == 4) || (noteDirection == 7) || (noteDirection == 9) ) {
 					//right
-					target.rPosQueue.add(startPos + noteTimeStamp*target.noteSpeed);
+					target.rPosQueue.add(startPos + (target.getAudioLatency()/1000 + noteTimeStamp)*target.noteSpeed);
 				}
 				
 			}

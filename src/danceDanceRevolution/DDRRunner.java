@@ -37,7 +37,13 @@ public class DDRRunner {
 	
 		if (! songChoice.equals("quit")) {
 			do {
-	
+				drawer.stopNoWait();
+				drawer.getFrame().dispose();
+				drawer = new Object_draw();
+				drawer.getFrame().setBackground(Color.black);
+				score.setScore(0);
+				score.setDrawer(drawer);
+				drawer.add(score);
 				Song song;
 				if (songChoice.equals("Other")) {
 					song = new Song(drawer,"./src/danceDanceRevolution/assets/Songs/" + JOptionPane.showInputDialog(drawer, "What song?") + ".dat");

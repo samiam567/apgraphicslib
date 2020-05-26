@@ -7,5 +7,14 @@ package apgraphicslib;
  * Can be any number of dimensions}
  *
  */
-public abstract class Coordinate {
+public abstract class Coordinate implements One_dimensional {
+	public double x;
+	
+	public void add(Vector tempStatMultiply) {
+		
+	}
+	
+	public double getX() {
+		return x;
+	}
 }

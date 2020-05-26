@@ -35,7 +35,7 @@ public class Object_draw extends JPanel {
 	private ArrayList<Tangible> tangibles = new ArrayList<Tangible>(); //this one is an arrayList because we have to do fancy manipulation in checkForCollisions()
 
 	private Physics_frame frame;
-	
+
 	private Object_draw_update_thread threader;
 
 	public int inactivity_timer = 0;
@@ -47,6 +47,16 @@ public class Object_draw extends JPanel {
 	public Object_draw() {
 		frame = new Physics_frame(this);
 		
+		threader = new Object_draw_update_thread(this);
+	}
+	
+	/**
+	 * {@code will create an Object_draw that does not have it's own frame. Indicates that you intend to use the passed camera as the main view for the game (the camera controls the painting) Object_draw.frame will equal null}
+	 * @param mainCam
+	 */
+	public Object_draw(Camera mainCam) {
+		mainCam.setDrawer(this);
+		frame = null;
 		threader = new Object_draw_update_thread(this);
 	}
 	

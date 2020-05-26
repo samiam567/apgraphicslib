@@ -28,4 +28,12 @@ public abstract class Physics_object implements Physics_engine_compatible {
 	public Object_draw getDrawer() {
 		return drawer;
 	}
+	
+	/**
+	 * {@code sets the objects drawer. Note: does not add the object to the passed drawer}
+	 * @param drawer
+	 */
+	public void setDrawer(Object_draw drawer) {
+		this.drawer = drawer;
+	}
 }	

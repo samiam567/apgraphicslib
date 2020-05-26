@@ -14,13 +14,7 @@ public class Coordinate2D extends Coordinate implements Two_dimensional {
 	public Coordinate2D(double x, double y) {
 		this.x = x;
 		this.y = y;
-	}
-
-	@Override
-	public double getX() {
-		return x;
-	}
-	
+	}	
 	
 	@Override
 	public double getY() {

@@ -29,7 +29,7 @@ import apgraphicslib.Settings;
 
 public class Song extends Physics_2DDrawMovable implements KeyListener{
 	
-	private double audioLatency = 3990, noteStart;
+	private double audioLatency = 3910, noteStart;
 	double noteSpeed;
 	//if these arrows on the mat are pressed down 
 	private boolean left = false, down = false, up = false, right = false;
@@ -348,9 +348,11 @@ public class Song extends Physics_2DDrawMovable implements KeyListener{
 		AudioManager.playAudioFile(audioSrc, playBackSpeed);
 		
 		getDrawer().repaint();
+		/*
 		try {
 			Thread.sleep((long) (audioLatency));
 		}catch(InterruptedException e) {}
+		*/
 		
 		getDrawer().start();
 		getDrawer().resetFrameCounter();
@@ -388,7 +390,7 @@ public class Song extends Physics_2DDrawMovable implements KeyListener{
 
 	@Override
 	public void keyPressed(KeyEvent arg0) {
-		
+		System.out.println(arg0.getKeyChar());
 
 		if (arg0.getKeyCode() == 37) { //LEFT
 			
@@ -544,5 +546,11 @@ public class Song extends Physics_2DDrawMovable implements KeyListener{
 	@Override
 	public void paint(Graphics page) {
 		//do nothing
+	}
+
+
+
+	public double getAudioLatency() {
+		return audioLatency;
 	}
 }

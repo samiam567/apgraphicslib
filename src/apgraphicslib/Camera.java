@@ -1,140 +1,87 @@
 package apgraphicslib;
 
+import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.util.LinkedList;
+
+import javax.swing.JPanel;
 
 
 /**
- * {@code will rotate and pan objects to simulate camera behavior }
+ * {@code will paint objects that are added to it according to the perspective of the camera }
  */
-public class Camera extends Physics_object implements Updatable, MouseMotionListener, KeyListener, Resizable {
-	private double cameraPanSpeed = 10000, cameraRotateSpeed = 10;
+public abstract class Camera extends JPanel implements Updatable {
 	
-	private Vector3D cameraPanVelocity = new Vector3D(0,0,0), prevCameraPanVelocity = new Vector3D(0,0,0);
-	private Vector3D cameraRotateVelocity = new Vector3D(0,0,0), prevCameraRotateVelocity = new Vector3D(0,0,0);
-
-	private Coordinate3D cameraCenter = new Coordinate3D(Settings.width/2,Settings.height/2, -Settings.distanceFromScreen);
+	private Coordinate cameraPosition;
+	private Vector cameraPanVelocity;
+	private Vector cameraRotation;
+	private Vector cameraAngularVelocity;
 	
-	public Camera(Object_draw drawer) {
-		super(drawer);
-		
-		addListeners();
+	private LinkedList<Drawable> cameraObs = new LinkedList<Drawable>(); //the objects to draw on the camera view frame
+	
+	private Physics_frame frame;
+	private String name = "unNamed Camera";
+	private Object_draw drawer;
+	
+	/**
+	 * {@code CAMERA WILL NOT WORK UNLESS A DRAWER IS SET -- this can be done by either using this camera as the constructor parameter in the desired Object_draw or by using setDrawer()}
+	 * @param cameraPosition
+	 */
+	public Camera(Coordinate cameraPosition) {
+		this.cameraPosition = cameraPosition;
 	}
-
 	
-	@Override
-	public void Update(double frames) {
-		
-		CameraMovable cOb;
-		
-		
-		for (Updatable cUp : getDrawer().getUpdatables()) {
-			try {
-				cOb = (CameraMovable) cUp;
-				cOb.setOrbitalAngularVelocity(((Vector3D)cOb.getOrbitalAngularVelocity()).statAdd(cameraRotateVelocity).subtract(prevCameraRotateVelocity));
-				cOb.setSpeed( ((Vector3D)cOb.getSpeed()).statAdd(cameraPanVelocity).subtract(prevCameraPanVelocity) );
-				
-			}catch(ClassCastException c) {}
-		}
-		prevCameraRotateVelocity.setIJK(cameraRotateVelocity);
-		prevCameraPanVelocity.setIJK(cameraPanVelocity);
+	/**
+	 * {@code sets the objects drawer. Note: does not add the object to the passed drawer}
+	 * @param drawer
+	 */
+	public void setDrawer(Object_draw drawer) {
+		this.drawer = drawer;
 	}
-
+	
+	
 	@Override
 	public void prePaintUpdate() {
 		
-		CameraMovable cOb;
-		for (Updatable cUp : getDrawer().getUpdatables()) {
-			try {
-				cOb = (CameraMovable) cUp;
-				cOb.setPointOfRotation(cameraCenter, true);
-			}catch(ClassCastException c) {}
-		}
+		
+				
+		cameraPosition.add(cameraPanVelocity.tempStatMultiply(Settings.timeSpeed / getDrawer().getActualFPS()));
+		cameraRotation.add(cameraAngularVelocity.tempStatMultiply(Settings.timeSpeed / getDrawer().getActualFPS()));
+		repaint();
+	}
+	
+	@Override
+	public void paint(Graphics page) {
+		//TODO Implement this
 	}
 	
 	
 	@Override
-	public void mouseMoved(MouseEvent e) {	
-	
-		
+	public void Update(double frames) {
+		//do nothing
+	}
+
+	/**
+	 * Gets the name of the object
+	 */
+	public String getName() {
+		return name;
 	}
 	
-	@Override
-	public void mouseDragged(MouseEvent e) {
-
-			
-	}
-	
-	
-	@Override
-	public void keyTyped(KeyEvent e) {
-
-		if (e.getKeyChar() == '\n') { //enter key
-			
-		}else if (e.getKeyChar() == 'm') {
-			
-		}
-		
-		
+	/**
+	 * Sets the name of the object
+	 */
+	public void setName(String newName) {
+		name = newName;
 	}
 
-	@Override
-	public void keyPressed(KeyEvent e) {
-		
-		if ( (e.getKeyChar() == 'w' ) || (e.getKeyCode() == 87)) {
-			cameraPanVelocity.setIJK(0,0,-cameraPanSpeed);
-		}else if ((e.getKeyChar() == 's') || (e.getKeyCode() == 83)) {
-			cameraPanVelocity.setIJK(0,0,cameraPanSpeed);
-		}
-		
-		if ((e.getKeyChar() == 'd') || (e.getKeyCode() == 68)) {
-			System.out.println("d");
-			((Vector3D) cameraRotateVelocity).setIJK(0,1,0);
-			cameraRotateVelocity.multiply(cameraRotateSpeed);
-			
-		}if ( (e.getKeyChar() == 'a') || (e.getKeyCode() == 65)) {
-			System.out.println("a");
-			((Vector3D) cameraRotateVelocity).setIJK(0,-1,0);
-			cameraRotateVelocity.multiply(cameraRotateSpeed);
-		}else if (e.getExtendedKeyCode() == 38) { //UP arrow key
-			((Vector3D) cameraRotateVelocity).setIJK(1,0,0);
-			cameraRotateVelocity.multiply(cameraRotateSpeed);
-		}else if (e.getExtendedKeyCode() == 40) { //DOWN arrow key
-			((Vector3D) cameraRotateVelocity).setIJK(-1,0,0);
-			cameraRotateVelocity.multiply(cameraRotateSpeed);
-		}
-
+	/**
+	 * Gets the Object_draw that this object was constructed with 
+	 */
+	public Object_draw getDrawer() {
+		return drawer;
 	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-		if ((e.getKeyChar() ==  'w') || (e.getKeyChar() == 's')  || (e.getKeyCode() == 87)|| (e.getKeyCode() == 83)) {
-			((Vector3D) cameraPanVelocity).setIJK(0, 0, 0);
-		}else if ( (e.getKeyChar() == 'a') || (e.getKeyChar() == 'd')|| (e.getKeyCode() == 65) || (e.getKeyCode() == 68) || (e.getExtendedKeyCode() == 40) || (e.getExtendedKeyCode() == 38)  ) {	
-			((Vector3D) cameraRotateVelocity).setIJK(0,0,0);
-		}
-
-	}
-	
-	public void addListeners() {		
-		getDrawer().getFrame().getContentPane().addMouseMotionListener(this);
-		getDrawer().getFrame().getGlassPane().addMouseMotionListener(this);
-		getDrawer().getFrame().addMouseMotionListener(this);
-		getDrawer().addMouseMotionListener(this);
-		
-		getDrawer().getFrame().getContentPane().addKeyListener(this);
-		getDrawer().getFrame().getGlassPane().addKeyListener(this);
-		getDrawer().getFrame().addKeyListener(this);
-		getDrawer().addKeyListener(this);
-		
-	}
-
-
-	@Override
-	public void resize() {
-		cameraCenter.setPos(Settings.width/2, Settings.height/2, -Settings.distanceFromScreen);
-	}
-	
 }
