@@ -1,4 +1,4 @@
-package Shapes;
+package shapes;
 
 import apgraphicslib.Object_draw;
 import apgraphicslib.Physics_2DPolygon;

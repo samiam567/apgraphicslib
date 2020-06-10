@@ -4,12 +4,12 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
-import Shapes.Square;
 import apgraphicslib.CollisionEvent;
 import apgraphicslib.Object_draw;
 import apgraphicslib.Settings;
 import apgraphicslib.Tangible;
 import apgraphicslib.Vector2D;
+import shapes.Square;
 
 public class Coin extends Square implements Tangible {
 	

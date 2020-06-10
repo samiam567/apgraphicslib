@@ -1,6 +1,6 @@
 package apgraphicslib;
 
-public class ScoreBoard extends APLabel implements Updatable {
+public class ScoreBoard extends APLabel implements Updatable, Drawable {
 	
 	private String score_phrase,end_phrase = "";
 	private double score;
@@ -21,7 +21,7 @@ public class ScoreBoard extends APLabel implements Updatable {
 	
 
 	public ScoreBoard(Object_draw drawer1) {
-		super(drawer1,0.05 * Settings.width,Settings.height-100);
+		super(drawer1,0.05 * drawer1.getFrameWidth(),drawer1.getFrameHeight()-100);
 		score_phrase = "Score:";
 		score = 0;
 	}

@@ -29,7 +29,7 @@ public class Object_draw extends JPanel {
 	
 	// a list of all the objects in the engine
 	private LinkedList<Physics_engine_compatible> objects = new LinkedList<Physics_engine_compatible>();
-	private LinkedList<Drawable> drawables = new LinkedList<Drawable>();
+	private ArrayList<Drawable> drawables = new ArrayList<Drawable>(); //we have to sort this, so it is an ArrayList
 	private LinkedList<Updatable> updatables = new LinkedList<Updatable>();
 	private LinkedList<Resizable> resizables = new LinkedList<Resizable>();
 	private ArrayList<Tangible> tangibles = new ArrayList<Tangible>(); //this one is an arrayList because we have to do fancy manipulation in checkForCollisions()
@@ -38,6 +38,8 @@ public class Object_draw extends JPanel {
 
 	private Object_draw_update_thread threader;
 
+	private ArrayList<Camera> cameras = new ArrayList<Camera>();
+	
 	public int inactivity_timer = 0;
 	
 	private double updateCount = 0, frameStep = 0.1, actualFPS = Settings.targetFPS;
@@ -55,17 +57,34 @@ public class Object_draw extends JPanel {
 	 * @param mainCam
 	 */
 	public Object_draw(Camera mainCam) {
-		mainCam.setDrawer(this);
-		frame = null;
+		frame = mainCam.frame;
 		threader = new Object_draw_update_thread(this);
+		mainCam.setDrawer(this);
+		cameras.add(mainCam);
 	}
+	
+	public void addCamera(Camera cam) {
+		cameras.add(cam);
+	}
+	
+	
+	public void callRepaint() {
+		if (cameras.size() == 0) {
+			repaint();
+		}else { //if we have cameras let them do the painting
+			for (Camera cam : cameras) {
+				cam.repaint();
+			}
+		}
+	}
+	
 	
 	public void doUpdate() { //for update thread. Updates the objects
 		try {			
 			frameStartTime = System.nanoTime();	
 			prePaintUpdateObjects();
 			checkForResize();
-			repaint(); //paint the objects onto the screen
+			callRepaint(); //paint the objects onto the screen.
 			actualFPS = 1000000000/((double)(System.nanoTime() - lastPaintTime));
 			lastPaintTime = System.nanoTime();
 			
@@ -83,7 +102,7 @@ public class Object_draw extends JPanel {
 			
 			if ( (! Double.isFinite(frameStep)) || (frameStep <= 0) ) frameStep = 1;
 			
-			for (double frameCount = 0; frameCount < 1; frameCount += frameStep) {
+			for (double frameCount = 0; frameCount < 1/frameStep; frameCount ++) {
 				updateStartTime = System.nanoTime();
 				updateObjects(Settings.timeSpeed * ((1 / ( (int) 1/frameStep )) / getActualFPS()) );
 				checkForCollisions(); //check for collisions between the tangibles
@@ -97,9 +116,13 @@ public class Object_draw extends JPanel {
 			subCalcTime *= frameStep;
 			
 			
+			/*
+			underTime = (long) ((1000000000/Settings.targetFPS) - (subCalcTime+(frameEndTime-frameStartTime)));	
+			if (underTime > 0) { try {Thread.sleep(underTime/1000000);}catch(InterruptedException i) {} }
+			*/
 			
 			frameStep = ((double) subCalcTime) / ((1000000000/Settings.targetFPS) - (frameEndTime-frameStartTime));
-		//	frameStep /= 2; // the averaging of the two numbers keeps the system from freezing during big changes (like adding objects)
+		
 			current_frame++;
 	    }catch(ConcurrentModificationException c) {
 	    	c.printStackTrace();
@@ -205,7 +228,7 @@ public class Object_draw extends JPanel {
 	 */
 	public void stop() {
 		threader.state = 0;
-		
+		threader.interrupt();
 		while((threader.status != 0) && (Thread.currentThread() != threader) ) {
 			try {
 				Thread.sleep(1);
@@ -350,7 +373,8 @@ public class Object_draw extends JPanel {
 		}
 	}
 	
-	public void checkForResize() {				
+	public void checkForResize() {	
+		
 		if ( (Settings.width != getFrame().getWidth()) || (Settings.height != getFrame().getHeight())) {
 			if (Settings.autoResizeFrame) {
 				Settings.width = (getFrame().getWidth());
@@ -395,22 +419,29 @@ public class Object_draw extends JPanel {
 	}
 
 	public void paint(Graphics page) {
-		drawables.sort(new Comparator<Drawable>() {
-			@Override
-			public int compare(Drawable o1, Drawable o2) {
-				return Double.compare(o2.getPaintOrderValue(),o1.getPaintOrderValue());	
-			}
-			
-		});
 		
-		page.setColor(getFrame().getBackground());
-		page.fillRect(0, 0, getFrame().getWidth(), getFrame().getHeight());
-		page.setColor(Color.black);
+		
 		try {
-		for (Drawable cOb : getDrawables()) {		
-			page.setColor(cOb.getColor());
-			if (cOb.getIsVisible()) cOb.paint(page);
-		}
+			
+			drawables.sort(new Comparator<Drawable>() {
+				@Override
+				public int compare(Drawable o1, Drawable o2) {
+					return Double.compare(o2.getPaintOrderValue(),o1.getPaintOrderValue());	
+				}
+					
+			});
+			
+			page.setColor(getFrame().getBackground());
+			page.fillRect(0, 0, getFrame().getWidth(), getFrame().getHeight());
+			page.setColor(Color.black);
+			
+			for (Drawable cOb : getDrawables()) {		
+				page.setColor(cOb.getColor());
+				if (cOb.getIsVisible()) cOb.paint(page);
+			}
+				
+			
+		
 		}catch(ConcurrentModificationException c) {
 			out.println(c);
 		}
@@ -420,12 +451,8 @@ public class Object_draw extends JPanel {
 		return frameStep;
 	}
 
-	public LinkedList<Drawable> getDrawables() {
+	public ArrayList<Drawable> getDrawables() {
 		return drawables;
-	}
-
-	public void setDrawables(LinkedList<Drawable> drawables) {
-		this.drawables = drawables;
 	}
 
 	public Physics_frame getFrame() {
@@ -442,6 +469,22 @@ public class Object_draw extends JPanel {
 	
 	public void resetFrameCounter() {
 		current_frame = 0;
+	}
+	
+	public int getFrameWidth() {
+		try {
+			return frame.getWidth();
+		}catch(NullPointerException n) {
+			return Settings.width;
+		}
+	}
+	
+	public int getFrameHeight() {
+		try {
+			return frame.getHeight();
+		}catch(NullPointerException n) {
+			return Settings.height;
+		}
 	}
 	
 

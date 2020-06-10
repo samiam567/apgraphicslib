@@ -221,8 +221,8 @@ public class Polygon_drawer_tools extends Physics_drawable implements MouseListe
 	@Override
 	public void paint(Graphics page) {
 		//draw crosshairs for mirroring
-		page.drawLine((int) object.getX(), 0,(int) object.getX(),(int) Settings.height);
-		page.drawLine(0,(int) object.getY(), Settings.width,(int) object.getY());
+		page.drawLine((int) object.getX(), 0,(int) object.getX(),(int) getDrawer().getFrameHeight());
+		page.drawLine(0,(int) object.getY(), getDrawer().getFrameWidth(),(int) object.getY());
 		
 		for (PolyPoint cPoint : object.getPoints()) {
 			page.fillRect((int) (object.getX() + cPoint.getX()-2),(int) (object.getY() + cPoint.getY()-2), 4, 4);

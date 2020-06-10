@@ -6,10 +6,16 @@ import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
+
+import apgraphicslib.Physics_2DPolygon.PolyPoint;
+import apgraphicslib.Physics_3DPolygon.AffineRotation3D;
+import apgraphicslib.Physics_3DPolygon.Point3D;
 
 public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Textured3D, Updatable {
 	
@@ -391,8 +397,160 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 		minZToPaintPoints = newMinZ;
 	}
 
+	
+	/// Camera stuff ////////////////////////////////////////////////////////////////////////////////
+		private ArrayList<CameraPaintData> cameraDataSets = new ArrayList<CameraPaintData>();
+		private class CameraPaintData {
+			private Camera cam;
+			private Point3D center;
+			private ArrayList<RGBPoint3D> platePoints;
+				
+				
+			public CameraPaintData(Camera cam) {
+				this.cam = cam;
+				center = new Point3D(0,0,0);
+				platePoints = new ArrayList<RGBPoint3D>(0);
+			}
+		}	
+			
+		private CameraPaintData getCameraPaintData(Camera cam) {
+			for (CameraPaintData data : cameraDataSets) {
+				if (data.cam.equals(cam)) return data;
+			}
+				
+			Exception e = new Exception("data for Camera " + cam + " ID: " + cam.getId() + " cannot be found for " + getName() + this);
+			e.printStackTrace(getDrawer().getOutputStream());
+			return null;
+		}
+			
+		public void createCameraPaintData(Camera cam) {
+			cameraDataSets.add(new CameraPaintData(cam));
+		}
+		
+		@Override
+		public void deleteCameraPaintData(Camera cam) {
+			cameraDataSets.remove(getCameraPaintData(cam));
+		}
+		
+		
+		public void updateCameraPaintData(Camera cam) {	
+			CameraPaintData data = getCameraPaintData(cam);
+			
+			
+			
+			double camX = cam.getCoordinates().getX(), camY = cam.getCoordinates().getY(), camZ = 0;
+			
+			try {
+				camZ = ((Coordinate3D) cam.getCoordinates()).getZ();
+			}catch(ClassCastException c) {}
+			
+			double offSetX = camX - cam.getFrame().getWidth()/2;
+			double offSetY = camY - cam.getFrame().getHeight()/2;
+			double offSetZ = camZ;
+			
+			Vector3D camRotation;
+			
+			try {
+				camRotation = (Vector3D) cam.getRotation();
+			}catch(ClassCastException c) {
+				camRotation = new Vector3D(0,0,cam.getRotation().getR());
+			}
+			
+			AffineRotation3D affRot = new AffineRotation3D();
+		
+			affRot.calculateRotation(camRotation);
+			
+			data.center.setPos(getX() - offSetX - camX, getY() - offSetY - camY, getZ() - offSetZ - camZ);
+			
+			data.center.rotate(affRot);
+			
+			data.center.add(cam.getCoordinates());
+
+			
+			
+			int i;
+			
+			//resize data.points if it isn't the same size as the object list
+			if (platePoints.size() != data.platePoints.size()) {
+				data.platePoints.clear();
+				
+				//loop through and create a point at each index of the data.points list
+				for (i = 0; i < getPlatePoints().size(); i++) {
+					data.platePoints.add(new RGBPoint3D(0,0,0,0,0,0));
+				}
+				
+			}
+			
+			
+		
+			//update the data.points list with the right values and more importantly data.pointXValues and data.pointYValues
+			i = 0;
+		
+			for (RGBPoint3D cPoint : platePoints) {
+				data.platePoints.get(i).setRGB(cPoint.R, cPoint.G, cPoint.B, cPoint.alpha);
+				data.platePoints.get(i).setPos(cPoint.getX(), cPoint.getY(), cPoint.getZ());
+				data.platePoints.get(i).rotate(affRot);
+				i++;
+			}
+			
+			data.platePoints.sort(new Comparator<Point3D>() {
+				@Override
+				public int compare(Point3D o1, Point3D o2) {
+					return (Double.compare(o2.getZ(), o1.getZ()));
+				}
+			});
+				
+		}
+		
+		@Override
+		public void paint(Camera cam, Graphics page) {
+			
+			CameraPaintData data = getCameraPaintData(cam);
+			
+
+	 		
+	 		double parallaxValue, x, y;
+			for (RGBPoint3D cPoint : data.platePoints) {
+				
+				if (cPoint.getZ() + getZ() >= minZToPaintPoints) {
+					page.setColor(new Color(cPoint.R,cPoint.G,cPoint.B,cPoint.alpha));
+					
+					if (Settings.perspective) {
+						
+						
+						x = data.center.getX() + cPoint.getX()-platePointSize/2 - cam.getFrame().getWidth()/2;
+						y = data.center.getY() + cPoint.getY()-platePointSize/2 - cam.getFrame().getHeight()/2;
+						
+						//as z gets bigger, the object gets further away from the viewer, and the object appears to be smaller
+						if (cPoint.getZ() == 0) {
+							parallaxValue = 1;
+						}else {
+							parallaxValue = (Settings.distanceFromScreen) / ((data.center.getZ() + cPoint.getZ()) + Settings.distanceFromScreen);
+						}
+						
+						
+						
+						x *= parallaxValue;
+						y *= parallaxValue;
+						
+						x += cam.getFrame().getWidth()/2;
+						y += cam.getFrame().getHeight()/2;
+						
+						page.fillRect((int) Math.round(x - platePointSize*parallaxValue/2 - 1) ,(int) Math.round(y - platePointSize*parallaxValue/2 - 1) , (int) (platePointSize * parallaxValue + 2), (int) (platePointSize * parallaxValue + 2));
+						
+						
+					}else {
+						page.fillRect((int) Math.round(data.center.getX() + cPoint.getX()-platePointSize/2 - 1) ,(int) Math.round(data.center.getY() + cPoint.getY()-platePointSize/2 - 1) , (int) (platePointSize+2), (int) (platePointSize+2));
+					}
+				}
+			}
+		}	
+		
+		////////////////////////// end camera stuff
+	
 	@Override
 	public void paint(Graphics page) {
+	
 		
  		if (paintInProgress) {
 			FramePoint ccPoint;
@@ -413,8 +571,8 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 				if (Settings.perspective) {
 					
 					
-					x = getX() + cPoint.getX()-platePointSize/2 - Settings.width/2;
-					y = getY() + cPoint.getY()-platePointSize/2 - Settings.height/2;
+					x = getX() + cPoint.getX()-platePointSize/2 - getDrawer().getFrameWidth()/2;
+					y = getY() + cPoint.getY()-platePointSize/2 - getDrawer().getFrameHeight()/2;
 					
 					//as z gets bigger, the object gets further away from the viewer, and the object appears to be smaller
 					if (cPoint.getZ() == 0) {
@@ -428,8 +586,8 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 					x *= parallaxValue;
 					y *= parallaxValue;
 					
-					x += Settings.width/2;
-					y += Settings.height/2;
+					x += getDrawer().getFrameWidth()/2;
+					y += getDrawer().getFrameHeight()/2;
 					
 					page.fillRect((int) Math.round(x - platePointSize*parallaxValue/2 - 1) ,(int) Math.round(y - platePointSize*parallaxValue/2 - 1) , (int) (platePointSize * parallaxValue + 2), (int) (platePointSize * parallaxValue + 2));
 					

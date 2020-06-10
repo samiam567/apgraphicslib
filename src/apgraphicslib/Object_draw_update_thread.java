@@ -27,9 +27,9 @@ public class Object_draw_update_thread extends Thread {
 					sleep(1);
 					Thread.yield();
 				} catch (InterruptedException e) {}
-			}		
+			}
 		}
-		
+		status = 0; //thread is stopped
 		Thread.yield();
 	}
 }

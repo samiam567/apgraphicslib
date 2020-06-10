@@ -1,73 +1,62 @@
 package apgraphicslib;
 
+import shapes.Egg;
+import shapes.Rectangle;
+import shapes.Rectangle3D;
+import shapes.Rectangle_Textured;
+import shapes.Square;
+
 public class Physics_runner {
 
 	private static Object_draw drawer;
 
 	
-	@SuppressWarnings("unused")
-	private static class Egg extends Physics_3DTexturedEquationedPolygon implements CameraMovable{
-		public Egg(Object_draw drawer, double x, double y, double z,double xSize, double ySize, double zSize, double ppSize) {
-			super(drawer, x, y, z,xSize, ppSize);
-			setSize(xSize, ySize, zSize);
-		}
-
-		@Override 
-		protected double[] equation(double theta, double phi) {
-			boolean egg = false;
-			
-			
-			if (egg) {
-				double x = getXSize() * Math.cos(theta) * Math.sin(phi);
-				double y = getYSize() * Math.sin(theta) * Math.sin(phi);
-				double z = getZSize() * Math.cos(phi);
-				
-				return new double[] {x,y,z};		
-			}else {
-
-				double x = getXSize() * Math.sin(theta);
-				double y = getYSize() * Math.cos(theta);
-				double z = -getZSize() + getZSize() * phi;
-				
-				return new double[] {x,y,z};
-			}
-		}
-	}
+	
 	
 	public static void main(String[] args) {
 		Settings.perspective = true;
 		Settings.targetFPS = 60;
+		
+		
+		Camera3D cam = new Camera3D(new Coordinate3D(Settings.width/2, Settings.height/2,0));
+		drawer = new Object_draw(cam);
 
 		drawer.add(new Object_border_tether(drawer));
-		drawer.add(new FPS_display(drawer, Settings.width * 0.01 + 35, Settings.height*0.05));
-		drawer.add(new FCPS_display(drawer, Settings.width * 0.01 + 45, Settings.height*0.05 + 15));
+		FPS_display fps = new FPS_display(drawer, Settings.width * 0.01 + 35, Settings.height*0.05);
+		drawer.add(fps);
+		cam.add(fps);
 		
+		FCPS_display fcps = new FCPS_display(drawer, Settings.width * 0.01 + 45, Settings.height*0.05 + 15);		
+		drawer.add(fcps);
+		cam.add(fcps);
 		
-		Egg square2 = new Egg(drawer,Settings.width/2,Settings.height/2,0,100,200,150,3);
+		Egg square1 = new Egg(drawer, Settings.width/2, Settings.height/2,0,300,200,100,7);
+		square1.setIsFilled(true);
 		
-		Camera2D cam = new Camera2D(new Coordinate3D(Settings.width/2,Settings.height/2,0));
-		drawer = new Object_draw(cam);
-		
-		square2.setTexture("src/LegendOfJava/assets/texture.jpg");
-		
-		drawer.add(square2);
-		
-		square2.setAngularVelocity(new Vector3D(1,0,1));
-
-		
+		square1.setTexture("./src/LegendOfJava/assets/strawberry.jpg");
+		drawer.add(square1);	
+		cam.add(square1);
+				
 		drawer.start();
+		
+
+	//	cam.setCameraPanVelocity(new Vector2D(100,5));
+		cam.setCameraAngularVelocity(new Vector3D(1,1,1));
+	
+		//square1.setAngularVelocity(new Vector3D(-1,-0,-1));
 	
 		//wait for close
-		while (drawer.getFrame().isActive()) {
+		while (drawer.getFrame().isVisible()) {
 			try {
-				Thread.sleep(100);
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 				break;
 			}
 		}
-		
-		drawer.stop();
+		System.out.println("stopping");
+     	drawer.stop();
+     	System.out.println("stopped");
 		System.exit(1);
 	}
 }

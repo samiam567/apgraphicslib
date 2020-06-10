@@ -1,10 +1,9 @@
 package apgraphicslib;
 
+import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
+import java.util.Comparator;
+import java.util.ConcurrentModificationException;
 import java.util.LinkedList;
 
 import javax.swing.JPanel;
@@ -13,25 +12,39 @@ import javax.swing.JPanel;
 /**
  * {@code will paint objects that are added to it according to the perspective of the camera }
  */
-public abstract class Camera extends JPanel implements Updatable {
+public abstract class Camera extends JPanel implements Updatable, Physics_engine_compatible {
 	
-	private Coordinate cameraPosition;
-	private Vector cameraPanVelocity;
-	private Vector cameraRotation;
-	private Vector cameraAngularVelocity;
+	private static int numCameras = 0;
 	
-	private LinkedList<Drawable> cameraObs = new LinkedList<Drawable>(); //the objects to draw on the camera view frame
+	private int id;
 	
-	private Physics_frame frame;
-	private String name = "unNamed Camera";
-	private Object_draw drawer;
+	protected Coordinate2D cameraPosition;
+	protected Vector cameraPanVelocity;
+	protected Vector cameraRotation;
+	protected Vector cameraAngularVelocity;
+	
+	protected LinkedList<CameraMovable> cameraObs = new LinkedList<CameraMovable>(); //the objects to draw on the camera view frame
+	protected LinkedList<Drawable> paintOnlyObs = new LinkedList<Drawable>(); //the objects to only draw on the camera frame
+	
+	protected Physics_frame frame;
+	protected String name = "unNamed Camera";
+	protected Object_draw drawer;
 	
 	/**
-	 * {@code CAMERA WILL NOT WORK UNLESS A DRAWER IS SET -- this can be done by either using this camera as the constructor parameter in the desired Object_draw or by using setDrawer()}
+	 * {@code CAMERA MUST BE added to an Object_draw by either using it as the constructor parameter or using addCamera()}
 	 * @param cameraPosition
 	 */
-	public Camera(Coordinate cameraPosition) {
+	public Camera(Coordinate2D cameraPosition) {
+		setName("Unnamed Camera");
+		numCameras++;
+		id = numCameras;
 		this.cameraPosition = cameraPosition;
+		cameraPanVelocity = new Vector(0);
+		cameraRotation = new Vector(0);
+		cameraAngularVelocity = new Vector(0);
+		frame = new Physics_frame(this);
+		setDoubleBuffered(false);
+		
 	}
 	
 	/**
@@ -40,22 +53,80 @@ public abstract class Camera extends JPanel implements Updatable {
 	 */
 	public void setDrawer(Object_draw drawer) {
 		this.drawer = drawer;
+		
+		drawer.add((Updatable) this);
 	}
 	
 	
 	@Override
 	public void prePaintUpdate() {
-		
-		
-				
 		cameraPosition.add(cameraPanVelocity.tempStatMultiply(Settings.timeSpeed / getDrawer().getActualFPS()));
 		cameraRotation.add(cameraAngularVelocity.tempStatMultiply(Settings.timeSpeed / getDrawer().getActualFPS()));
-		repaint();
+		
+		for (CameraMovable cOb : cameraObs) {
+			cOb.updateCameraPaintData(this);
+		}
+	}
+	
+	private class CamObsSorter implements Comparator<CameraMovable> {
+		private Camera cam; //the camera reference to get the paintRenderOrders from 
+		
+		public CamObsSorter(Camera camera) {
+			cam = camera;
+		}
+		@Override
+		public int compare(CameraMovable o1, CameraMovable o2) {
+			return Double.compare(o2.getPaintOrderValue(cam),o1.getPaintOrderValue(cam));	
+		}	
 	}
 	
 	@Override
-	public void paint(Graphics page) {
-		//TODO Implement this
+	public void paint(Graphics page) {	
+		try {
+			page.setColor(frame.getBackground());
+			page.fillRect(0, 0, getFrame().getWidth(), getFrame().getHeight());
+			page.setColor(Color.black);
+			
+			
+			cameraObs.sort(new CamObsSorter(this));
+			
+			for (Drawable cOb : paintOnlyObs) {
+				page.setColor(cOb.getColor());
+				cOb.paint(page);
+			}
+			
+			for (CameraMovable cOb : cameraObs) {
+				page.setColor(cOb.getColor());
+				cOb.paint(this,page);
+			}
+		
+		}catch(ConcurrentModificationException c) {
+			getDrawer().out.println(c + " in paint(Graphics) in Camera: " + getName());
+		}
+	}
+	
+	
+	public Physics_frame getFrame() {
+		return frame;
+	}
+	
+	
+	public void add(CameraMovable newOb) {
+		cameraObs.add(newOb);
+		newOb.createCameraPaintData(this);
+	}
+	
+	public void remove(CameraMovable remOb) {
+		cameraObs.remove(remOb);
+		remOb.deleteCameraPaintData(this);
+	}
+	
+	public void addPaintOnly(Drawable newOb) {
+		paintOnlyObs.add(newOb);
+	}
+	
+	public void removePaintOnly(Drawable remOb) {
+		paintOnlyObs.remove(remOb);
 	}
 	
 	
@@ -63,6 +134,8 @@ public abstract class Camera extends JPanel implements Updatable {
 	public void Update(double frames) {
 		//do nothing
 	}
+	
+	
 
 	/**
 	 * Gets the name of the object
@@ -83,5 +156,25 @@ public abstract class Camera extends JPanel implements Updatable {
 	 */
 	public Object_draw getDrawer() {
 		return drawer;
+	}
+
+	public Coordinate2D getCoordinates() {
+		return cameraPosition;
+	}
+	
+	public int getId() {
+		return id;
+	}
+
+	public Vector getRotation() {
+		return cameraRotation;
+	}
+	
+	public int getFrameWidth() {
+		return frame.getWidth();
+	}
+	
+	public int getFrameHeight() {
+		return frame.getHeight();
 	}
 }

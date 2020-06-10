@@ -1,26 +1,20 @@
-package Shapes;
-
+package shapes;
 
 import apgraphicslib.CollisionEvent;
 import apgraphicslib.Coordinate2D;
 import apgraphicslib.Coordinate3D;
 import apgraphicslib.Object_draw;
-import apgraphicslib.Physics_2DPolygon;
+import apgraphicslib.Physics_2DTexturedPolygon;
 import apgraphicslib.Physics_engine_toolbox;
 import apgraphicslib.Tangible;
 import apgraphicslib.Three_dimensional;
 
-/**
- * {@code A rectangle. Supports rotation and collision (but you must implement Tangible}
- * @author apun1
- *
- */
-public class Rectangle extends Physics_2DPolygon {
-	
+public class Rectangle_Textured extends Physics_2DTexturedPolygon {
+
 	private boolean isTangible = true;
 	
-	public Rectangle(Object_draw drawer, double x, double y, double xSize, double ySize) {
-		super(drawer, x, y);
+	public Rectangle_Textured(Object_draw drawer, double x, double y, double xSize, double ySize, int ppSize) {
+		super(drawer, x, y, ppSize);
 		
 		addPoint(-xSize/2, -ySize/2);
 		addPoint(xSize/2, -ySize/2);
@@ -36,7 +30,7 @@ public class Rectangle extends Physics_2DPolygon {
 				return (Coordinate2D) cP;
 			}
 		}	
-		return  null;
+		return null;
 	}
 
 

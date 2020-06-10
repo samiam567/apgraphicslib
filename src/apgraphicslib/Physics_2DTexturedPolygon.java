@@ -6,8 +6,12 @@ import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import javax.imageio.ImageIO;
+
+import apgraphicslib.Physics_2DPolygon.AffineRotation;
+
 
 
 public class Physics_2DTexturedPolygon extends Physics_2DPolygon implements Textured, Updatable {
@@ -28,9 +32,6 @@ public class Physics_2DTexturedPolygon extends Physics_2DPolygon implements Text
 			
 	        width = image.getWidth();
 	        height = image.getHeight();
-	        
-	        System.out.println(width);
-	        System.out.println(height);
 
 		}
 		/** 
@@ -229,6 +230,98 @@ public class Physics_2DTexturedPolygon extends Physics_2DPolygon implements Text
 	public void addPoint(double x, double y) {
 		addPoint(new FramePoint(x,y));
 	}
+	
+	/// Camera stuff ////////////////////////////////////////////////////////////////////////////////
+		private ArrayList<CameraPaintData> cameraDataSets = new ArrayList<CameraPaintData>();
+		private class CameraPaintData {
+			private Camera cam;
+			private double x, y;	
+			private RGBPoint2D[] platePoints;
+			
+			public CameraPaintData(Camera cam, Physics_2DTexturedPolygon parent) {
+				this.cam = cam;
+				platePoints = new RGBPoint2D[0];
+			}
+		}	
+		
+		private CameraPaintData getCameraPaintData(Camera cam) {
+			for (CameraPaintData data : cameraDataSets) {
+				if (data.cam.equals(cam)) return data;
+			}
+			
+			Exception e = new Exception("data for Camera " + cam + " ID: " + cam.getId() + " cannot be found for " + getName() + this);
+			e.printStackTrace(getDrawer().getOutputStream());
+			return null;
+		}
+		
+		public void createCameraPaintData(Camera cam) {
+			cameraDataSets.add(new CameraPaintData(cam,this));
+		}
+		
+		@Override
+		public void deleteCameraPaintData(Camera cam) {
+			cameraDataSets.remove(getCameraPaintData(cam));
+		}
+		
+		public void updateCameraPaintData(Camera cam) {
+			
+			CameraPaintData data = getCameraPaintData(cam);
+			
+			
+			double camX = cam.getCoordinates().getX(), camY = cam.getCoordinates().getY();
+			
+			double offSetX = camX - cam.getFrameWidth()/2;
+			double offSetY = camY - cam.getFrameHeight()/2;
+			
+			AffineRotation affRot = new AffineRotation();
+			affRot.calculateRotation(cam.getRotation());
+			
+			
+			data.x = affRot.a * (getX() - offSetX - camX) + affRot.b * (getY() - offSetY - camY);
+			data.y = affRot.c * (getX() - offSetX - camX) + affRot.d * (getY() - offSetY - camY);
+			
+			data.x += camX;
+			data.y += camY;
+			
+		
+			
+			 //resize data.platepoints if it isn't the same size as the object list
+			if (platePoints.size() != data.platePoints.length) {
+				data.platePoints = new RGBPoint2D[platePoints.size()];
+				
+				//loop through and create a point at each index of the data.platePoints list
+				int i = 0;
+				for (RGBPoint2D cPoint : platePoints) {
+					data.platePoints[i] = new RGBPoint2D(cPoint.getX(), cPoint.getY(), cPoint.R, cPoint.G, cPoint.B);
+					i++;
+				}
+				
+			}
+			
+			int i = 0;
+			for (RGBPoint2D cPoint : platePoints) {			
+					data.platePoints[i].setPos((affRot.a * (cPoint.getX()) + affRot.b * (cPoint.getY())), (affRot.c * (cPoint.getX()) + affRot.d * (cPoint.getY())));
+					data.platePoints[i].setRGB(cPoint.R, cPoint.G, cPoint.B, cPoint.alpha);
+					i++;
+			}
+			
+			
+		}
+		
+		@Override
+		public void paint(Camera cam, Graphics page) {
+			
+			CameraPaintData data = getCameraPaintData(cam);
+			
+		
+			for (RGBPoint2D cPoint : data.platePoints) {
+		   		page.setColor(new Color(cPoint.R,cPoint.G,cPoint.B,cPoint.alpha));
+				page.fillRect((int) Math.round(data.x + cPoint.getX()-platePointSize/2),(int) Math.round(data.y + cPoint.getY()-platePointSize/2), (int) (platePointSize+1), (int) (platePointSize+1));
+			}	
+		}
+		
+		/// Camera stuff end ////////////////////////////////////////////////////////////////////////////////
+
 	
 	@Override
 	public void paint(Graphics page) {

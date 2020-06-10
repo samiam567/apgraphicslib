@@ -4,11 +4,11 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
-import Shapes.Rectangle;
 import apgraphicslib.CollisionEvent;
 import apgraphicslib.Object_draw;
 import apgraphicslib.Settings;
 import apgraphicslib.Tangible;
+import shapes.Rectangle;
 
 public class Laser extends Rectangle implements Tangible {
 

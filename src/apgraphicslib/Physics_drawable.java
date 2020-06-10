@@ -100,7 +100,10 @@ public abstract class Physics_drawable extends Physics_object implements Drawabl
 	public void setIsVisible(boolean isVisible) {
 		this.isVisible = isVisible;
 	}
-	
+
+	public double getPaintOrderValue(Camera cam) {
+		return Physics_engine_toolbox.distance(getCoordinates(), cam.getCoordinates());
+	}
 
 
 	

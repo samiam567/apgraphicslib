@@ -3,9 +3,9 @@ package jetpack_joyride;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import Shapes.Square;
 import apgraphicslib.Object_draw;
 import apgraphicslib.Settings;
+import shapes.Square;
 
 
 public class JetPack_fire extends Square {

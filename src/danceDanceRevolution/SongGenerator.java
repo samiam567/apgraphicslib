@@ -3,7 +3,6 @@ package danceDanceRevolution;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.Scanner;
 
 
@@ -12,7 +11,7 @@ public class SongGenerator {
 	private static int notesToSkip = 0;
 	
 	//this is the difficulty
-	private static int notesPerBeat = 30;
+	private static int notesPerBeat = 2;
 		
 	private static double timeInBetweenNotes = 0.25; //this is in beats
 	
@@ -82,15 +81,10 @@ public class SongGenerator {
 			for (int i = 0; i < noteTimes.size(); i++ ) { 
 				
 								
-				noteTimeStamp = noteTimes.get(i)/2;
+				noteTimeStamp = noteTimes.get(i);
 				notePitch = getPitch(noteTimeStamp, 0, notePitches.length);
 				
-				
-				
-				
-				
-				
-				
+			
 				System.out.print(noteTimeStamp + " -> ");
 				System.out.println(((int) Math.round((noteTimeStamp/2)/(timePerBeat))));
 				System.out.println(notesThisBeat);

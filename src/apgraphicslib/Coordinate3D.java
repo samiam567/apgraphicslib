@@ -64,6 +64,7 @@ public class Coordinate3D extends Coordinate2D implements Three_dimensional {
 		
 	}
 	
+
 	/**
 	 * {@summary adds the vector to the coordinate as if it were a vector. (x + i, y + j, z + k)}
 	 * @param addV

@@ -1,10 +1,11 @@
 package apgraphicslib;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
 
-public class Physics_2DPolygon extends Physics_2DDrawMovable implements Updatable, Rotatable, Two_dimensional {
+public class Physics_2DPolygon extends Physics_2DDrawMovable implements Updatable, Rotatable, Two_dimensional, CameraMovable {
 	
 	/** 
 	 * @author samiam567
@@ -56,6 +57,8 @@ public class Physics_2DPolygon extends Physics_2DDrawMovable implements Updatabl
 		} 
 	}
 	
+	
+	
 	protected AffineRotation rotationMatrix = new AffineRotation();
 	
 	protected Vector rotation = new Vector();
@@ -80,7 +83,7 @@ public class Physics_2DPolygon extends Physics_2DDrawMovable implements Updatabl
 
 	protected boolean rotateWithOrbit = false;
 	
-	private boolean isFilled = true;
+	private boolean isFilled = false;
 
 	public Physics_2DPolygon(Object_draw drawer, double x, double y) {
 		super(drawer, x, y);
@@ -100,6 +103,7 @@ public class Physics_2DPolygon extends Physics_2DDrawMovable implements Updatabl
 	 */
 	protected void addPoint(PolyPoint newPoint) {
 		numPoints++;
+	
 		pointXValues = new int[numPoints];
 		pointYValues = new int[numPoints];
 		
@@ -107,11 +111,15 @@ public class Physics_2DPolygon extends Physics_2DDrawMovable implements Updatabl
 		if (Math.abs(newPoint.getX()) > getXSize()/2) setSize(Math.abs(newPoint.getX()*2),getYSize());
 		if (Math.abs(newPoint.getY()) > getYSize()/2) setSize(getXSize(),Math.abs(newPoint.getY()*2));
 		points.add(newPoint);
+		
+		updatePointValueLists();
+		
+		
 	}
 	
 	/**
 	 * @author samiam567
-	 * {@summary rotates the points in the object and updates the PolyXY with the point values + the coordinates of this object}
+	 * {@summary rotates the points in the object}
 	 * {@code this should never have to be overridden by higher dimensional polygons}
 	 */
 	protected void updatePoints() {		
@@ -130,15 +138,18 @@ public class Physics_2DPolygon extends Physics_2DDrawMovable implements Updatabl
 			if (Math.abs(cPoint.getY()) > getYSize()/2) setSize(getXSize(),Math.abs(cPoint.getY()*2));
 		}
 	}
+
 	
 	protected void updatePointValueLists() {
 		int pointIndx = 0;
+		
+		
 		for (PolyPoint cPoint : points) {
 			pointXValues[pointIndx] = (int) (cPoint.getX() + getX());
 			pointYValues[pointIndx] = (int) (cPoint.getY() + getY());
 			pointIndx++;
-			numPoints = pointIndx;
 		}
+		numPoints = pointIndx;
 	}
 	
 
@@ -150,7 +161,6 @@ public class Physics_2DPolygon extends Physics_2DDrawMovable implements Updatabl
 	public void Update(double frames) {
 		super.Update(frames);
 		
-		updatePointValueLists();
 		//orbital rotation
 		if (orbitalAngularAcceleration.getR() != 0) orbitalAngularVelocity.add(orbitalAngularAcceleration.tempStatMultiply(frames));
 			orbitalAngVFrames = orbitalAngularVelocity.tempStatMultiply(frames);
@@ -180,7 +190,8 @@ public class Physics_2DPolygon extends Physics_2DDrawMovable implements Updatabl
 			updatePoints();
 		}
 		
-		updatePointValueLists();
+	
+		
 	}
 	
 	/**
@@ -324,20 +335,121 @@ public class Physics_2DPolygon extends Physics_2DDrawMovable implements Updatabl
 		this.rotateWithOrbit = rotateWithOrbit;
 		pointOfRotation = newPointOfRotation;
 	}
- 
+	
+	/// Camera stuff ////////////////////////////////////////////////////////////////////////////////
+	private ArrayList<CameraPaintData> cameraDataSets = new ArrayList<CameraPaintData>();
+	private class CameraPaintData {
+		private Camera cam;
+		private int[] camPointXValues;
+		private int[] camPointYValues;	
+		
+		public CameraPaintData(Camera cam) {
+			this.cam = cam;
+			camPointXValues = new int[points.size()];
+			camPointYValues = new int[points.size()];
+		}
+	}	
+	
+	private CameraPaintData getCameraPaintData(Camera cam) {
+		for (CameraPaintData data : cameraDataSets) {
+			if (data.cam.equals(cam)) return data;
+		}
+		
+		Exception e = new Exception("data for Camera " + cam + " ID: " + cam.getId() + " cannot be found for " + getName() + this);
+		e.printStackTrace(getDrawer().getOutputStream());
+		return null;
+	}
+	
+	public void createCameraPaintData(Camera cam) {
+		cameraDataSets.add(new CameraPaintData(cam));
+	}
+	
+	@Override
+	public void deleteCameraPaintData(Camera cam) {
+		cameraDataSets.remove(getCameraPaintData(cam));
+	}
+	
+	public void updateCameraPaintData(Camera cam) {
+		
+		CameraPaintData data = getCameraPaintData(cam);
+		
+		
+		
+		double camX = cam.getCoordinates().getX(), camY = cam.getCoordinates().getY();
+		
+		double offSetX = camX - cam.getFrameWidth()/2;
+		double offSetY = camY - cam.getFrameHeight()/2;
+		
+		AffineRotation affRot = new AffineRotation();
+		affRot.calculateRotation(cam.getRotation());
+		
+		
+		double obX = affRot.a * (getX() - offSetX - camX) + affRot.b * (getY() - offSetY - camY);
+		double obY = affRot.c * (getX() - offSetX - camX) + affRot.d * (getY() - offSetY - camY);
+		
+		obX += camX;
+		obY += camY;
+
+		if (points.size() != data.camPointXValues.length) {
+			data.camPointXValues = new int[points.size()];
+			data.camPointYValues = new int[points.size()];
+		}
+		
+		int pointIndx = 0;
+		for (PolyPoint cPoint : points) {
+			data.camPointXValues[pointIndx] = (int) (obX + affRot.a * (cPoint.getX()) + affRot.b * (cPoint.getY()));
+			data.camPointYValues[pointIndx] = (int) (obY + affRot.c * (cPoint.getX()) + affRot.d * (cPoint.getY()));
+			pointIndx++;
+		}
+		
+		
+	}
+	
+	@Override
+	public void paint(Camera cam, Graphics page) {
+		
+		CameraPaintData data = getCameraPaintData(cam);
+		
+		if (getIsFilled()) {
+			page.fillPolygon(data.camPointXValues, data.camPointYValues, numPoints);
+		}else {
+			page.drawPolygon(data.camPointXValues, data.camPointYValues, numPoints);
+		}
+	}
+	
+	/// Camera stuff end ////////////////////////////////////////////////////////////////////////////////
+	
+	
+	
+	
 	@Override
 	public void paint(Graphics page) {
-		if (isFilled) {
+		
+		updatePointValueLists();
+		
+		if (getIsFilled()) {
 			page.fillPolygon(pointXValues, pointYValues, numPoints);
 		}else {
 			page.drawPolygon(pointXValues, pointYValues, numPoints);
 		}
 	}
 
+	
 
 	public void setIsFilled(boolean isFilled) {
 		this.isFilled = isFilled;
 	}
+
+	@Override
+	public double getPaintOrderValue(Camera cam) {
+		return Physics_engine_toolbox.distance2D(getCoordinates(), cam.getCoordinates());
+	}
+
+	public boolean getIsFilled() {
+		return isFilled;
+	}
+
+
 
 	
 }

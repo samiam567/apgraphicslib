@@ -7,8 +7,9 @@ import java.awt.event.MouseMotionListener;
 
 
 /**
- * {@code will rotate and pan objects to simulate camera behavior, but isn't a true camera. }
+ * {@code replaced by Camera - will rotate and pan objects to simulate camera behavior, but isn't a true camera. }
  */
+@Deprecated 
 public class Camera_Simulated extends Physics_object implements Updatable, MouseMotionListener, KeyListener, Resizable {
 	private double cameraPanSpeed = 10000, cameraRotateSpeed = 10;
 	
@@ -27,12 +28,12 @@ public class Camera_Simulated extends Physics_object implements Updatable, Mouse
 	@Override
 	public void Update(double frames) {
 		
-		CameraMovable cOb;
+		Camera_Simulated_objectable cOb;
 		
 		
 		for (Updatable cUp : getDrawer().getUpdatables()) {
 			try {
-				cOb = (CameraMovable) cUp;
+				cOb = (Camera_Simulated_objectable) cUp;
 				cOb.setOrbitalAngularVelocity(((Vector3D)cOb.getOrbitalAngularVelocity()).statAdd(cameraRotateVelocity).subtract(prevCameraRotateVelocity));
 				cOb.setSpeed( ((Vector3D)cOb.getSpeed()).statAdd(cameraPanVelocity).subtract(prevCameraPanVelocity) );
 				
@@ -45,10 +46,10 @@ public class Camera_Simulated extends Physics_object implements Updatable, Mouse
 	@Override
 	public void prePaintUpdate() {
 		
-		CameraMovable cOb;
+		Camera_Simulated_objectable cOb;
 		for (Updatable cUp : getDrawer().getUpdatables()) {
 			try {
-				cOb = (CameraMovable) cUp;
+				cOb = (Camera_Simulated_objectable) cUp;
 				cOb.setPointOfRotation(cameraCenter, true);
 			}catch(ClassCastException c) {}
 		}
@@ -134,7 +135,7 @@ public class Camera_Simulated extends Physics_object implements Updatable, Mouse
 
 	@Override
 	public void resize() {
-		cameraCenter.setPos(Settings.width/2, Settings.height/2, -Settings.distanceFromScreen);
+		cameraCenter.setPos(getDrawer().getFrameWidth()/2, getDrawer().getFrameHeight()/2, -Settings.distanceFromScreen);
 	}
 	
 }

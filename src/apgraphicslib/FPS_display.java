@@ -20,6 +20,17 @@ public class FPS_display extends ScoreBoard {
 		super.paint(page);
 		
 	}
+	
+	@Override
+	public void paint(Camera cam, Graphics page) {
+		if (loops % Settings.targetFPS == 0) {
+			setScore(getDrawer().getActualFPS());
+			loops = 1;
+		}
+		loops++;
+		super.paint(cam,page);
+		
+	}
 
 	
 	

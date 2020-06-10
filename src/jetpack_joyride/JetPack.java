@@ -2,7 +2,7 @@ package jetpack_joyride;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import Shapes.Rectangle;
+
 import apgraphicslib.CollisionEvent;
 import apgraphicslib.Coordinate2D;
 import apgraphicslib.Coordinate3D;
@@ -11,6 +11,7 @@ import apgraphicslib.Resizable;
 import apgraphicslib.Settings;
 import apgraphicslib.Tangible;
 import apgraphicslib.Vector2D;
+import shapes.Rectangle;
 
 public class JetPack extends Rectangle implements Tangible, Resizable {
 	

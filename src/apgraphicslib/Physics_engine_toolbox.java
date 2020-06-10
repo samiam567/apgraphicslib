@@ -315,6 +315,17 @@ public class Physics_engine_toolbox {
 	}
 	
 	/**
+	 * {@code automatically determines which distance method to use but runs a little slower}
+	 */
+	public static double distance(Coordinate2D point1, Coordinate2D point2) {
+		try { 
+			return distance3D((Coordinate3D) point1,(Coordinate3D) point2);
+		}catch(ClassCastException c) {
+			return distance2D(point1, point2);
+		}
+	}
+	
+	/**
 	 * {@summary calculates the distance between two points in objects. (Adds the obX, obY, and obZ to the point coords)}
 	 * @param ob1X the x position of the first object
 	 * @param ob1Y the y position of the first object

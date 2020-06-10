@@ -21,6 +21,15 @@ public class Coordinate2D extends Coordinate implements Two_dimensional {
 	}
 	
 	/**
+	 * {@summary adds half the dimension-less vector to the x and half to the y, unless it is a Vector2D in which case it uses add(Vector2D addV)}
+	 */
+	@Override
+	public void add(Vector addV) {
+		x += addV.getR() * 0.5;
+		y += addV.getR() * 0.5;
+	}
+	
+	/**
 	 * {@summary adds the vector to the coordinate as if it were a vector. (x + i, y + j)}
 	 * @param addV
 	 */

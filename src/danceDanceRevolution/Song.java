@@ -79,7 +79,7 @@ public class Song extends Physics_2DDrawMovable implements KeyListener{
 	private void loadSong(String songSrc) {
 		
 		this.songSrc = songSrc;
-		Note.noteSize = Settings.width/5;
+		Note.noteSize = getDrawer().getWidth()/5;
 		leftNoteTarget = new LeftNote(this,10 + Note.noteSize/2,0,"./src/danceDanceRevolution/assets/arrowTargetTextureGreen.png");
 		
 		downNoteTarget = new DownNote(this,10 + Note.noteSize/2,0,"./src/danceDanceRevolution/assets/arrowTargetTextureGreen.png");
@@ -404,7 +404,7 @@ public class Song extends Physics_2DDrawMovable implements KeyListener{
 					for (Note n : leftNotes) {
 						
 						double distance = Physics_engine_toolbox.distance2D(n.getCoordinates(), leftNoteTarget.getCoordinates());
-						if (distance < Note.noteSize/4) {
+						if (distance < Note.noteSize/2) {
 							n.reposition();
 							DDRRunner.score.AddScore(1000/distance);
 							break;
@@ -425,7 +425,7 @@ public class Song extends Physics_2DDrawMovable implements KeyListener{
 				}else {
 					for (Note n : downNotes) {
 						double distance = Physics_engine_toolbox.distance2D(n.getCoordinates(), downNoteTarget.getCoordinates());
-						if (distance < Note.noteSize/4) {
+						if (distance < Note.noteSize/2) {
 							n.reposition();
 							DDRRunner.score.AddScore(1000/distance);
 							break;
@@ -444,7 +444,7 @@ public class Song extends Physics_2DDrawMovable implements KeyListener{
 				}else {
 					for (Note n : upNotes) {
 						double distance = Physics_engine_toolbox.distance2D(n.getCoordinates(), upNoteTarget.getCoordinates());
-						if (distance < Note.noteSize/4) {
+						if (distance < Note.noteSize/2) {
 							n.reposition();
 							DDRRunner.score.AddScore(1000/distance);
 							break;
@@ -463,7 +463,7 @@ public class Song extends Physics_2DDrawMovable implements KeyListener{
 				}else {
 					for (Note n : rightNotes) {
 						double distance = Physics_engine_toolbox.distance2D(n.getCoordinates(), rightNoteTarget.getCoordinates());
-						if (distance < Note.noteSize/4) {
+						if (distance < Note.noteSize/2) {
 							n.reposition();
 							DDRRunner.score.AddScore(1000/distance);
 							break;

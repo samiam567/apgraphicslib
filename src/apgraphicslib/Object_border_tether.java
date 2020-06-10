@@ -16,7 +16,7 @@ public class Object_border_tether extends Physics_object implements Updatable {
 	@Override
 	public void Update(double frames) {
 		for (Drawable cObject : getDrawer().getDrawables()) {
-			if ((cObject.getX() > Settings.width) || (cObject.getX() < 0) || (cObject.getY() > Settings.height) || (cObject.getY() < 0) ) { 
+			if ((cObject.getX() > getDrawer().getFrameHeight()) || (cObject.getX() < 0) || (cObject.getY() > getDrawer().getFrameHeight()) || (cObject.getY() < 0) ) { 
 				System.out.println(cObject.getName() + " is outside the screen. x: " + cObject.getX() + " y: " + cObject.getY());
 				 
 			}

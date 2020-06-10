@@ -1,5 +1,13 @@
 package apgraphicslib;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.util.ArrayList;
+
+import apgraphicslib.Physics_2DPolygon.AffineRotation;
+import apgraphicslib.Physics_2DPolygon.PolyPoint;
+import apgraphicslib.Physics_2DTexturedPolygon.RGBPoint2D;
+
 public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimensional, Rotatable {
 	
 	private double zSize;
@@ -515,5 +523,132 @@ public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimens
 	public double getZSize() {
 		return zSize;
 	}
+	
+	
+	/// Camera stuff ////////////////////////////////////////////////////////////////////////////////
+	private ArrayList<CameraPaintData> cameraDataSets = new ArrayList<CameraPaintData>();
+	private class CameraPaintData {
+		private Camera cam;
+		private Point3D center;
+		private Point3D[] points;
+		private int[] camPointXValues;
+		private int[] camPointYValues;			
+			
+		public CameraPaintData(Camera cam) {
+			this.cam = cam;
+			center = new Point3D(0,0,0);
+			points = new Point3D[0];
+			camPointXValues = new int[getPoints().size()];
+			camPointYValues = new int[getPoints().size()];
+		}
+	}	
+		
+	private CameraPaintData getCameraPaintData(Camera cam) {
+		for (CameraPaintData data : cameraDataSets) {
+			if (data.cam.equals(cam)) return data;
+		}
+			
+		Exception e = new Exception("data for Camera " + cam + " ID: " + cam.getId() + " cannot be found for " + getName() + this);
+		e.printStackTrace(getDrawer().getOutputStream());
+		return null;
+	}
+		
+	public void createCameraPaintData(Camera cam) {
+		cameraDataSets.add(new CameraPaintData(cam));
+	}
+	
+	@Override
+	public void deleteCameraPaintData(Camera cam) {
+		cameraDataSets.remove(getCameraPaintData(cam));
+	}
+	
+	
+	public void updateCameraPaintData(Camera cam) {	
+		CameraPaintData data = getCameraPaintData(cam);
+		
+		
+		
+		double camX = cam.getCoordinates().getX(), camY = cam.getCoordinates().getY(), camZ = 0;
+		
+		try {
+			camZ = ((Coordinate3D) cam.getCoordinates()).getZ();
+		}catch(ClassCastException c) {}
+		
+		double offSetX = camX - cam.getFrameWidth()/2;
+		double offSetY = camY - cam.getFrameHeight()/2;
+		double offSetZ = camZ;
+		
+		Vector3D camRotation;
+		
+		try {
+			camRotation = (Vector3D) cam.getRotation();
+		}catch(ClassCastException c) {
+			camRotation = new Vector3D(0,0,cam.getRotation().getR());
+		}
+		
+	//	System.out.println(camRotation);
+		
+		AffineRotation3D affRot = new AffineRotation3D();
+	
+		affRot.calculateRotation(camRotation);
+		
+		data.center.setPos(getX() - offSetX - camX, getY() - offSetY - camY, getZ() - offSetZ - camZ);
+		
+		data.center.rotate(affRot);
+		
+		data.center.add(cam.getCoordinates());
+
+		if (getPoints().size() != data.camPointXValues.length) {
+			data.camPointXValues = new int[getPoints().size()];
+			data.camPointYValues = new int[getPoints().size()];
+		}
+		
+		int i;
+		
+		//resize data.points if it isn't the same size as the object list
+		if (getPoints().size() != data.points.length) {
+			data.points = new Point3D[getPoints().size()];
+			
+			//loop through and create a point at each index of the data.points list
+			i = 0;
+			Coordinate3D cPoint;
+			for (PolyPoint cP : getPoints()) {
+				cPoint = (Coordinate3D) cP;
+				data.points[i] = new Point3D(0,0,0);
+				i++;
+			}
+			
+		}
+		
+		
+	
+		//update the data.points list with the right values and more importantly data.pointXValues and data.pointYValues
+		i = 0;
+		Coordinate3D cPoint;
+		for (PolyPoint cP : getPoints()) {
+			cPoint = (Coordinate3D) cP;
+			data.points[i].setPos(cPoint.getX(), cPoint.getY(), cPoint.getZ());
+			data.points[i].rotate(affRot);
+			data.camPointXValues[i] = (int) (data.points[i].getX() + data.center.getX());
+			data.camPointYValues[i] = (int) (data.points[i].getY() + data.center.getY());
+			i++;
+		}
+			
+	}
+	
+	@Override
+	public void paint(Camera cam, Graphics page) {
+		
+		CameraPaintData data = getCameraPaintData(cam);
+
+	
+		if (getIsFilled()) {
+			page.fillPolygon(data.camPointXValues, data.camPointYValues, numPoints);
+		}else {
+			page.drawPolygon(data.camPointXValues, data.camPointYValues, numPoints);
+		}
+	}	
+	
+	////////////////////////// end camera stuff
 
 }
