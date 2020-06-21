@@ -30,6 +30,8 @@ public abstract class Camera extends JPanel implements Updatable, Physics_engine
 	protected String name = "unNamed Camera";
 	protected Object_draw drawer;
 	
+	public boolean perspective = Settings.perspective;
+	
 	/**
 	 * {@code CAMERA MUST BE added to an Object_draw by either using it as the constructor parameter or using addCamera()}
 	 * @param cameraPosition
@@ -82,6 +84,8 @@ public abstract class Camera extends JPanel implements Updatable, Physics_engine
 	
 	@Override
 	public void paint(Graphics page) {	
+	
+		
 		try {
 			page.setColor(frame.getBackground());
 			page.fillRect(0, 0, getFrame().getWidth(), getFrame().getHeight());
@@ -95,14 +99,19 @@ public abstract class Camera extends JPanel implements Updatable, Physics_engine
 				cOb.paint(page);
 			}
 			
+	//		getDrawer().pause();
 			for (CameraMovable cOb : cameraObs) {
 				page.setColor(cOb.getColor());
 				cOb.paint(this,page);
 			}
+//			getDrawer().resumeNoWait();
 		
 		}catch(ConcurrentModificationException c) {
 			getDrawer().out.println(c + " in paint(Graphics) in Camera: " + getName());
+			c.printStackTrace();
 		}
+		
+		
 	}
 	
 	

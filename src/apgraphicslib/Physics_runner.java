@@ -1,5 +1,6 @@
 package apgraphicslib;
 
+import shapes.Cylinder;
 import shapes.Egg;
 import shapes.Rectangle;
 import shapes.Rectangle3D;
@@ -30,7 +31,7 @@ public class Physics_runner {
 		drawer.add(fcps);
 		cam.add(fcps);
 		
-		Egg square1 = new Egg(drawer, Settings.width/2, Settings.height/2,0,300,200,100,7);
+		Cylinder square1 = new Cylinder(drawer, Settings.width/2, Settings.height/2,0,100,100,100,10);
 		square1.setIsFilled(true);
 		
 		square1.setTexture("./src/LegendOfJava/assets/strawberry.jpg");
@@ -41,9 +42,9 @@ public class Physics_runner {
 		
 
 	//	cam.setCameraPanVelocity(new Vector2D(100,5));
-		cam.setCameraAngularVelocity(new Vector3D(1,1,1));
+		cam.setCameraAngularVelocity(new Vector3D(1,2,1));
 	
-		//square1.setAngularVelocity(new Vector3D(-1,-0,-1));
+	//	square1.setAngularVelocity(new Vector3D(-1,-0,-1));
 	
 		//wait for close
 		while (drawer.getFrame().isVisible()) {
