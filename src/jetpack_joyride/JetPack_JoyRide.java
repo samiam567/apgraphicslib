@@ -367,7 +367,7 @@ public class JetPack_JoyRide implements MouseListener, KeyListener{
 		Settings.JOptionPaneErrorMessages = false;
 		Settings.targetFPS = 60; //attempt to make the FPS 60
 		Settings.autoResizeFrame = true;
-		Settings.timeSpeed = 1;
+		Settings.timeSpeed = 0.5;
 	}
 	
 	public static void loadGame() throws ClassNotFoundException, IOException{
