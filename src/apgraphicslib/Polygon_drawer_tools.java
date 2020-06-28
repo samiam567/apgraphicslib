@@ -15,23 +15,43 @@ import apgraphicslib.Physics_3DPolygon.Point3D;
  * {@summary tools to draw objects using the mouse. Needs update to really be used well}
  * {@code you must call startCapture() before you can add points }
  */
-@Deprecated
 public class Polygon_drawer_tools extends Physics_drawable implements MouseListener, MouseMotionListener, KeyListener, Drawable {
-	private Physics_3DPolygon object;
+	
+	private Object_draw drawer;
+	private Camera3D cam;
+	
+	private Physics_3DTexturedPolygon object;
 	private String name;
 	private boolean capturing = false;
 	private Coordinate2D prevPoint = new Coordinate2D(0,0);
-	private double contPointDist = 4;
+	private double contPointDist = 30;
 	private boolean constCapture = false;
 	private boolean mirror;
 	private boolean rotating;
 	private double rotationSpeed;
 	
-	public Polygon_drawer_tools(Physics_3DPolygon ob) {
-		super(ob.getDrawer(),ob.getX(),ob.getY());
-		object = ob;
+	
+	public static void main(String[] args) {
+		Camera3D cam = new Camera3D(new Coordinate3D(Settings.width/2, Settings.height/2, 0));
+		new Polygon_drawer_tools(new Object_draw(), cam);
+	}
+	
+	public Polygon_drawer_tools(Object_draw drawer, Camera3D cam) {
+		super(drawer, Settings.width/2, Settings.height/2);
+		this.cam = cam;
+		this.drawer = drawer;
+		drawer.addCamera(cam);
+		cam.setDrawer(drawer);
+		
+		object = new Physics_3DTexturedPolygon(drawer, drawer.getFrameWidth()/2, drawer.getFrameHeight()/2,0,5);
+		
+		drawer.add(object);
+		cam.add(object);
+		setName("Polygon_drawer_tools for " + object.getName());
 		addListeners();
-		name = "Polygon_drawer_tools for " + object.getName();
+		
+		startCapture();
+		
 	}
 	
 	
@@ -47,6 +67,8 @@ public class Polygon_drawer_tools extends Physics_drawable implements MouseListe
 		object.getDrawer().getFrame().getContentPane().addKeyListener(this);
 		object.getDrawer().getFrame().addKeyListener(this);
 		object.getDrawer().addKeyListener(this);
+		
+		drawer.out.println("Listeners added");
 	}
 	
 
@@ -63,7 +85,10 @@ public class Polygon_drawer_tools extends Physics_drawable implements MouseListe
 		
 		object.getDrawer().remove(object); //this keeps many errors from happening that stem from live building
 		capturing = true;
-		object.getDrawer().add(this);
+		drawer.add(this);
+		
+		drawer.start();
+		
 		while (capturing) {
 			try {
 				Thread.sleep(1);
@@ -73,24 +98,31 @@ public class Polygon_drawer_tools extends Physics_drawable implements MouseListe
 		}
 		
 		
+		
 	}
 	
 	public void endCapture() {
 		object.getDrawer().out.println("capture finished");
 		capturing = false;
 		object.getDrawer().remove(this);
+		drawer.pause();
+		object.setTexture2D("./src/LegendOfJava/assets/strawberry.jpg");
 		object.getDrawer().add(object);
+		((Vector3D) object.angularVelocity).setIJK(1,1,1);
+		drawer.resume();
 	}
 	
 	private void addPoint(int x, int y) {
+	
 		object.addPoint(x - object.getX(),y - object.getY(),0);
+
 		if (mirror) {
 			object.addPoint(-(x - object.getX()),(y - object.getY()),0);
 		}
 	}
 	@Override
 	public void mouseClicked(MouseEvent e) {
-//		object.getDrawer().out.println("mouse clicked");
+		object.getDrawer().out.println("mouse clicked");
 		if (capturing) {
 			addPoint(e.getX(),e.getY());
 		}
@@ -117,6 +149,10 @@ public class Polygon_drawer_tools extends Physics_drawable implements MouseListe
 //		object.getDrawer().out.println("mouse released");
 		constCapture = false;
 		rotating = false;
+		
+		//reset camera
+		cam.cameraAngularVelocity.setR(0);
+		cam.cameraRotation.setR(0);
 	}
 
 	@Override
@@ -147,12 +183,8 @@ public class Polygon_drawer_tools extends Physics_drawable implements MouseListe
 				prevPoint = newPoint;
 			}
 		}else if (rotating) {
-			Vector3D rotation = new Vector3D(prevPoint.getY()-e.getY(),e.getX()-prevPoint.getX(),0);
-			rotation.multiply(0.0001);
-			for (PolyPoint cPoint : object.getPoints()) {
-				((Point3D)cPoint).rotate(rotation);
-				((Point3D)cPoint).prevAngle = 0;
-			}
+			((Vector3D) cam.cameraAngularVelocity).setIJK(prevPoint.getY()-e.getY(),e.getX()-prevPoint.getX(),0);
+			((Vector3D) cam.cameraAngularVelocity).multiply(0.01);
 		}
 		
 		
@@ -220,6 +252,7 @@ public class Polygon_drawer_tools extends Physics_drawable implements MouseListe
 
 	@Override
 	public void paint(Graphics page) {
+		
 		//draw crosshairs for mirroring
 		page.drawLine((int) object.getX(), 0,(int) object.getX(),(int) getDrawer().getFrameHeight());
 		page.drawLine(0,(int) object.getY(), getDrawer().getFrameWidth(),(int) object.getY());

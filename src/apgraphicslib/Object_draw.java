@@ -46,6 +46,8 @@ public class Object_draw extends JPanel {
 	private long current_frame = 0, updateStartTime, updateEndTime, frameStartTime, frameEndTime, subCalcTime, lastPaintTime;
 	private double frameTime = 1/Settings.targetFPS;
 	
+	private boolean paintWithCameras = true; //whether we should still paint ourself even if we have cameras
+	
 	public Object_draw() {
 		frame = new Physics_frame(this);
 		
@@ -57,20 +59,32 @@ public class Object_draw extends JPanel {
 	 * @param mainCam
 	 */
 	public Object_draw(Camera mainCam) {
+		paintWithCameras = false;
 		frame = mainCam.frame;
 		threader = new Object_draw_update_thread(this);
 		mainCam.setDrawer(this);
 		cameras.add(mainCam);
 	}
 	
+	/**
+	 * {@summary adds the camera to this drawer. If the cam was not passed as the constructor parameter for this Object_draw this must be called for the camera to work properly}
+	 * {@code adds the camera to this drawer's cameras ArrayList, and sets the camera's drawer to this drawer}
+	 * @param cam
+	 */
 	public void addCamera(Camera cam) {
 		cameras.add(cam);
+		cam.setDrawer(this);
 	}
 	
 	
 	public void callRepaint() {
 		if (cameras.size() == 0) {
 			repaint();
+		}else if (paintWithCameras) {
+			repaint();
+			for (Camera cam : cameras) {
+				cam.repaint();
+			}
 		}else { //if we have cameras let them do the painting
 			for (Camera cam : cameras) {
 				cam.repaint();
@@ -461,6 +475,14 @@ public class Object_draw extends JPanel {
 
 	public double getActualFPS() {
 		return actualFPS;
+	}
+	
+	/**
+	 * {@summary whether or not we should still paint ourself even if we have cameras}
+	 * @param pWC
+	 */
+	public void setPaintWithCameras(boolean pWC) {
+		paintWithCameras = pWC;
 	}
 
 	public double getCurrentFrame() {

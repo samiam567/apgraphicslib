@@ -54,9 +54,14 @@ public abstract class Camera extends JPanel implements Updatable, Physics_engine
 	 * @param drawer
 	 */
 	public void setDrawer(Object_draw drawer) {
-		this.drawer = drawer;
-		
-		drawer.add((Updatable) this);
+		if ( ! drawer.equals(this.drawer)) {
+			this.drawer = drawer;
+			
+			drawer.add((Updatable) this);
+		}else {
+			Exception e = new Exception("drawer already set to that drawer");
+			e.printStackTrace(drawer.out);
+		}
 	}
 	
 	

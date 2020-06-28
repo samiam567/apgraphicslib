@@ -643,9 +643,9 @@ public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimens
 
 	
 		if (getIsFilled()) {
-			page.fillPolygon(data.camPointXValues, data.camPointYValues, numPoints);
+			page.fillPolygon(data.camPointXValues, data.camPointYValues, data.camPointXValues.length);
 		}else {
-			page.drawPolygon(data.camPointXValues, data.camPointYValues, numPoints);
+			page.drawPolygon(data.camPointXValues, data.camPointYValues, data.camPointXValues.length);
 		}
 	}	
 	

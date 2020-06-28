@@ -3,7 +3,7 @@ package apgraphicslib;
 import java.awt.Color;
 
 public abstract class Settings {
-	public static final String version = "2.0.10.2";
+	public static final String version = "2.0.11.1";
 	
 	public static int width = (int) (1000);
 	public static int height = (int) (800);
