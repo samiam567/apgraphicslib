@@ -592,6 +592,9 @@ public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimens
 	
 		affRot.calculateRotation(camRotation);
 		
+		
+		
+		
 		data.center.setPos(getX() - offSetX - camX, getY() - offSetY - camY, getZ() - offSetZ - camZ);
 		
 		data.center.rotate(affRot);
