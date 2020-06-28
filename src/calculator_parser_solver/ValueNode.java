@@ -7,9 +7,13 @@ package calculator_parser_solver;
  *
  */
 public class ValueNode extends EquationNode {
+		
+	public ValueNode(double v) {
+		setValue(v);
+	}
 	
 	public void setValue(double value) {
-		getParent().notCalculated();
+		if (getParent() != null) getParent().notCalculated();
 		this.value = value;
 		calculated();
 	}

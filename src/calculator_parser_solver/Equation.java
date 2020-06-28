@@ -19,7 +19,7 @@ public class Equation extends One_subNode_node {
 	 * {@summary testing method}
 	 * @param equation
 	 */
-	public static void main(String args) {
+	public static void main(String[] args) { 
 		Equation e = new Equation("1 + 1");  // start simple
 		Equation e2 = new Equation("1 + 2 * 6^2"); //get a little more complicated
 		Equation e3 = new Equation("((4^2*3-45)^(1+1*4) / 3) * 2 "); //REALLY complicated
@@ -30,7 +30,7 @@ public class Equation extends One_subNode_node {
 			System.out.println("e failed :(");
 		}
 		
-		if (e2.solve() == (1 + 2 * 6^2)) { 
+		if (e2.solve() == (1 + 2 * Math.pow(6,2))) { 
 			System.out.println("e worked!");
 		}else {
 			System.out.println("e failed :(");
@@ -65,11 +65,29 @@ public class Equation extends One_subNode_node {
 		
 		
 		//To test we will just do one of the sample equations manually building the tree.
-		//"1 + 1"
+		//"1 + 2 * 6^2"
 		
 		Addition a = new Addition();
+		setSubNode(a);
+	
+		a.setLeftSubNode(new ValueNode(1));
+		
+		Multiplication m = new Multiplication();
+		a.setRightSubNode(m);
+		m.setLeftSubNode(new ValueNode(2));
 		
 		
+		Pow p = new Pow();
+		m.setRightSubNode(p);
+		
+		p.setLeftSubNode(new ValueNode(6));
+		p.setRightSubNode(new ValueNode(2));
+		
+		
+		System.out.println(getValue());
+		
+		
+
 		
 	}
 	

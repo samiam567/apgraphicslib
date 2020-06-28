@@ -23,6 +23,7 @@ public abstract class Two_subNode_node extends EquationNode {
 	public void setLeftSubNode(EquationNode lft) {
 		leftSubNode = lft;
 		leftSubNode.setParent(this);
+		notCalculated();
 	}
 	
 	/**
@@ -32,6 +33,7 @@ public abstract class Two_subNode_node extends EquationNode {
 	public void setRightSubNode(EquationNode rgt) {
 		rightSubNode = rgt;
 		rightSubNode.setParent(this);
+		notCalculated();
 	}
 	
 	
@@ -41,6 +43,7 @@ public abstract class Two_subNode_node extends EquationNode {
 	 */
 	@Override
 	public double getValue() {
+		
 		if (! isCalculated()) {
 			value = operation(leftSubNode.getValue(), rightSubNode.getValue()); 
 			calculated();
