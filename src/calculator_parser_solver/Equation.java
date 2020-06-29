@@ -14,7 +14,7 @@ public class Equation extends One_subNode_node {
 	public static int[] numbers = {1,2,3,4,5,6,7,8,9,0};
 	public static String[] numberChars = {"1","2","3","4","5","6","7","8","9","0",".",","};
 	
-	static final boolean printInProgress = true;
+	static final boolean printInProgress = false;
 			
 	private EquationNode[] nodes;
 	
@@ -226,6 +226,14 @@ public class Equation extends One_subNode_node {
 		}
 		
 		printNodeArray(nodes);
+		
+		if (parenthesisLevel > 0) {
+			Exception e = new Exception("ParenthesisError: missing close-parenthesis");
+			e.printStackTrace();
+		}else if (parenthesisLevel < 0) {
+			Exception e = new Exception("ParenthesisError: missing open-parenthesis");
+			e.printStackTrace();
+		}
 		
 		
 		//create tree linkups
