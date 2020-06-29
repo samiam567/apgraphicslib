@@ -23,16 +23,16 @@ public class Equation extends One_subNode_node {
 	 * @param equation
 	 */
 	public static void main(String[] args) { 
-		Equation e = new Equation("1 + 1");  // start simple
+		Equation e1 = new Equation("1 + 1");  // start simple
 		Equation e2 = new Equation("1 + 2 * 6^2"); //get a little more complicated
 		Equation e3 = new Equation("((4^2*3-45)^(1+1*4) / 3) * 2"); //REALLY complicated
 		Equation e4 = new Equation("45/2 + sin(10-5)/3"); //testing Sine
-		Equation e5 = new Equation("4rt(sin(asin(0.12))) + 13-sqrt4");
+		Equation e5 = new Equation("4rt(tan(atan(0.12))) + 13-sqrt4"); //test sin, asin,sqrt,rt
 		
-		if (e.solve() == (1+1)) { 
-			System.out.println("e worked!");
+		if (e1.solve() == (1+1)) { 
+			System.out.println("e1 worked!");
 		}else {
-			System.out.println("e failed :(");
+			System.out.println("e1 failed :(");
 		}
 		
 		if (e2.solve() == (1 + 2 * Math.pow(6,2))) { 
@@ -53,7 +53,7 @@ public class Equation extends One_subNode_node {
 			System.out.println("e4 failed :(");
 		}
 		
-		if (e5.solve() == Math.pow( 4,1/(Math.sin(Math.asin(0.12))) ) + 13-Math.sqrt(4) ){
+		if (e5.solve() == Math.pow( 4,1/(Math.tan(Math.atan(0.12))) ) + 13-Math.sqrt(4) ){
 			System.out.println("e5 worked!");
 		}else {
 			System.out.println("e5 failed :(");
