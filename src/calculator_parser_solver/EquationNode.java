@@ -5,7 +5,8 @@ package calculator_parser_solver;
  *
  */
 public abstract class EquationNode {
-	private double level;
+	private int parenthesisLevel;
+	protected int orderOfOpsLevel;
 	private EquationNode parent;
 	protected double value;
 	
@@ -49,12 +50,22 @@ public abstract class EquationNode {
 		return value;
 	}
 
-	public double getLevel() {
-		return level;
+
+	public int getParenthesisLevel() {
+		return parenthesisLevel;
 	}
 
-	public void setLevel(double level) {
-		this.level = level;
+	protected void setParenthesisLevel(int parenthesisLevel) {
+		this.parenthesisLevel = parenthesisLevel;
+	}
+
+	public int getOrderOfOpsLevel() {
+		return orderOfOpsLevel;
 	}
 	
+	public long getLevel() {
+		return parenthesisLevel * Equation.operations.length + orderOfOpsLevel;
+	}
+
+
 }

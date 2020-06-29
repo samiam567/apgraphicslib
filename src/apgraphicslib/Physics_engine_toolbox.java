@@ -380,7 +380,7 @@ public class Physics_engine_toolbox {
 		double[] prevArray = array;
 		array = new double[size];
 		
-		double refillSize;
+		int refillSize;
 		if (size > prevArray.length) {
 			refillSize = prevArray.length;
 		}else {

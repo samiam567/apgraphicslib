@@ -9,11 +9,12 @@ import java.util.LinkedList;
  */
 public class Equation extends One_subNode_node {
 	
-	private String[] operations = { "(", ")", "sin", "cos", "tan", "asin", "acos", "atan", "^", "rt", "sqrt", "*", "/", "+", "-" };
-	private String[] letters = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
+	public static final String[] operations = {"sin", "cos", "tan", "asin", "acos", "atan", "^", "rt", "sqrt", "*", "/", "+", "-" };
+	private static String[] letters = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
 	public static int[] numbers = {1,2,3,4,5,6,7,8,9,0};
+	public static String[] numberChars = {"1","2","3","4","5","6","7","8","9","0",".",","};
 			
-	private LinkedList<EquationNode> nodes = new LinkedList<EquationNode>();
+	private EquationNode[] nodes;
 	
 	/**
 	 * {@summary testing method}
@@ -22,7 +23,7 @@ public class Equation extends One_subNode_node {
 	public static void main(String[] args) { 
 		Equation e = new Equation("1 + 1");  // start simple
 		Equation e2 = new Equation("1 + 2 * 6^2"); //get a little more complicated
-		Equation e3 = new Equation("((4^2*3-45)^(1+1*4) / 3) * 2 "); //REALLY complicated
+		Equation e3 = new Equation("((4^2*3-45)^(1+1*4) / 3) * 2"); //REALLY complicated
 		
 		if (e.solve() == (1+1)) { 
 			System.out.println("e worked!");
@@ -36,12 +37,14 @@ public class Equation extends One_subNode_node {
 			System.out.println("e failed :(");
 		}
 		
-		if (e3.solve() == (((4^2*3-45)^(1+1*4) / 3) * 2 )) { 
+		if (e3.solve() == ((Math.pow((Math.pow(4,2)*3-45),(1+1*4)) / 3) * 2 )) { 
 			System.out.println("e worked!");
 		}else {
 			System.out.println("e failed :(");
 		}
-	}
+		
+		System.out.println(e3.solve());
+	}	
 	
 	
 	/**
@@ -49,48 +52,276 @@ public class Equation extends One_subNode_node {
 	 * @param equation
 	 */
 	public Equation(String equation) {
-		setLevel(0); //we are the top level
-		addNodesAt(equation,this);
+		orderOfOpsLevel = 0; //we are the top level
+		setParenthesisLevel(0);
+		
+		createTree(equation);
 	}
 	
+	/**
+	 * {@summary resizes the passed array to the given constraints. Can lengthen the array}
+	 * @param array
+	 * @param start
+	 * @param end
+	 * @return
+	 */
+	private EquationNode[] resizeNodesArray(EquationNode[] arr, int start, int end) {
+		EquationNode[] prevArray = arr;
+		arr = new EquationNode[1+end-start];
+		
+		for (int i = start; i <= end; i++) {
+			try {
+				arr[i-start] = prevArray[i];
+			}catch(ArrayIndexOutOfBoundsException a) {/*okay yeah this is a lazy way of doing this but it'll work every time*/}
+		}
+		
+		return arr;
+	
+	}
+	
+	private void printNodeArray(EquationNode[] arr) {
+		int parenthesisLevel = 0;
+		System.out.print("getTree :");
+		for (EquationNode n : arr) {
+			
+			if (n.getParenthesisLevel() != parenthesisLevel) {
+				for (int i = 0; i < (n.getParenthesisLevel()-parenthesisLevel); i++) {
+					System.out.print("(");
+				}
+				
+				for (int i = 0; i > (n.getParenthesisLevel()-parenthesisLevel); i--) {
+					System.out.print(")");
+				}
+				parenthesisLevel = n.getParenthesisLevel();
+			}
+			System.out.print(n + " ");
+		}
+		System.out.println();
+	}
+	
+	/**
+	 * {@summary searches for a String in an array and returns the index of that string in the array}
+	 * {@code returns -1 if the String was not found}
+	 * @param str the string to search for
+	 * @param arr the array to search in
+	 */
+	private int indexOf(String str,String[] arr) {
+		for (int i = 0; i < arr.length; i++) {
+			if (arr[i].equals(str)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	private void addToNodesArray(EquationNode n) {
+		nodes = resizeNodesArray(nodes, 0,nodes.length);
+		nodes[nodes.length-1] = n;
+	}
+
 	/**
 	 * {@summary recursively adds the child nodes to the parent}
 	 * @param equation
 	 * @param parent
 	 */
-	public void addNodesAt(String equation, EquationNode parent) {
-		//TODO write this
-		//this is the input method that will generate the node trees
+	public void createTree(String equation) {
 		
 		
+		//create nodes
 		
-		//To test we will just do one of the sample equations manually building the tree.
-		//"1 + 2 * 6^2"
-		
-		Addition a = new Addition();
-		setSubNode(a);
-	
-		a.setLeftSubNode(new ValueNode(1));
-		
-		Multiplication m = new Multiplication();
-		a.setRightSubNode(m);
-		m.setLeftSubNode(new ValueNode(2));
-		
-		
-		Pow p = new Pow();
-		m.setRightSubNode(p);
-		
-		p.setLeftSubNode(new ValueNode(6));
-		p.setRightSubNode(new ValueNode(2));
-		
-		
-		System.out.println(getValue());
-		
-		
+		nodes = new EquationNode[0];
 
+		
+		String mode = "unknown";
+		String prevMode = "unknown";
+		String inputBuffer = "";
+		
+		int parenthesisLevel = 0;
+		
+		String cChar = "";
+		for (int i = 0; i < equation.length()+1; i++) {	
+	
+			if (i < equation.length()) {
+				cChar = equation.substring(i, i+1);
+					
+				System.out.println(cChar);
+				
+				if (cChar.equals(" ")) continue; //skip spaces
+					
+					
+					
+				if ( cChar.equals("(") ) { //it is an open-parenthesis, and the parenthesis level goes up
+					mode = "openParent";
+					System.out.println("openParent");
+				}else if ( cChar.equals(")") ) { //it is an end-parenthesis, and the parenthesis level goes down
+					mode = "closeParent";
+					System.out.println("closeParent");			
+				}else if (indexOf(cChar,numberChars) != -1) { //it is a number, and must be a value
+					mode = "numberInput";
+					System.out.println("numbInput");
+				}else if (indexOf(cChar,letters) != -1) { //it is a letter, and if it is a single letter it is a variable, but if there are multiple letters it is an operation
+					mode = "letterInput";
+					System.out.println("letter");
+					if (prevMode.equals("letterInput")) {
+						mode = "operation";
+						System.out.println("operation");
+					}
+				}else {
+					mode = "operation";
+					System.out.println("operation");	
+				}
+			}else { //we are at the end of the equation
+				mode = "end";
+			}
+			
+			
+			
+			if ((! prevMode.equals(mode)) && (! prevMode.equals("unknown")) ){
+				System.out.println("modeChange:" + inputBuffer);
+				if (prevMode.equals("letterInput") && (! mode.equals("operation"))) { //create a variable 
+					addToNodesArray(new ValueNode(inputBuffer,parenthesisLevel)); //add a new ValueNode with the variable name
+					inputBuffer = ""; //clear the inputBuffer
+				}else if (prevMode.equals("numberInput")) { //create a value
+					addToNodesArray(new ValueNode(Double.parseDouble(inputBuffer),parenthesisLevel)); //add a new ValueNode with the variable name
+					inputBuffer = ""; //clear the inputBuffer
+				}else if (prevMode.equals("operation")) {
+					if (indexOf(inputBuffer,operations) != -1) {
+						addToNodesArray(createOperation(inputBuffer,parenthesisLevel));
+					}else {
+						Exception e = new Exception("operation not found in operations array: " + inputBuffer);
+						e.printStackTrace();
+					}
+					inputBuffer = ""; //clear the inputBuffer
+				}
+			}
+			
+			if (mode.equals("openParent")) {
+				parenthesisLevel++;
+			}else if (mode.equals("closeParent")) {
+				parenthesisLevel--;
+			}else {		
+				inputBuffer += cChar;
+			}
+			
+			prevMode = mode;
+			 
+			
+		}
+		
+		printNodeArray(nodes);
+		
+		
+		//create tree linkups
+		
+		setSubNode(getTree(nodes));
+		
 		
 	}
 	
+	/**
+	 * {@summary recursively returns the tree of the passed node array}
+	 * {@code 1. search for the lowest level node/operation -----
+	     2.a if it is a single subnode, getTree(everything right of it) is its subnode -----
+	     2.b if it is a double subnode, getTree(everything left of it) is its left subnode, and getTree(everything right of it) is its left subnode
+		}
+	 * @param arr
+	 * @return
+	 */
+	private EquationNode getTree(EquationNode[] arr) {
+		printNodeArray(arr);
+		
+		//find the lowest level node/operation
+		EquationNode lowestNode = arr[0];
+		EquationNode n;
+		int lowestIndx = 0;
+		for (int i = 0; i < arr.length; i++) {
+			n = arr[i];
+			if ( n.getLevel() < lowestNode.getLevel() ) {
+				lowestNode = n;
+				lowestIndx = i;
+			}
+		}
+		
+		System.out.println("lowestNode: " + lowestNode + " lowestIndx: " + lowestIndx);
+		
+		try {
+			Two_subNode_node node = (Two_subNode_node) lowestNode;
+			System.out.println("two_subnode");
+			node.setLeftSubNode(getTree(resizeNodesArray(arr,0,lowestIndx-1)));
+			node.setRightSubNode(getTree(resizeNodesArray(arr,lowestIndx+1,arr.length-1)));
+		}catch(ClassCastException c) {
+			try {
+				One_subNode_node node = (One_subNode_node) lowestNode;
+				System.out.println("one_subnode");
+				if (lowestIndx != 0) {
+					Exception e = new Exception("there should be nothing to the right of a lowest-priority single-node operation");
+					e.printStackTrace();
+				}
+				
+				node.setSubNode(getTree(resizeNodesArray(arr,lowestIndx+1,arr.length-1)));
+			}catch(ClassCastException e) {
+				System.out.println("valueNode");
+			}
+		}
+		
+		
+		return lowestNode;
+	}
+	
+	private EquationNode createOperation(String op, int parenthesisLevel) {
+		EquationNode node = null;
+		
+		switch (op) {
+		case("sin"):
+			node = new Sine();
+			break;
+		case("cos"):
+			node = new Cosine();
+			break;
+		case("tan"):
+			node = new Tangent();
+			break;
+		case("asin"):
+			node = new ArcSine();
+			break;
+		case("acos"):
+			node = new ArcCosine();
+			break;
+		case("atan"):
+			node = new ArcTangent();
+			break;
+		case("^"):
+			node = new Pow();
+			break;
+		case("rt"):
+			node = new Root();
+			break;
+		case("sqrt"):
+			node = new SquareRoot();
+			break;
+		case("*"):
+			node = new Multiplication();
+			break;
+		case("/"):
+			node = new Division();
+			break;
+		case("+"):
+			node = new Addition();
+			break;
+		case("-"):
+			node = new Subtraction();
+			break;
+		default:
+			Exception e = new Exception("operation not found in createOperation: " + op);
+			e.printStackTrace();
+			break;
+			
+		}
+		
+		node.setParenthesisLevel(parenthesisLevel);
+		
+		return node;
+	}
 	
 	public double solve() {
 		return getValue();
