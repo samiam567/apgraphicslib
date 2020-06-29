@@ -7,6 +7,7 @@ public class Tangent extends One_subNode_node {
 	}
 	
 	protected double operation(double a) {
+		if (Equation.printInProgress) System.out.println("tan" + a);
 		return Math.tan(a);
 	}
 	

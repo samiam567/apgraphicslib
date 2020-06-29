@@ -7,6 +7,7 @@ public class ArcTangent extends One_subNode_node {
 	}
 	
 	protected double operation(double a) {
+		if (Equation.printInProgress) System.out.println("atan" + a);
 		return Math.atan(a);
 	}
 	

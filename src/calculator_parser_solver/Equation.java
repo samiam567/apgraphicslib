@@ -13,6 +13,8 @@ public class Equation extends One_subNode_node {
 	private static String[] letters = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
 	public static int[] numbers = {1,2,3,4,5,6,7,8,9,0};
 	public static String[] numberChars = {"1","2","3","4","5","6","7","8","9","0",".",","};
+	
+	static final boolean printInProgress = true;
 			
 	private EquationNode[] nodes;
 	
@@ -24,6 +26,8 @@ public class Equation extends One_subNode_node {
 		Equation e = new Equation("1 + 1");  // start simple
 		Equation e2 = new Equation("1 + 2 * 6^2"); //get a little more complicated
 		Equation e3 = new Equation("((4^2*3-45)^(1+1*4) / 3) * 2"); //REALLY complicated
+		Equation e4 = new Equation("45/2 + sin(10-5)/3"); //testing Sine
+		Equation e5 = new Equation("4rt(sin(asin(0.12))) + 13-sqrt4");
 		
 		if (e.solve() == (1+1)) { 
 			System.out.println("e worked!");
@@ -32,18 +36,29 @@ public class Equation extends One_subNode_node {
 		}
 		
 		if (e2.solve() == (1 + 2 * Math.pow(6,2))) { 
-			System.out.println("e worked!");
+			System.out.println("e2 worked!");
 		}else {
-			System.out.println("e failed :(");
+			System.out.println("e2 failed :(");
 		}
 		
 		if (e3.solve() == ((Math.pow((Math.pow(4,2)*3-45),(1+1*4)) / 3) * 2 )) { 
-			System.out.println("e worked!");
+			System.out.println("e3 worked!");
 		}else {
-			System.out.println("e failed :(");
+			System.out.println("e3 failed :(");
 		}
 		
-		System.out.println(e3.solve());
+		if (e4.solve() == (45D/2 + Math.sin(10-5) / 3) ) {
+			System.out.println("e4 worked!");
+		}else {
+			System.out.println("e4 failed :(");
+		}
+		
+		if (e5.solve() == Math.pow( 4,1/(Math.sin(Math.asin(0.12))) ) + 13-Math.sqrt(4) ){
+			System.out.println("e5 worked!");
+		}else {
+			System.out.println("e5 failed :(");
+		}
+	
 	}	
 	
 	
@@ -81,7 +96,7 @@ public class Equation extends One_subNode_node {
 	
 	private void printNodeArray(EquationNode[] arr) {
 		int parenthesisLevel = 0;
-		System.out.print("getTree :");
+	
 		for (EquationNode n : arr) {
 			
 			if (n.getParenthesisLevel() != parenthesisLevel) {
@@ -160,11 +175,13 @@ public class Equation extends One_subNode_node {
 					mode = "numberInput";
 					System.out.println("numbInput");
 				}else if (indexOf(cChar,letters) != -1) { //it is a letter, and if it is a single letter it is a variable, but if there are multiple letters it is an operation
-					mode = "letterInput";
-					System.out.println("letter");
-					if (prevMode.equals("letterInput")) {
-						mode = "operation";
-						System.out.println("operation");
+					if (! mode.equals("multi-char-operation")) {
+						mode = "letterInput";
+						System.out.println("letter");
+						if (prevMode.equals("letterInput")) {
+							mode = "multi-char-operation";
+							System.out.println("multi-char-operation");
+						}
 					}
 				}else {
 					mode = "operation";
@@ -178,13 +195,13 @@ public class Equation extends One_subNode_node {
 			
 			if ((! prevMode.equals(mode)) && (! prevMode.equals("unknown")) ){
 				System.out.println("modeChange:" + inputBuffer);
-				if (prevMode.equals("letterInput") && (! mode.equals("operation"))) { //create a variable 
+				if (prevMode.equals("letterInput") && (! mode.equals("multi-char-operation"))) { //create a variable 
 					addToNodesArray(new ValueNode(inputBuffer,parenthesisLevel)); //add a new ValueNode with the variable name
 					inputBuffer = ""; //clear the inputBuffer
 				}else if (prevMode.equals("numberInput")) { //create a value
 					addToNodesArray(new ValueNode(Double.parseDouble(inputBuffer),parenthesisLevel)); //add a new ValueNode with the variable name
 					inputBuffer = ""; //clear the inputBuffer
-				}else if (prevMode.equals("operation")) {
+				}else if (prevMode.equals("operation") || prevMode.equals("multi-char-operation") ) {
 					if (indexOf(inputBuffer,operations) != -1) {
 						addToNodesArray(createOperation(inputBuffer,parenthesisLevel));
 					}else {

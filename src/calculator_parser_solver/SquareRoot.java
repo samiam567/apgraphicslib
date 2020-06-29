@@ -7,6 +7,7 @@ public class SquareRoot extends One_subNode_node {
 	}
 	
 	protected double operation(double a) {
+		if (Equation.printInProgress) System.out.println("sqrt" + a);
 		return Math.sqrt(a);
 	}
 	

@@ -7,6 +7,7 @@ public class Multiplication extends Two_subNode_node {
 	}
 	
 	protected double operation(double a, double b) {
+		if (Equation.printInProgress) System.out.println(a + "*" + b);
 		return a*b;
 	}
 	
