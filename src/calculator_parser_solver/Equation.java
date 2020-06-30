@@ -1,6 +1,6 @@
 package calculator_parser_solver;
 
-import java.util.LinkedList;
+import javax.swing.JOptionPane;
 
 /**
  * {@summary this equation class will store the tree of operations and values that make up an equation and it will be capable of solving itself with different values}
@@ -9,12 +9,12 @@ import java.util.LinkedList;
  */
 public class Equation extends One_subNode_node {
 	
-	public static final String[] operations = {"sin", "cos", "tan", "asin", "acos", "atan", "^", "rt", "sqrt", "*", "/", "+", "-" };
+	public static final String[] operations = {"_","sin", "cos", "tan", "asin", "acos", "atan", "^", "rt", "sqrt", "*", "/", "+", "-" };
 	private static String[] letters = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
 	public static int[] numbers = {1,2,3,4,5,6,7,8,9,0};
 	public static String[] numberChars = {"1","2","3","4","5","6","7","8","9","0",".",","};
 	
-	static final boolean printInProgress = false;
+	static final boolean printInProgress = true;
 			
 	private EquationNode[] nodes;
 	
@@ -23,42 +23,23 @@ public class Equation extends One_subNode_node {
 	 * @param equation
 	 */
 	public static void main(String[] args) { 
-		Equation e1 = new Equation("1 + 1");  // start simple
-		Equation e2 = new Equation("1 + 2 * 6^2"); //get a little more complicated
-		Equation e3 = new Equation("((4^2*3-45)^(1+1*4) / 3) * 2"); //REALLY complicated
-		Equation e4 = new Equation("45/2 + sin(10-5)/3"); //testing Sine
-		Equation e5 = new Equation("4rt(tan(atan(0.12))) + 13-sqrt4"); //test sin, asin,sqrt,rt
 		
-		if (e1.solve() == (1+1)) { 
-			System.out.println("e1 worked!");
-		}else {
-			System.out.println("e1 failed :(");
+		String input = "";
+		
+		while (true) { //if the user presses cancel the program will automatically terminate
+			while (input.length() == 0) {
+				input = JOptionPane.showInputDialog(null,"Type in what you want to solve");
+			}
+		
+			System.out.println("Input: " + input);
+			
+			Equation eq = new Equation(input);
+			
+			JOptionPane.showMessageDialog(null, eq.solve());
+			
+			input = "";
 		}
 		
-		if (e2.solve() == (1 + 2 * Math.pow(6,2))) { 
-			System.out.println("e2 worked!");
-		}else {
-			System.out.println("e2 failed :(");
-		}
-		
-		if (e3.solve() == ((Math.pow((Math.pow(4,2)*3-45),(1+1*4)) / 3) * 2 )) { 
-			System.out.println("e3 worked!");
-		}else {
-			System.out.println("e3 failed :(");
-		}
-		
-		if (e4.solve() == (45D/2 + Math.sin(10-5) / 3) ) {
-			System.out.println("e4 worked!");
-		}else {
-			System.out.println("e4 failed :(");
-		}
-		
-		if (e5.solve() == Math.pow( 4,1/(Math.tan(Math.atan(0.12))) ) + 13-Math.sqrt(4) ){
-			System.out.println("e5 worked!");
-		}else {
-			System.out.println("e5 failed :(");
-		}
-	
 	}	
 	
 	
@@ -297,6 +278,9 @@ public class Equation extends One_subNode_node {
 		EquationNode node = null;
 		
 		switch (op) {
+		case("_"):
+			node = new Negative();
+			break;
 		case("sin"):
 			node = new Sine();
 			break;
@@ -356,6 +340,44 @@ public class Equation extends One_subNode_node {
 	public double operation(double a) {
 		return a;
 	}
-	
+
+	@SuppressWarnings("unused")
+	private void testCalculator() {
+		Equation e1 = new Equation("1 + 1");  // start simple
+		Equation e2 = new Equation("1 + 2 * 6^2"); //get a little more complicated
+		Equation e3 = new Equation("((4^2*3-45)^(1+1*4) / 3) * 2"); //REALLY complicated
+		Equation e4 = new Equation("45/2 + sin(10-5)/3"); //testing Sine
+		Equation e5 = new Equation("4rt(tan(atan(0.12))) + 13-sqrt4"); //test sin, asin,sqrt,rt
+		
+		if (e1.solve() == (1+1)) { 
+			System.out.println("e1 worked!");
+		}else {
+			System.out.println("e1 failed :(");
+		}
+		
+		if (e2.solve() == (1 + 2 * Math.pow(6,2))) { 
+			System.out.println("e2 worked!");
+		}else {
+			System.out.println("e2 failed :(");
+		}
+		
+		if (e3.solve() == ((Math.pow((Math.pow(4,2)*3-45),(1+1*4)) / 3) * 2 )) { 
+			System.out.println("e3 worked!");
+		}else {
+			System.out.println("e3 failed :(");
+		}
+		
+		if (e4.solve() == (45D/2 + Math.sin(10-5) / 3) ) {
+			System.out.println("e4 worked!");
+		}else {
+			System.out.println("e4 failed :(");
+		}
+		
+		if (e5.solve() == Math.pow( 4,1/(Math.tan(Math.atan(0.12))) ) + 13-Math.sqrt(4) ){
+			System.out.println("e5 worked!");
+		}else {
+			System.out.println("e5 failed :(");
+		}
+	}
 	
 }

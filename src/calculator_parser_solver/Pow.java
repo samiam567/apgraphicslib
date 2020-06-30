@@ -12,7 +12,7 @@ public class Pow extends Two_subNode_node {
 	}
 	
 	public String toString() {
-		return "pow";
+		return "^";
 	}
 }
 
