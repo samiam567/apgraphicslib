@@ -384,7 +384,13 @@ public class Equation extends One_subNode_node {
 	
 	
 	public ValueNode getVariable(int varIndx) {
-		return variables.get(varIndx);
+		try {
+			return variables.get(varIndx);
+		}catch(IndexOutOfBoundsException i) {
+			Exception e = new Exception("Variable index not found. That Varaible dosen't exist. Indx: " + varIndx);
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	/**
@@ -393,7 +399,12 @@ public class Equation extends One_subNode_node {
 	 * @param value
 	 */
 	public void setVariableValue(int varIndx, double value) {
-		variables.get(varIndx).setValue(value);
+		try {
+			variables.get(varIndx).setValue(value);
+		}catch(IndexOutOfBoundsException i) {
+			Exception e = new Exception("Variable index not found. That Varaible dosen't exist. Indx: " + varIndx);
+			e.printStackTrace();
+		}
 	}
 	
 	

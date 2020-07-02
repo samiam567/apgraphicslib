@@ -314,6 +314,31 @@ public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimens
 	}
 	
 	/**
+	 * {@summary uniformly translates all the points in the object so that the engine center of the object is roughly in line with the Polygon's estimated center of mass}
+	 */
+	public void centerPoints() {
+		Coordinate3D com = new Coordinate3D(0,0,0); 
+		Coordinate3D cPoint;
+		for (PolyPoint cP : getPoints() ) {
+			cPoint = (Coordinate3D) cP;
+			com.add(cPoint);
+		}
+		
+		System.out.println(com);
+		
+		com.setPos(com.getX() / getPoints().size(),com.getY() / getPoints().size(),com.getZ() / getPoints().size());
+		
+		for (PolyPoint cP : getPoints() ) {
+			cPoint = (Point3D) cP;
+			cPoint.setPos(cPoint.getX() - com.getX(),cPoint.getY() - com.getY(), cPoint.getZ() - com.getZ());
+		}
+		
+		System.out.println(com);
+	}
+	
+	
+	
+	/**
 	 * 
 	 * @param x
 	 * @param y

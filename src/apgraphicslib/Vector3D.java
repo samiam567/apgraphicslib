@@ -274,6 +274,14 @@ public class Vector3D extends Vector2D implements Three_dimensional {
 		return this;
 	}
 	
+	/**
+	 * {@summary adds the coordinate directly into our i,j, and k values}
+	 * @param cPoint
+	 */
+	public void add(Coordinate3D cPoint) {
+		setIJK(getI() + cPoint.getX(), getJ() + cPoint.getY(), getK() + cPoint.getZ());
+	}
+	
 	
 	/**
 	 * @param subVec the vector to subtract 
@@ -420,6 +428,8 @@ public class Vector3D extends Vector2D implements Three_dimensional {
 	public String toString() {
 		return "i: " + getI() + " , j: " + getJ() + " , k: " + getK() + " , theta: " + getTheta() + " , phi: " + getPhi();
 	}
+
+	
 
 	
 

@@ -21,7 +21,7 @@ public class Polygon_drawer_tools extends Physics_drawable implements MouseListe
 	private Object_draw drawer;
 	private Camera3D cam;
 	
-	private Physics_3DTexturedPolygon object;
+	private Physics_3DPolygon object;
 	private String name;
 	private boolean capturing = false;
 	private Coordinate2D prevPoint = new Coordinate2D(0,0);
@@ -31,7 +31,7 @@ public class Polygon_drawer_tools extends Physics_drawable implements MouseListe
 	private boolean rotating;
 	private double rotationSpeed;
 	
-	private Equation zAxis = new Equation("x^2 + y^2");
+	private Equation zAxis = new Equation("(x/10)^2");
 	
 	
 	public static void main(String[] args) {
@@ -46,7 +46,7 @@ public class Polygon_drawer_tools extends Physics_drawable implements MouseListe
 		drawer.addCamera(cam);
 		cam.setDrawer(drawer);
 		
-		object = new Physics_3DTexturedPolygon(drawer, drawer.getFrameWidth()/2, drawer.getFrameHeight()/2,0,5);
+		object = new Physics_3DPolygon(drawer, drawer.getFrameWidth()/2, drawer.getFrameHeight()/2,0);
 		
 		drawer.add(object);
 		cam.add(object);
@@ -106,10 +106,11 @@ public class Polygon_drawer_tools extends Physics_drawable implements MouseListe
 	
 	public void endCapture() {
 		object.getDrawer().out.println("capture finished");
+		object.centerPoints();
 		capturing = false;
 		object.getDrawer().remove(this);
 		drawer.pause();
-		object.setTexture("./src/LegendOfJava/assets/strawberry.jpg");
+//		object.setTexture2D("./src/LegendOfJava/assets/strawberry.jpg");
 		object.getDrawer().add(object);
 		((Vector3D) object.angularVelocity).setIJK(1,1,1);
 		drawer.resume();
@@ -117,10 +118,7 @@ public class Polygon_drawer_tools extends Physics_drawable implements MouseListe
 	
 	private void addPoint(int x, int y) {
 		
-		zAxis.setVariableValue("x", x);
-		zAxis.setVariableValue("y",y);
-		
-		System.out.println(zAxis.getVariable(zAxis.getVariableIndex("y")).getParent().getParent().getParent().isCalculated());
+		zAxis.setVariableValue("x", x - object.getX());
 		
 		double z = zAxis.solve();
 		
@@ -135,6 +133,8 @@ public class Polygon_drawer_tools extends Physics_drawable implements MouseListe
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		object.getDrawer().out.println("mouse clicked");
+		
+		
 		if (capturing) {
 			addPoint(e.getX(),e.getY());
 		}

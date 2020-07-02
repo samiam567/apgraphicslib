@@ -309,7 +309,7 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 	@Override
 	public void setTexture(String fileName) {
 	
-		getDrawer().pause(); //pause the drawer so we can not get ConcModExceptions
+		getDrawer().pause(); //pause the drawer so we don't get ConcModExceptions
 		
 		getDrawer().out.println("setting texture");
 		
