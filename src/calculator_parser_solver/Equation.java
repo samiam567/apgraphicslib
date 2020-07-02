@@ -1,5 +1,6 @@
 package calculator_parser_solver;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
@@ -19,6 +20,8 @@ public class Equation extends One_subNode_node {
 	private static ArrayList<ValueNode> variables = new ArrayList<ValueNode>();
 	
 	static final boolean printInProgress = false;
+	
+	private PrintStream out = System.out;
 			
 	private EquationNode[] nodes;
 	
@@ -193,7 +196,7 @@ public class Equation extends One_subNode_node {
 						addToNodesArray(createOperation(inputBuffer,parenthesisLevel));
 					}else {
 						Exception e = new Exception("operation not found in operations array: " + inputBuffer);
-						e.printStackTrace();
+						e.printStackTrace(out);
 					}
 					inputBuffer = ""; //clear the inputBuffer
 				}
@@ -216,10 +219,10 @@ public class Equation extends One_subNode_node {
 		
 		if (parenthesisLevel > 0) {
 			Exception e = new Exception("ParenthesisError: missing close-parenthesis");
-			e.printStackTrace();
+			e.printStackTrace(out);
 		}else if (parenthesisLevel < 0) {
 			Exception e = new Exception("ParenthesisError: missing open-parenthesis");
-			e.printStackTrace();
+			e.printStackTrace(out);
 		}
 		
 		
@@ -267,7 +270,7 @@ public class Equation extends One_subNode_node {
 				System.out.println("one_subnode");
 				if (lowestIndx != 0) {
 					Exception e = new Exception("there should be nothing to the right of a lowest-priority single-node operation");
-					e.printStackTrace();
+					e.printStackTrace(out);
 				}
 				
 				node.setSubNode(getTree(resizeNodesArray(arr,lowestIndx+1,arr.length-1)));
@@ -328,7 +331,7 @@ public class Equation extends One_subNode_node {
 			break;
 		default:
 			Exception e = new Exception("operation not found in createOperation: " + op);
-			e.printStackTrace();
+			e.printStackTrace(out);
 			break;
 			
 		}
@@ -388,7 +391,7 @@ public class Equation extends One_subNode_node {
 			return variables.get(varIndx);
 		}catch(IndexOutOfBoundsException i) {
 			Exception e = new Exception("Variable index not found. That Varaible dosen't exist. Indx: " + varIndx);
-			e.printStackTrace();
+			e.printStackTrace(out);
 			return null;
 		}
 	}
@@ -403,7 +406,7 @@ public class Equation extends One_subNode_node {
 			variables.get(varIndx).setValue(value);
 		}catch(IndexOutOfBoundsException i) {
 			Exception e = new Exception("Variable index not found. That Varaible dosen't exist. Indx: " + varIndx);
-			e.printStackTrace();
+			e.printStackTrace(out);
 		}
 	}
 	
@@ -446,6 +449,11 @@ public class Equation extends One_subNode_node {
 		}else {
 			System.out.println("e5 failed :(");
 		}
+	}
+
+
+	public void setPrintStream(PrintStream outputStream) {
+		out = outputStream;
 	}
 	
 }

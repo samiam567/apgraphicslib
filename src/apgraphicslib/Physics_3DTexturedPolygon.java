@@ -16,6 +16,7 @@ import javax.swing.JOptionPane;
 import apgraphicslib.Physics_2DPolygon.PolyPoint;
 import apgraphicslib.Physics_3DPolygon.AffineRotation3D;
 import apgraphicslib.Physics_3DPolygon.Point3D;
+import calculator_parser_solver.Equation;
 
 public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Textured3D, Updatable {
 	
@@ -667,8 +668,10 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 	
 	/**
 	 * {@summary sets the texture of the object, but this version makes the object a 2d sheet rather than a 3D wrapping. Note that the texture cannot be a .jpeg file}
-	 */
-	public void setTexture2D(String fileName) {
+	 * @param fileName the filePath to the texture to use
+	 * @param zEq the Equation in terms of up to x and y to use for the z values of the points
+ 	 */
+	public void setTexture2D(String fileName, Equation zEq) {
 		
 		if (getPoints().size() == 0) {
 			Exception e = new Exception("Physics_TexturePolygon must have points for a texture to be added");
@@ -709,7 +712,9 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 				//if our spiral guess was inside our polygon, add the plate point to the shape
 				if (framePoly.contains(getX()+x,getY()+y)) {
 					try {
-						newPoint = Texture.getRGBPoint(x,y,0,0,0,false);
+						zEq.setVariableValue("x", x);
+						zEq.setVariableValue("y", y);
+						newPoint = Texture.getRGBPoint(x,y,zEq.solve(),0,0,false);
 						getPlatePoints().add(newPoint);
 					}catch(ArrayIndexOutOfBoundsException a) {
 						System.out.println("array out of bounds");
@@ -744,6 +749,10 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 		getDrawer().out.println("Setting of texture complete.");
 	}
 	
+	public void setTexture2D(String fileName) {
+		setTexture2D(fileName, new Equation("0"));
+	}
+
 	/** 
 	 * @param gain the larger the gain the less accurate it is
 	 **/

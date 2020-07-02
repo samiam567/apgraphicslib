@@ -21,17 +21,17 @@ public class Polygon_drawer_tools extends Physics_drawable implements MouseListe
 	private Object_draw drawer;
 	private Camera3D cam;
 	
-	private Physics_3DPolygon object;
+	private Physics_3DTexturedPolygon object;
 	private String name;
 	private boolean capturing = false;
 	private Coordinate2D prevPoint = new Coordinate2D(0,0);
-	private double contPointDist = 30;
+	private double contPointDist = 10;
 	private boolean constCapture = false;
 	private boolean mirror;
 	private boolean rotating;
 	private double rotationSpeed;
 	
-	private Equation zAxis = new Equation("(x/10)^2");
+	private Equation zAxis = new Equation("100*sin(x/100) - (y/20)^2"); 
 	
 	
 	public static void main(String[] args) {
@@ -46,7 +46,9 @@ public class Polygon_drawer_tools extends Physics_drawable implements MouseListe
 		drawer.addCamera(cam);
 		cam.setDrawer(drawer);
 		
-		object = new Physics_3DPolygon(drawer, drawer.getFrameWidth()/2, drawer.getFrameHeight()/2,0);
+		zAxis.setPrintStream(drawer.getOutputStream());
+		
+		object = new Physics_3DTexturedPolygon(drawer, drawer.getFrameWidth()/2, drawer.getFrameHeight()/2,0,5);
 		
 		drawer.add(object);
 		cam.add(object);
@@ -110,7 +112,7 @@ public class Polygon_drawer_tools extends Physics_drawable implements MouseListe
 		capturing = false;
 		object.getDrawer().remove(this);
 		drawer.pause();
-//		object.setTexture2D("./src/LegendOfJava/assets/strawberry.jpg");
+		object.setTexture2D("./src/LegendOfJava/assets/texture.jpg",zAxis);
 		object.getDrawer().add(object);
 		((Vector3D) object.angularVelocity).setIJK(1,1,1);
 		drawer.resume();
@@ -119,11 +121,10 @@ public class Polygon_drawer_tools extends Physics_drawable implements MouseListe
 	private void addPoint(int x, int y) {
 		
 		zAxis.setVariableValue("x", x - object.getX());
+		zAxis.setVariableValue("x", y - object.getY());
 		
 		double z = zAxis.solve();
 		
-		System.out.println(z);
-	
 		object.addPoint(x - object.getX(),y - object.getY(),z);
 
 		if (mirror) {
