@@ -10,6 +10,7 @@ public class One_subNode_node extends EquationNode {
 	
 	public void setSubNode(EquationNode sub) {
 		subNode = sub;
+		subNode.setParent(this);
 		notCalculated();
 	}
 

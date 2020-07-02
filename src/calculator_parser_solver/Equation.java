@@ -1,5 +1,7 @@
 package calculator_parser_solver;
 
+import java.util.ArrayList;
+
 import javax.swing.JOptionPane;
 
 /**
@@ -14,7 +16,9 @@ public class Equation extends One_subNode_node {
 	public static int[] numbers = {1,2,3,4,5,6,7,8,9,0};
 	public static String[] numberChars = {"1","2","3","4","5","6","7","8","9","0",".",","};
 	
-	static final boolean printInProgress = true;
+	private static ArrayList<ValueNode> variables = new ArrayList<ValueNode>();
+	
+	static final boolean printInProgress = false;
 			
 	private EquationNode[] nodes;
 	
@@ -177,7 +181,9 @@ public class Equation extends One_subNode_node {
 			if ((! prevMode.equals(mode)) && (! prevMode.equals("unknown")) ){
 				System.out.println("modeChange:" + inputBuffer);
 				if (prevMode.equals("letterInput") && (! mode.equals("multi-char-operation"))) { //create a variable 
-					addToNodesArray(new ValueNode(inputBuffer,parenthesisLevel)); //add a new ValueNode with the variable name
+					ValueNode newVariable = new ValueNode(inputBuffer,parenthesisLevel);
+					variables.add(newVariable);
+					addToNodesArray(newVariable); //add a new ValueNode with the variable name
 					inputBuffer = ""; //clear the inputBuffer
 				}else if (prevMode.equals("numberInput")) { //create a value
 					addToNodesArray(new ValueNode(Double.parseDouble(inputBuffer),parenthesisLevel)); //add a new ValueNode with the variable name
@@ -340,6 +346,57 @@ public class Equation extends One_subNode_node {
 	public double operation(double a) {
 		return a;
 	}
+	
+	
+	/**
+	 * {@summary sets ALL variables in the equation with the passed name to the passed value.}
+	 * {@code the equation will automatically know to recalculate itself}
+	 * @param varName
+	 * @param value
+	 * @return
+	 */
+	public boolean setVariableValue(String varName, double value ) {
+		boolean varFound = false;
+		for (ValueNode n : variables) {
+			if (n.getName().equals(varName)) {
+				n.setValue(value);
+				varFound = true;
+			}
+		}	
+		return varFound;
+	}
+	
+	/**
+	 * @param varName
+	 * @return the index of the first instance of a variable with the passed name, -1 if the variable does not appear in the equation
+	 */
+	public int getVariableIndex(String varName) {
+		ValueNode n;
+		for (int i = 0; i < variables.size(); i++) {
+			n = variables.get(i);
+			if (n.getName().equals(varName)) {
+				return i;
+			}
+		}
+		
+		return -1;
+	}
+	
+	
+	public ValueNode getVariable(int varIndx) {
+		return variables.get(varIndx);
+	}
+	
+	/**
+	 * {@summary sets the value of the variable with the passed index to the passed value}
+	 * @param varIndx
+	 * @param value
+	 */
+	public void setVariableValue(int varIndx, double value) {
+		variables.get(varIndx).setValue(value);
+	}
+	
+	
 
 	@SuppressWarnings("unused")
 	private void testCalculator() {

@@ -25,9 +25,10 @@ public abstract class EquationNode {
 	 * {@summary sets us to not calculated, and makes all parents of this node un-calculated as well}
 	 */
 	protected void notCalculated() {
-		if ((getParent() != null) ) parent.notCalculated(); //if we have a parent, they need to redo their calculation as well
-		
 		calculated = false;
+		
+		if ((getParent() != null) ) parent.notCalculated(); //if we have a parent, they need to redo their calculation as well
+
 	}
 	
 	public void setParent(EquationNode parent) {

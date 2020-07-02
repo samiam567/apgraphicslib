@@ -8,6 +8,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import apgraphicslib.Physics_2DPolygon.PolyPoint;
 import apgraphicslib.Physics_3DPolygon.Point3D;
+import calculator_parser_solver.Equation;
 
 /**
  * 
@@ -29,6 +30,8 @@ public class Polygon_drawer_tools extends Physics_drawable implements MouseListe
 	private boolean mirror;
 	private boolean rotating;
 	private double rotationSpeed;
+	
+	private Equation zAxis = new Equation("x^2 + y^2");
 	
 	
 	public static void main(String[] args) {
@@ -106,18 +109,27 @@ public class Polygon_drawer_tools extends Physics_drawable implements MouseListe
 		capturing = false;
 		object.getDrawer().remove(this);
 		drawer.pause();
-		object.setTexture2D("./src/LegendOfJava/assets/strawberry.jpg");
+		object.setTexture("./src/LegendOfJava/assets/strawberry.jpg");
 		object.getDrawer().add(object);
 		((Vector3D) object.angularVelocity).setIJK(1,1,1);
 		drawer.resume();
 	}
 	
 	private void addPoint(int x, int y) {
+		
+		zAxis.setVariableValue("x", x);
+		zAxis.setVariableValue("y",y);
+		
+		System.out.println(zAxis.getVariable(zAxis.getVariableIndex("y")).getParent().getParent().getParent().isCalculated());
+		
+		double z = zAxis.solve();
+		
+		System.out.println(z);
 	
-		object.addPoint(x - object.getX(),y - object.getY(),0);
+		object.addPoint(x - object.getX(),y - object.getY(),z);
 
 		if (mirror) {
-			object.addPoint(-(x - object.getX()),(y - object.getY()),0);
+			object.addPoint(-(x - object.getX()),(y - object.getY()),z);
 		}
 	}
 	@Override

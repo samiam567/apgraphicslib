@@ -45,6 +45,10 @@ public class ValueNode extends EquationNode {
 		return super.getValue();
 	}
 	
+	public String getName() {
+		return name;
+	}
+	
 	@Override
 	public long getLevel() {
 		return 1000000000000000000L;
