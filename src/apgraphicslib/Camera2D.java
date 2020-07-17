@@ -1,5 +1,6 @@
 package apgraphicslib;
 
+import apgraphicslib.Physics_2DPolygon.Point2D;
 
 /**
  * {@code a 2D camera. see Camera}
@@ -13,7 +14,7 @@ public class Camera2D extends Camera {
 		cameraPanVelocity = new Vector2D(0,0);
 	}
 
-	public void setCameraPosition(Coordinate2D newPos) {
+	public void setCameraPosition(Point2D newPos) {
 		cameraPosition = newPos;
 	}
 	

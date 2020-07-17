@@ -108,8 +108,8 @@ public class Controller implements MouseMotionListener, MouseListener, KeyListen
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		Vector3D moveVec = new Vector3D(e.getYOnScreen()-runner.drawer.getFrameHeight()/2,e.getXOnScreen()-runner.drawer.getFrameWidth()/2,0);
-		System.out.println(moveVec);
+		Vector3D moveVec = new Vector3D(0/*e.getYOnScreen()-runner.drawer.getFrameHeight()/2*/,e.getXOnScreen()-runner.drawer.getFrameWidth()/2,0);
+	//	System.out.println(moveVec);
 		moveVec.multiply(0.01);
 		runner.camera.getRotation().add(moveVec);
 		

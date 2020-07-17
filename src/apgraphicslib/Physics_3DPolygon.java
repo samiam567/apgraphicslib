@@ -91,7 +91,7 @@ public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimens
 	 * @author samiam567
 	 *
 	 */
-	protected class Point3D extends Coordinate3D implements PolyPoint {
+	protected static class Point3D extends Coordinate3D implements PolyPoint {
 		//multi-purpose lists for rotation
 		private double[] rotMagsStat = new double[3];
 		private double[] rotComps = new double[2];

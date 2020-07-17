@@ -1,11 +1,16 @@
 package apgraphicslib;
 
+import apgraphicslib.Physics_2DPolygon.Point2D;
 import apgraphicslib.Physics_3DPolygon.AffineRotation3D;
+import apgraphicslib.Physics_3DPolygon.Point3D;
 
 public class Camera3D extends Camera2D {
 	
 	public Camera3D(Coordinate3D cameraPosition) {
 		super(cameraPosition);
+		
+		this.cameraPosition = new Point3D(cameraPosition.getX(), cameraPosition.getY(), cameraPosition.getZ());
+		
 		cameraPanVelocity = new Vector3D();
 		cameraRotation = new Vector3D();
 		cameraAngularVelocity = new Vector3D();
@@ -19,10 +24,10 @@ public class Camera3D extends Camera2D {
 	}
 
 	@Override
-	public void setCameraPosition(Coordinate2D newPos) {
-		cameraPosition.setPos(newPos.getX(), newPos.getY());
+	public void setCameraPosition(Point2D newPos) {
+		((Coordinate3D) cameraPosition).setPos(newPos.getX(), newPos.getY(),0);
 	}
-	public void setCameraPosition(Coordinate3D newPos) {
+	public void setCameraPosition(Point3D newPos) {
 		cameraPosition = newPos;
 	}
 	

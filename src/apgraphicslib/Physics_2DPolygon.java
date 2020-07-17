@@ -17,6 +17,7 @@ public class Physics_2DPolygon extends Physics_2DDrawMovable implements Updatabl
 		public double getX();
 		public double getY();
 		public void rotate(Vector rotation);
+		public void add(Vector tempStatMultiply);
 	}
 	
 	protected static class AffineRotation {

@@ -23,6 +23,12 @@ public class LegendOfJava2 {
 		drawer = new Object_draw(camera);
 		drawer.start();
 		Ryan = new Character(this, drawer.getFrameWidth()*0.5, drawer.getFrameHeight()*0.5, 0);
+		
+		Ryan.getAcceleration().setIJ(0,900);
+		
+		camera.setPointOfRotation(Ryan.getCoordinates());
+		camera.setRotateWithOrbit(true);
+		camera.setCameraPanVelocity(Ryan.getSpeed());
 
 		APLabel LOJTitle = new APLabel(drawer, drawer.getFrameWidth()*0.5, 25);
 		LOJTitle.setName("LOJ Title text");
@@ -32,6 +38,8 @@ public class LegendOfJava2 {
 		
 		
 		controller = new Controller(this);
+		
+		Room room1 = new Room(this, drawer.getFrameWidth()/2, drawer.getFrameHeight()/2,0);
 		
 		
 		

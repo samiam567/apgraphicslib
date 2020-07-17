@@ -85,9 +85,7 @@ public abstract class Camera extends JPanel implements Updatable, Physics_engine
 		
 		//orbital rotation
 		if (orbitalAngularAcceleration.getR() != 0) orbitalAngularVelocity.add(orbitalAngularAcceleration);
-					
-		
-				
+							
 		orbitalRotation.add(orbitalAngularVelocity);	
 					
 		rotationMatrix.calculateRotation(orbitalAngularVelocity);
@@ -98,10 +96,13 @@ public abstract class Camera extends JPanel implements Updatable, Physics_engine
 		((PolyPoint) getCoordinates()).rotate(rotationMatrix);
 		getCoordinates().add(pORCoordsTemp);
 			
-		if (rotateWithOrbit ) {
+		if (rotateWithOrbit) {
 			cameraRotation.add(orbitalAngularVelocity);
 		}
 			
+		//end orbital rotation 
+		
+		
 		cameraRotation.add(cameraAngularVelocity.tempStatMultiply(Settings.timeSpeed / getDrawer().getActualFPS()));
 		
 		cameraPosition.add(cameraPanVelocity.tempStatMultiply(Settings.timeSpeed / getDrawer().getActualFPS()));
@@ -230,6 +231,14 @@ public abstract class Camera extends JPanel implements Updatable, Physics_engine
 
 	public void setOrbitalAngularAcceleration(Vector newAngAccel) {
 		orbitalAngularAcceleration = newAngAccel;
+	}
+	
+	public void setPointOfRotation(Coordinate3D newPOR) {
+		pointOfRotation = newPOR;
+	}
+	
+	public void setRotateWithOrbit(boolean rot) {
+		rotateWithOrbit = rot;
 	}
 	
 	public Vector getOrbitalRotation() {

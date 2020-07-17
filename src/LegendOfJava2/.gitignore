@@ -4,3 +4,5 @@
 /Character$Character_Head.class
 /Character$Upper_arm.class
 /Controller.class
+/Room.class
+/Room$Room_floor.class
