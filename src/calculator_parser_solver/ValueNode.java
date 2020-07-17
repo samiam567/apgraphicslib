@@ -8,6 +8,7 @@ package calculator_parser_solver;
  */
 public class ValueNode extends EquationNode {
 	private String name = "number";
+
 	
 	private boolean unsetVal = false;
 	

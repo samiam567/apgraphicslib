@@ -8,6 +8,9 @@ import java.util.LinkedList;
 
 import javax.swing.JPanel;
 
+import apgraphicslib.Physics_2DPolygon.AffineRotation;
+import apgraphicslib.Physics_2DPolygon.PolyPoint;
+import apgraphicslib.Physics_2DPolygon.Point2D;
 
 /**
  * {@code will paint objects that are added to it according to the perspective of the camera }
@@ -22,6 +25,17 @@ public abstract class Camera extends JPanel implements Updatable, Physics_engine
 	protected Vector cameraPanVelocity;
 	protected Vector cameraRotation;
 	protected Vector cameraAngularVelocity;
+	
+	protected AffineRotation rotationMatrix;
+	
+	protected boolean rotateWithOrbit = false;
+	protected Coordinate2D pointOfRotation;
+	
+	protected Vector orbitalRotation = new Vector();
+	protected Vector orbitalAngularVelocity = new Vector();
+	protected Vector orbitalAngularAcceleration = new Vector();
+	
+	protected Coordinate2D pORCoordsTemp = new Coordinate2D(0,0); //used by the Update() method
 	
 	protected LinkedList<CameraMovable> cameraObs = new LinkedList<CameraMovable>(); //the objects to draw on the camera view frame
 	protected LinkedList<Drawable> paintOnlyObs = new LinkedList<Drawable>(); //the objects to only draw on the camera frame
@@ -40,13 +54,14 @@ public abstract class Camera extends JPanel implements Updatable, Physics_engine
 		setName("Unnamed Camera");
 		numCameras++;
 		id = numCameras;
-		this.cameraPosition = cameraPosition;
+		this.cameraPosition = new Point2D(cameraPosition.getX(), cameraPosition.getY());
 		cameraPanVelocity = new Vector(0);
 		cameraRotation = new Vector(0);
 		cameraAngularVelocity = new Vector(0);
 		frame = new Physics_frame(this);
 		setDoubleBuffered(false);
-		
+		rotationMatrix = new AffineRotation();
+		pointOfRotation = cameraPosition;
 	}
 	
 	/**
@@ -67,8 +82,30 @@ public abstract class Camera extends JPanel implements Updatable, Physics_engine
 	
 	@Override
 	public void prePaintUpdate() {
-		cameraPosition.add(cameraPanVelocity.tempStatMultiply(Settings.timeSpeed / getDrawer().getActualFPS()));
+		
+		//orbital rotation
+		if (orbitalAngularAcceleration.getR() != 0) orbitalAngularVelocity.add(orbitalAngularAcceleration);
+					
+		
+				
+		orbitalRotation.add(orbitalAngularVelocity);	
+					
+		rotationMatrix.calculateRotation(orbitalAngularVelocity);
+				
+		pORCoordsTemp.setPos(pointOfRotation);
+					
+		getCoordinates().subtract(pORCoordsTemp);
+		((PolyPoint) getCoordinates()).rotate(rotationMatrix);
+		getCoordinates().add(pORCoordsTemp);
+			
+		if (rotateWithOrbit ) {
+			cameraRotation.add(orbitalAngularVelocity);
+		}
+			
 		cameraRotation.add(cameraAngularVelocity.tempStatMultiply(Settings.timeSpeed / getDrawer().getActualFPS()));
+		
+		cameraPosition.add(cameraPanVelocity.tempStatMultiply(Settings.timeSpeed / getDrawer().getActualFPS()));
+		
 		
 		for (CameraMovable cOb : cameraObs) {
 			cOb.updateCameraPaintData(this);
@@ -104,12 +141,10 @@ public abstract class Camera extends JPanel implements Updatable, Physics_engine
 				cOb.paint(page);
 			}
 			
-	//		getDrawer().pause();
 			for (CameraMovable cOb : cameraObs) {
 				page.setColor(cOb.getColor());
 				cOb.paint(this,page);
 			}
-//			getDrawer().resumeNoWait();
 		
 		}catch(ConcurrentModificationException c) {
 			getDrawer().out.println(c + " in paint(Graphics) in Camera: " + getName());
@@ -146,7 +181,7 @@ public abstract class Camera extends JPanel implements Updatable, Physics_engine
 	
 	@Override
 	public void Update(double frames) {
-		//do nothing
+		//do nothing because we do updating in prePaintUpdate since this object is never used between frames
 	}
 	
 	
@@ -182,6 +217,31 @@ public abstract class Camera extends JPanel implements Updatable, Physics_engine
 
 	public Vector getRotation() {
 		return cameraRotation;
+	}
+	
+	public void setOrbitalRotation(Vector rotVec) {
+		orbitalRotation = rotVec;
+	}
+	
+
+	public void setOrbitalAngularVelocity(Vector newAngV) {
+		orbitalAngularVelocity = newAngV;
+	}
+
+	public void setOrbitalAngularAcceleration(Vector newAngAccel) {
+		orbitalAngularAcceleration = newAngAccel;
+	}
+	
+	public Vector getOrbitalRotation() {
+		return orbitalRotation;
+	}
+	
+	public Vector getOrbitalAngularVelocity() {
+		return orbitalAngularVelocity;
+	}
+	
+	public Vector getOrbitalAngularAcceleration() {
+		return orbitalAngularAcceleration;
 	}
 	
 	public int getFrameWidth() {

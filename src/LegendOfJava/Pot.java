@@ -44,8 +44,9 @@ public class Pot extends Physics_3DTexturedEquationedPolygon implements Hittable
 	protected double[] equation(double theta,double phi) {
 		double x,y,z;
 	
-	//	x = getXSize() * (Math.cos(theta))* Math.pow(phi,1/2) * Math.sin(phi * 1.2 + 1.5) ;
-	//	z = getZSize() * (Math.sin(theta)) * Math.pow(phi,1/2) * Math.sin(phi * 1.2 + 1.5) ;
+//		x = getXSize() * (Math.cos(theta))* Math.pow(phi,1/2) * Math.sin(phi * 1.2 + 1.5) ;
+	
+//		z = getZSize() * (Math.sin(theta)) * Math.pow(phi,1/2) * Math.sin(phi * 1.2 + 1.5) ;
 		
 		x = getXSize() * Math.cos(theta) - getXSize()/2;
 		y = getYSize() * phi - getYSize();

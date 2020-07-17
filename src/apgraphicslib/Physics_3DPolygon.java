@@ -13,7 +13,7 @@ public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimens
 	private double zSize;
 	
 	
-	public class AffineRotation3D extends AffineRotation {
+	public static class AffineRotation3D extends AffineRotation {
 		
 		//for the rot matrices, a 5 will be replaced by a trig function in the calculateRotation() method
 		private double[][] xRot = {
@@ -324,16 +324,13 @@ public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimens
 			com.add(cPoint);
 		}
 		
-		System.out.println(com);
-		
 		com.setPos(com.getX() / getPoints().size(),com.getY() / getPoints().size(),com.getZ() / getPoints().size());
 		
 		for (PolyPoint cP : getPoints() ) {
 			cPoint = (Point3D) cP;
 			cPoint.setPos(cPoint.getX() - com.getX(),cPoint.getY() - com.getY(), cPoint.getZ() - com.getZ());
 		}
-		
-		System.out.println(com);
+
 	}
 	
 	

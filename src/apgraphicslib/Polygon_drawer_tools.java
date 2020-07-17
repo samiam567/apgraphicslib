@@ -1,5 +1,6 @@
 package apgraphicslib;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -7,13 +8,16 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import apgraphicslib.Physics_2DPolygon.PolyPoint;
-import apgraphicslib.Physics_3DPolygon.Point3D;
 import calculator_parser_solver.Equation;
+
+
+
+//TODO add ability to save objects
 
 /**
  * 
  * @author apun1
- * {@summary tools to draw objects using the mouse. Needs update to really be used well}
+ * {@summary tools to draw objects using the mouse.}
  * {@code you must call startCapture() before you can add points }
  */
 public class Polygon_drawer_tools extends Physics_drawable implements MouseListener, MouseMotionListener, KeyListener, Drawable {
@@ -29,10 +33,12 @@ public class Polygon_drawer_tools extends Physics_drawable implements MouseListe
 	private boolean constCapture = false;
 	private boolean mirror;
 	private boolean rotating;
-	private double rotationSpeed;
+	private double rotationSpeed, newPointZ = 0, arrowKeyZOffset = 0;
 	
-	private Equation zAxis = new Equation("100*sin(x/100) - (y/20)^2"); 
+	private ScoreBoard zDisplay, zOffsetDisplay;
 	
+	private Equation zAxis = new Equation("(x/30)^2 + (y/30)^2"); 
+
 	
 	public static void main(String[] args) {
 		Camera3D cam = new Camera3D(new Coordinate3D(Settings.width/2, Settings.height/2, 0));
@@ -40,17 +46,29 @@ public class Polygon_drawer_tools extends Physics_drawable implements MouseListe
 	}
 	
 	public Polygon_drawer_tools(Object_draw drawer, Camera3D cam) {
-		super(drawer, Settings.width/2, Settings.height/2);
+		super(drawer, drawer.getFrameWidth()/2, drawer.getFrameHeight()/2);
 		this.cam = cam;
 		this.drawer = drawer;
 		drawer.addCamera(cam);
 		cam.setDrawer(drawer);
 		
+		zDisplay = new ScoreBoard(drawer,100, 25, "Current zPosition: ", newPointZ);
+		zDisplay.setColor(Color.cyan);
+		drawer.add(zDisplay);
+		
+		zOffsetDisplay = new ScoreBoard(drawer,120, 50, "Current arrowKeyZOffset: ", arrowKeyZOffset);
+		zOffsetDisplay.setColor(Color.cyan);
+		drawer.add(zOffsetDisplay);
+		
 		zAxis.setPrintStream(drawer.getOutputStream());
 		
 		object = new Physics_3DTexturedPolygon(drawer, drawer.getFrameWidth()/2, drawer.getFrameHeight()/2,0,5);
 		
+		
+		
 		drawer.add(object);
+		
+		object.setShowBorder(true);
 		cam.add(object);
 		setName("Polygon_drawer_tools for " + object.getName());
 		addListeners();
@@ -85,7 +103,7 @@ public class Polygon_drawer_tools extends Physics_drawable implements MouseListe
 		object.getDrawer().out.println("capture started");
 		object.getDrawer().out.println("Type ENTER when done");
 		object.getDrawer().out.println("type m to activate mirror mode");
-		object.getDrawer().out.println("type 3 to extrude the drawing"); //TODO Make this
+		object.getDrawer().out.println("use the UP and DOWN arrow keys to change the z position of new points");
 		object.getDrawer().out.println("right click and drag to rotate the drawing");
 		
 		object.getDrawer().remove(object); //this keeps many errors from happening that stem from live building
@@ -101,40 +119,39 @@ public class Polygon_drawer_tools extends Physics_drawable implements MouseListe
 				e.printStackTrace();
 			}
 		}
-		
-		
-		
+			
 	}
 	
 	public void endCapture() {
 		object.getDrawer().out.println("capture finished");
-		object.centerPoints();
+		
 		capturing = false;
 		object.getDrawer().remove(this);
 		drawer.pause();
 		object.setTexture2D("./src/LegendOfJava/assets/texture.jpg",zAxis);
 		object.getDrawer().add(object);
 		((Vector3D) object.angularVelocity).setIJK(1,1,1);
+		
+		object.centerPoints();
+		
+	//	object.setShowBorder(false);
+		
+		drawer.remove(zDisplay);
+		drawer.remove(zOffsetDisplay);
 		drawer.resume();
 	}
 	
-	private void addPoint(int x, int y) {
+	private void addPoint(int x, int y) {	
 		
-		zAxis.setVariableValue("x", x - object.getX());
-		zAxis.setVariableValue("x", y - object.getY());
-		
-		double z = zAxis.solve();
-		
-		object.addPoint(x - object.getX(),y - object.getY(),z);
+		object.addPoint(x - object.getX(),y - object.getY(),newPointZ);
 
 		if (mirror) {
-			object.addPoint(-(x - object.getX()),(y - object.getY()),z);
+			object.addPoint(-(x - object.getX()),(y - object.getY()),newPointZ);
 		}
 	}
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		object.getDrawer().out.println("mouse clicked");
-		
 		
 		if (capturing) {
 			addPoint(e.getX(),e.getY());
@@ -143,8 +160,7 @@ public class Polygon_drawer_tools extends Physics_drawable implements MouseListe
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		
-//		object.getDrawer().out.println("mouse pressed");
+
 		prevPoint = new Coordinate2D(e.getX(),e.getY());
 		
 		if(e.getButton() == MouseEvent.BUTTON1) {
@@ -159,7 +175,6 @@ public class Polygon_drawer_tools extends Physics_drawable implements MouseListe
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-//		object.getDrawer().out.println("mouse released");
 		constCapture = false;
 		rotating = false;
 		
@@ -182,11 +197,19 @@ public class Polygon_drawer_tools extends Physics_drawable implements MouseListe
 	
 	@Override
 	public void mouseMoved(MouseEvent e) {
-//		object.getDrawer().out.println("mouse moved");
+		zAxis.setVariableValue("x", e.getX() - object.getX());
+		zAxis.setVariableValue("y", e.getY() - object.getY());
+			
+		newPointZ = zAxis.solve() + arrowKeyZOffset;	
+		
 	}
 	
 	@Override
 	public void mouseDragged(MouseEvent e) {
+		zAxis.setVariableValue("x", e.getX() - object.getX());
+		zAxis.setVariableValue("y", e.getY() - object.getY());
+			
+		newPointZ = zAxis.solve() + arrowKeyZOffset;	
 		
 		
 		if (constCapture) {
@@ -234,6 +257,14 @@ public class Polygon_drawer_tools extends Physics_drawable implements MouseListe
 		}else if (e.getKeyChar() == 's') {
 			rotationSpeed+=rotAdd;
 			object.rotate(new Vector3D(-rotationSpeed,0,0));
+		}else if (e.getExtendedKeyCode() == 38) { //UP arrow key
+			arrowKeyZOffset++;
+			newPointZ++; //this will be updated later when the mouse moves but we change manualy here so the displayed number immediately changes
+			zOffsetDisplay.setScore(arrowKeyZOffset);
+		}else if (e.getExtendedKeyCode() == 40) { //DOWN arrow key
+			arrowKeyZOffset--;
+			newPointZ--; //this will be updated later when the mouse moves but we change manualy here so the displayed number immediately changes
+			zOffsetDisplay.setScore(arrowKeyZOffset);
 		}
 		
 		
@@ -265,6 +296,7 @@ public class Polygon_drawer_tools extends Physics_drawable implements MouseListe
 
 	@Override
 	public void paint(Graphics page) {
+		zDisplay.setScore(newPointZ);
 		
 		//draw crosshairs for mirroring
 		page.drawLine((int) object.getX(), 0,(int) object.getX(),(int) getDrawer().getFrameHeight());

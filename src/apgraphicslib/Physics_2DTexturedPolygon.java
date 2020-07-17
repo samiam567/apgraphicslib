@@ -86,6 +86,7 @@ public class Physics_2DTexturedPolygon extends Physics_2DPolygon implements Text
 	private P2DPTexture Texture;
 	private double platePointSize;
 	private LinkedList<RGBPoint2D> platePoints;
+	private boolean showBorder = false;
 	
 	public Physics_2DTexturedPolygon(Object_draw drawer, double x, double y, double ppSize) {
 		super(drawer, x, y);
@@ -310,6 +311,7 @@ public class Physics_2DTexturedPolygon extends Physics_2DPolygon implements Text
 		
 		@Override
 		public void paint(Camera cam, Graphics page) {
+			if (showBorder) super.paint(page);
 			
 			CameraPaintData data = getCameraPaintData(cam);
 			
@@ -325,11 +327,21 @@ public class Physics_2DTexturedPolygon extends Physics_2DPolygon implements Text
 	
 	@Override
 	public void paint(Graphics page) {
-		//super.paint(page); //this would paint the border around the texture
+		if (showBorder) super.paint(page);
+		
 		for (RGBPoint2D cPoint : platePoints) {
 	   		page.setColor(new Color(cPoint.R,cPoint.G,cPoint.B,cPoint.alpha));
 			page.fillRect((int) Math.round(getX() + cPoint.getX()-platePointSize/2),(int) Math.round(getY() + cPoint.getY()-platePointSize/2), (int) (platePointSize+1), (int) (platePointSize+1));
 		}	
+	}
+
+	/**
+	 * {@summary warning: this can be pretty expensive if cameras are being used}
+	 * {@code this must be called BEFORE the object is added to any cameras if it is true}
+	 * @param showBorder
+	 */
+	public void setShowBorder(boolean showBorder) {
+		this.showBorder = showBorder;
 	}
 
 }

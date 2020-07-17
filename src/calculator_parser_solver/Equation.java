@@ -12,14 +12,14 @@ import javax.swing.JOptionPane;
  */
 public class Equation extends One_subNode_node {
 	
-	public static final String[] operations = {"_","sin", "cos", "tan", "asin", "acos", "atan", "^", "rt", "sqrt", "*", "/", "+", "-" };
+	public static final String[] operations = {"_","abs","sin", "cos", "tan", "asin", "acos", "atan", "^", "rt", "sqrt", "*", "/", "+", "-" };
 	private static String[] letters = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
 	public static int[] numbers = {1,2,3,4,5,6,7,8,9,0};
 	public static String[] numberChars = {"1","2","3","4","5","6","7","8","9","0",".",","};
 	
-	private static ArrayList<ValueNode> variables = new ArrayList<ValueNode>();
+	private ArrayList<ValueNode> variables;
 	
-	static final boolean printInProgress = false;
+	public static final boolean printInProgress = false;
 	
 	private PrintStream out = System.out;
 			
@@ -30,7 +30,7 @@ public class Equation extends One_subNode_node {
 	 * @param equation
 	 */
 	public static void main(String[] args) { 
-		
+		testCalculator();
 		String input = "";
 		
 		while (true) { //if the user presses cancel the program will automatically terminate
@@ -58,6 +58,7 @@ public class Equation extends One_subNode_node {
 		orderOfOpsLevel = 0; //we are the top level
 		setParenthesisLevel(0);
 		
+		variables = new ArrayList<ValueNode>();
 		createTree(equation);
 	}
 	
@@ -89,17 +90,17 @@ public class Equation extends One_subNode_node {
 			
 			if (n.getParenthesisLevel() != parenthesisLevel) {
 				for (int i = 0; i < (n.getParenthesisLevel()-parenthesisLevel); i++) {
-					System.out.print("(");
+					out.print("(");
 				}
 				
 				for (int i = 0; i > (n.getParenthesisLevel()-parenthesisLevel); i--) {
-					System.out.print(")");
+					out.print(")");
 				}
 				parenthesisLevel = n.getParenthesisLevel();
 			}
-			System.out.print(n + " ");
+			out.print(n + " ");
 		}
-		System.out.println();
+		out.println();
 	}
 	
 	/**
@@ -133,6 +134,8 @@ public class Equation extends One_subNode_node {
 		//create nodes
 		
 		nodes = new EquationNode[0];
+		
+		variables.clear();
 
 		
 		String mode = "unknown";
@@ -147,7 +150,7 @@ public class Equation extends One_subNode_node {
 			if (i < equation.length()) {
 				cChar = equation.substring(i, i+1);
 					
-				System.out.println(cChar);
+				if (printInProgress) out.println(cChar);
 				
 				if (cChar.equals(" ")) continue; //skip spaces
 					
@@ -155,34 +158,40 @@ public class Equation extends One_subNode_node {
 					
 				if ( cChar.equals("(") ) { //it is an open-parenthesis, and the parenthesis level goes up
 					mode = "openParent";
-					System.out.println("openParent");
+					if (printInProgress) out.println("openParent");
 				}else if ( cChar.equals(")") ) { //it is an end-parenthesis, and the parenthesis level goes down
 					mode = "closeParent";
-					System.out.println("closeParent");			
+					if (printInProgress) out.println("closeParent");			
 				}else if (indexOf(cChar,numberChars) != -1) { //it is a number, and must be a value
 					mode = "numberInput";
-					System.out.println("numbInput");
+					if (printInProgress) out.println("numbInput");
 				}else if (indexOf(cChar,letters) != -1) { //it is a letter, and if it is a single letter it is a variable, but if there are multiple letters it is an operation
 					if (! mode.equals("multi-char-operation")) {
 						mode = "letterInput";
-						System.out.println("letter");
+						if (printInProgress) out.println("letter");
 						if (prevMode.equals("letterInput")) {
 							mode = "multi-char-operation";
-							System.out.println("multi-char-operation");
+							if (printInProgress) out.println("multi-char-operation");
 						}
 					}
 				}else {
 					mode = "operation";
-					System.out.println("operation");	
+					if (printInProgress) out.println("operation");	
 				}
 			}else { //we are at the end of the equation
 				mode = "end";
 			}
 			
 			
+			if (indexOf(inputBuffer,operations) != -1) { //catch if we have two operations in a row ex: 1 + sin(25) or 1 + _3
+				addToNodesArray(createOperation(inputBuffer,parenthesisLevel));
+				inputBuffer = "";
+				prevMode = "unknown";
+			}
+			
 			
 			if ((! prevMode.equals(mode)) && (! prevMode.equals("unknown")) ){
-				System.out.println("modeChange:" + inputBuffer);
+				if (printInProgress) out.println("modeChange:" + inputBuffer);
 				if (prevMode.equals("letterInput") && (! mode.equals("multi-char-operation"))) { //create a variable 
 					ValueNode newVariable = new ValueNode(inputBuffer,parenthesisLevel);
 					variables.add(newVariable);
@@ -215,7 +224,7 @@ public class Equation extends One_subNode_node {
 			
 		}
 		
-		printNodeArray(nodes);
+		if (printInProgress) printNodeArray(nodes);
 		
 		if (parenthesisLevel > 0) {
 			Exception e = new Exception("ParenthesisError: missing close-parenthesis");
@@ -243,7 +252,7 @@ public class Equation extends One_subNode_node {
 	 * @return
 	 */
 	private EquationNode getTree(EquationNode[] arr) {
-		printNodeArray(arr);
+		if (printInProgress) printNodeArray(arr);
 		
 		//find the lowest level node/operation
 		EquationNode lowestNode = arr[0];
@@ -257,17 +266,17 @@ public class Equation extends One_subNode_node {
 			}
 		}
 		
-		System.out.println("lowestNode: " + lowestNode + " lowestIndx: " + lowestIndx);
+		if (printInProgress) out.println("lowestNode: " + lowestNode + " lowestIndx: " + lowestIndx);
 		
 		try {
 			Two_subNode_node node = (Two_subNode_node) lowestNode;
-			System.out.println("two_subnode");
+			if (printInProgress) out.println("two_subnode");
 			node.setLeftSubNode(getTree(resizeNodesArray(arr,0,lowestIndx-1)));
 			node.setRightSubNode(getTree(resizeNodesArray(arr,lowestIndx+1,arr.length-1)));
 		}catch(ClassCastException c) {
 			try {
 				One_subNode_node node = (One_subNode_node) lowestNode;
-				System.out.println("one_subnode");
+				if (printInProgress) out.println("one_subnode");
 				if (lowestIndx != 0) {
 					Exception e = new Exception("there should be nothing to the right of a lowest-priority single-node operation");
 					e.printStackTrace(out);
@@ -275,7 +284,7 @@ public class Equation extends One_subNode_node {
 				
 				node.setSubNode(getTree(resizeNodesArray(arr,lowestIndx+1,arr.length-1)));
 			}catch(ClassCastException e) {
-				System.out.println("valueNode");
+				if (printInProgress) out.println("valueNode");
 			}
 		}
 		
@@ -329,6 +338,9 @@ public class Equation extends One_subNode_node {
 		case("-"):
 			node = new Subtraction();
 			break;
+		case("abs"):
+			node = new Absolute_Value();
+			break;
 		default:
 			Exception e = new Exception("operation not found in createOperation: " + op);
 			e.printStackTrace(out);
@@ -341,6 +353,10 @@ public class Equation extends One_subNode_node {
 		return node;
 	}
 	
+	/**
+	 * 
+	 * @return the solution to the equation. If the equation has been solved before and no modifications have been made, it will simply return the value of the previous calculation.
+	 */
 	public double solve() {
 		return getValue();
 	}
@@ -370,6 +386,21 @@ public class Equation extends One_subNode_node {
 	}
 	
 	/**
+	 * {@summary sets the value of the variable with the passed index to the passed value}
+	 * @param varIndx
+	 * @param value
+	 */
+	public void setVariableValue(int varIndx, double value) {
+		try {
+			variables.get(varIndx).setValue(value);
+		}catch(IndexOutOfBoundsException i) {
+			Exception e = new Exception("Variable index not found. That Variable dosen't exist. Indx: " + varIndx);
+			e.printStackTrace(out);
+		}
+	}
+
+
+	/**
 	 * @param varName
 	 * @return the index of the first instance of a variable with the passed name, -1 if the variable does not appear in the equation
 	 */
@@ -396,59 +427,67 @@ public class Equation extends One_subNode_node {
 		}
 	}
 	
-	/**
-	 * {@summary sets the value of the variable with the passed index to the passed value}
-	 * @param varIndx
-	 * @param value
-	 */
-	public void setVariableValue(int varIndx, double value) {
-		try {
-			variables.get(varIndx).setValue(value);
-		}catch(IndexOutOfBoundsException i) {
-			Exception e = new Exception("Variable index not found. That Varaible dosen't exist. Indx: " + varIndx);
-			e.printStackTrace(out);
-		}
-	}
-	
-	
-
 	@SuppressWarnings("unused")
-	private void testCalculator() {
+	private static void testCalculator() {
+		System.out.println("Testing calculator to ensure accuracy...");
+		
+		boolean successful = true;
+		
 		Equation e1 = new Equation("1 + 1");  // start simple
 		Equation e2 = new Equation("1 + 2 * 6^2"); //get a little more complicated
 		Equation e3 = new Equation("((4^2*3-45)^(1+1*4) / 3) * 2"); //REALLY complicated
 		Equation e4 = new Equation("45/2 + sin(10-5)/3"); //testing Sine
 		Equation e5 = new Equation("4rt(tan(atan(0.12))) + 13-sqrt4"); //test sin, asin,sqrt,rt
+		Equation e6 = new Equation("sqrt(3^2 + 4^2) * ( (abs(3)/3 * abs(4)/4) * (_abs(3)/3 + _abs(4)/4) - 1)"); //test abs and negatives
 		
 		if (e1.solve() == (1+1)) { 
 			System.out.println("e1 worked!");
 		}else {
 			System.out.println("e1 failed :(");
+			successful = false;
 		}
 		
 		if (e2.solve() == (1 + 2 * Math.pow(6,2))) { 
 			System.out.println("e2 worked!");
 		}else {
 			System.out.println("e2 failed :(");
+			successful = false;
 		}
 		
 		if (e3.solve() == ((Math.pow((Math.pow(4,2)*3-45),(1+1*4)) / 3) * 2 )) { 
 			System.out.println("e3 worked!");
 		}else {
 			System.out.println("e3 failed :(");
+			successful = false;
 		}
 		
 		if (e4.solve() == (45D/2 + Math.sin(10-5) / 3) ) {
 			System.out.println("e4 worked!");
 		}else {
 			System.out.println("e4 failed :(");
+			successful = false;
 		}
 		
 		if (e5.solve() == Math.pow( 4,1/(Math.tan(Math.atan(0.12))) ) + 13-Math.sqrt(4) ){
 			System.out.println("e5 worked!");
 		}else {
 			System.out.println("e5 failed :(");
+			successful = false;
 		}
+		
+		if (e6.solve() ==  Math.sqrt(3*3 + 4*4) * ( (Math.abs(3)/3 * Math.abs(4)/4) * (-Math.abs(3)/3 + -Math.abs(4)/4) - 1)){
+			System.out.println("e6 worked!");
+		}else {
+			System.out.println("e6 failed :(");
+			successful = false;
+		}
+		
+		if (successful) {
+			System.out.println("test complete. All systems functional");
+		}else {
+			System.out.println("test FAILED. One or more equations gave an incorrect answer.");
+		}
+		
 	}
 
 

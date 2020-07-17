@@ -121,7 +121,7 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 	public boolean paintInProgress = false;
 	protected int collisionCheckGain = 5;
 	private double minZToPaintPoints = -Settings.distanceFromScreen;
-	private boolean isTangible = true;
+	private boolean isTangible = true, showBorder = false;
 	
 	public Physics_3DTexturedPolygon(Object_draw drawer, double x, double y, double z, double ppSize) {
 		super(drawer, x, y, z);
@@ -242,7 +242,7 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 		double drP = pp1.r - pp2.r;
 		
 
-		//solve for dTheta/dr and dPhi/dr
+		//solve for dr/dTheta and dr/dPhi
 		double[] DthetaAndDPhi = Physics_engine_toolbox.solveLinearSystem(dthetaT, dphiT, drT, dthetaP, dphiP, drP);
 		
 		
@@ -302,7 +302,33 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 	}
 	
 	
-	
+	/**
+	 * {@summary uniformly translates all the points in the object so that the engine center of the object is roughly in line with the Polygon's estimated center of mass}
+	 * {@code This must be called AFTER setTexture() if you want platePoints to be centered (which you probably do)}
+	 */
+	@Override
+	public void centerPoints() {
+		Coordinate3D com = new Coordinate3D(0,0,0); 
+		Coordinate3D cPoint;
+		for (PolyPoint cP : getPoints() ) {
+			cPoint = (Coordinate3D) cP;
+			com.add(cPoint);
+		}
+		
+		com.setPos(com.getX() / getPoints().size(),com.getY() / getPoints().size(),com.getZ() / getPoints().size());
+		
+		for (PolyPoint cP : getPoints() ) {
+			cPoint = (Point3D) cP;
+			cPoint.setPos(cPoint.getX() - com.getX(),cPoint.getY() - com.getY(), cPoint.getZ() - com.getZ());
+		}
+		
+		for (PolyPoint cP : platePoints ) {
+			cPoint = (Point3D) cP;
+			cPoint.setPos(cPoint.getX() - com.getX(),cPoint.getY() - com.getY(), cPoint.getZ() - com.getZ());
+		}
+		
+
+	}
 	
 	/**
 	 * {@summary sets the texture of the object. Note that the texture cannot be a .jpeg file}
@@ -428,16 +454,22 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 		}
 			
 		public void createCameraPaintData(Camera cam) {
+			if (showBorder) super.createCameraPaintData(cam);
+			
 			cameraDataSets.add(new CameraPaintData(cam));
 		}
 		
 		@Override
 		public void deleteCameraPaintData(Camera cam) {
+			if (showBorder) super.deleteCameraPaintData(cam);
+			
 			cameraDataSets.remove(getCameraPaintData(cam));
 		}
 		
 		
 		public void updateCameraPaintData(Camera cam) {	
+			
+			if (showBorder) super.updateCameraPaintData(cam);
 			
 			CameraPaintData data = getCameraPaintData(cam);
 
@@ -573,7 +605,12 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 		
 		@Override
 		public void paint(Camera cam, Graphics page) {
-
+			
+			if (showBorder) {
+				super.paint(cam,page);
+			}
+			
+			
 			CameraPaintData data = getCameraPaintData(cam);
 			
 			ArrayList<RGBPoint3D> dataPointSet;
@@ -597,6 +634,7 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 			
 			
 			
+			
 			RGBPoint3D cPoint;
 	 		for (int i = 0; i < dataPointSet.size(); i++ ) {
 	 			cPoint = dataPointSet.get(i);
@@ -615,7 +653,10 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 	
 	@Override
 	public void paint(Graphics page) {
-	
+		
+		if (showBorder) {
+			super.paint(page);
+		}
 		
  		if (paintInProgress) {
 			FramePoint ccPoint;
@@ -752,6 +793,164 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 	public void setTexture2D(String fileName) {
 		setTexture2D(fileName, new Equation("0"));
 	}
+	
+	/**
+	 * {@summary finds the closest point to the passed one with the distance being calculated in accordance to the passed equation}
+	 * {@code *throws away negative distances*}
+	 * @param point
+	 * @param equation
+	 */
+	private Point3D findClosestPoint(Coordinate3D point, String equation) {
+		Equation distance = new Equation(equation);
+		
+		Point3D cPoint, closestPoint = (Point3D) getPoints().get(0);
+		double closestDistance = Double.MAX_VALUE;
+		for (PolyPoint cP : getPoints()) {
+			cPoint = (Point3D) cP;
+			
+			//set the values into the distance equation
+			
+			distance.setVariableValue("x", cPoint.getX()-point.getX());
+			distance.setVariableValue("y", cPoint.getY()-point.getY());
+			distance.setVariableValue("z", cPoint.getZ()-point.getZ());
+			
+			
+			if ((distance.solve() < closestDistance) && (distance.solve() >= 0) ) {
+				closestPoint = cPoint;
+				closestDistance = distance.solve();
+			}
+			
+		}
+		
+		return closestPoint;
+		
+	}
+	
+	
+	private double getZAtPoint_Surface(double x, double y) {
+		Point3D pXY, pX, pY, p;
+
+		//the second part of these equations is to make the whole thing negative if the x and y aren't the right signs
+		pXY = findClosestPoint(new Coordinate3D(0,0,0), "sqrt(x^2 + y^2) * ( (abs(x)/x * abs(y)/y) * (abs(x)/x + abs(y)/y) - 1)"); //x and y must both be positive
+		p = findClosestPoint(new Coordinate3D(0,0,0), "sqrt(x^2 + y^2) * ( (abs(x)/x * abs(y)/y) * (_abs(x)/x + _abs(y)/y) - 1)"); //x and y must both be negative
+		pX = findClosestPoint(new Coordinate3D(0,0,0), "sqrt(x^2 + y^2) * ( (abs(x)/x - abs(y)/y) - 1)"); //x must be positive and y must be negative
+		pY = findClosestPoint(new Coordinate3D(0,0,0), "sqrt(x^2 + y^2) * ( (abs(y)/y - abs(x)/x) - 1)"); //y must be positive and z must be negative
+		
+		
+		//try to make sure we have at least three unique points (this is not 100% accurate but it should give us an hint if it's not working)
+		if (pXY.equals(p)) {
+			Exception e = new Exception("pXY == p");
+			e.printStackTrace();
+		}
+		if (pXY.equals(pX)) {
+			Exception e = new Exception("pXY == pX");
+			e.printStackTrace();
+		}
+		if (pX.equals(pY)) {
+			Exception e = new Exception("pX == pY");
+			e.printStackTrace();
+		}
+		
+		/*
+		To get dr/dx and dr/dy we must solve the equation  dx (dz/dx) + dy (dz/dy) = dz
+		Where dx, dy, and dr are knowns. Since there are two unknowns we must use 4 points (or 2 unique combinations of 2 points) to get 2 equations with 2 sets of dx, dy, and dr.
+		*/
+		double dX1 = pXY.getX() - p.getX();
+		double dY1 = pXY.getY() - p.getY();
+		double dZ1 = pXY.getZ() - p.getZ();
+		
+		double dX2 = pXY.getX() - pY.getX();
+		double dY2 = pX.getY() - pY.getY();
+		double dZ2 = pX.getZ() - pY.getZ();
+		
+		double[] drdx_drdy = Physics_engine_toolbox.solveLinearSystem(dX1, dY1, dZ1, dX2, dY2, dZ2);
+		
+		return pXY.getZ() + (x - pXY.getX()) * drdx_drdy[0] + (y - pXY.getY()) * drdx_drdy[1];	
+		
+	}
+	
+	
+	/**
+	 * {@summary sets the texture of the object but treats the object as a thin sheet (or a 2D plane) in 3D rather than as a 3D shape with an inside. }
+	 *  {@code could theoretically work but deprecated because there needs to be points throughout the surface and that will mess up the polygon border of the surface }
+	 */
+	@Deprecated
+	public void setTexture_Surface(String fileName) {
+		if (getPoints().size() == 0) {
+			Exception e = new Exception("Physics_TexturePolygon must have points for a texture to be added");
+			e.printStackTrace();
+		}
+		
+		Texture = new P3DPTexture(fileName);
+
+		
+		// remove old plate points
+		getPlatePoints().clear();
+		
+
+		//un-find all frame points
+		try {
+			FramePoint cPoint;
+			for (PolyPoint cP : getPoints()) {
+				cPoint = (FramePoint) cP;
+				cPoint.isFound = false;
+			}
+		}catch(ClassCastException c) {
+			getDrawer().out.println("Non-framePoint in points list (Physics_2DTexturedPolygon) Name: " + getName());
+			c.printStackTrace();
+		}
+		
+		super.Update(0.001);		
+		Polygon framePoly = new Polygon(pointXValues,pointYValues,numPoints);
+		RGBPoint3D newPoint;
+		int spiralNum = -2,spiralSize=1,direction = 0, pointsOut = 0;
+		double x = 0, y = 0, xInc = 0, yInc = platePointSize;
+		while (pointsOut <= (getXSize() * getYSize())/platePointSize ) {
+			
+			for (int pointNum = 0; pointNum < spiralSize; pointNum++) {
+				x += xInc;
+				y += yInc;
+				
+				
+				//if our spiral guess was inside our polygon, add the plate point to the shape
+				if (framePoly.contains(getX()+x,getY()+y)) {
+					try {
+						
+						newPoint = Texture.getRGBPoint(x,y,getZAtPoint_Surface(x,y),0,0,false);
+						getPlatePoints().add(newPoint);
+					}catch(ArrayIndexOutOfBoundsException a) {
+						System.out.println("array out of bounds");
+					}
+				}else {				
+					pointsOut++;				
+				}
+
+			}
+			spiralNum++;
+			direction++;
+
+			//size of spiral
+			if (spiralNum % 2 == 1) spiralSize++;
+			
+			//direction
+			if (direction % 4 == 0) {
+				xInc = 0;
+				yInc = platePointSize;
+			}else if (direction % 4 == 1) {
+				xInc = -platePointSize;
+				yInc = 0;
+			}else if (direction % 4 == 2) {
+				xInc = 0;
+				yInc = -platePointSize;
+			}else if (direction % 4 == 3) {
+				xInc = platePointSize;
+				yInc = 0;
+			}
+		}
+		
+		getDrawer().out.println("Setting of texture complete.");
+		
+	}
 
 	/** 
 	 * @param gain the larger the gain the less accurate it is
@@ -866,6 +1065,14 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 
 	public void setIsTangible(boolean isTangible) {
 		this.isTangible = isTangible;
+	}
+
+	/**
+	 * {@summary warning: this can be pretty expensive if cameras are being used}
+	 * @param showBorder
+	 */
+	public void setShowBorder(boolean showBorder) {
+		this.showBorder = showBorder;
 	}
 	
 

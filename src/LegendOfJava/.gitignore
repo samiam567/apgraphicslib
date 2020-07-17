@@ -20,3 +20,12 @@
 /SwordArm.class
 /Sword.class
 /PlayerBodyPartAble.class
+/EnemyCharacter$EnemyAttackTimer.class
+/FloorWall.class
+/HealthBar$1.class
+/HealthBar.class
+/Hittable.class
+/LOJAudioManager.class
+/MainCharacter$JumpBackTimer.class
+/MainCharacterHead.class
+/Pot.class

@@ -1,12 +1,21 @@
 package apgraphicslib;
 
+import apgraphicslib.Physics_3DPolygon.AffineRotation3D;
+
 public class Camera3D extends Camera2D {
 	
 	public Camera3D(Coordinate3D cameraPosition) {
 		super(cameraPosition);
-		cameraPanVelocity = new Vector3D(0,0,0);
-		cameraRotation = new Vector3D(0,0,0);
-		cameraAngularVelocity = new Vector3D(0,0,0);
+		cameraPanVelocity = new Vector3D();
+		cameraRotation = new Vector3D();
+		cameraAngularVelocity = new Vector3D();
+		
+		orbitalRotation = new Vector3D();
+		orbitalAngularVelocity = new Vector3D();
+		orbitalAngularAcceleration = new Vector3D();
+		
+		rotationMatrix = new AffineRotation3D();
+		pORCoordsTemp = new Coordinate3D(0,0,0);
 	}
 
 	@Override

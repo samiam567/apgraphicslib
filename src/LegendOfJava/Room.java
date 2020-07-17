@@ -132,6 +132,7 @@ public class Room extends Physics_3DDrawMovable implements Updatable, Three_dime
 			frontWall.setTexture("./src/LegendOfJava/assets/Dungeon wall 7by3.png");
 		}else {
 			frontWall.setTexture("./src/LegendOfJava/assets/Dungeon side wall 7by3.png");
+			
 		}
 		
 		if (leftRoom != null) {

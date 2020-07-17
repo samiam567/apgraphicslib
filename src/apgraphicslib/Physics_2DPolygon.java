@@ -19,7 +19,7 @@ public class Physics_2DPolygon extends Physics_2DDrawMovable implements Updatabl
 		public void rotate(Vector rotation);
 	}
 	
-	protected class AffineRotation {
+	protected static class AffineRotation {
 		protected double a,b,c,d;
 		protected Vector rotation;
 		
@@ -36,7 +36,7 @@ public class Physics_2DPolygon extends Physics_2DDrawMovable implements Updatabl
 		}
 	}
 	
-	protected class Point2D extends Coordinate2D implements PolyPoint, Two_dimensional {
+	protected static class Point2D extends Coordinate2D implements PolyPoint, Two_dimensional {
 		protected double prevAngle = 0;
 
 		public Point2D(double x, double y) {
@@ -66,6 +66,9 @@ public class Physics_2DPolygon extends Physics_2DDrawMovable implements Updatabl
 	protected Vector angularAcceleration = new Vector();
 	private Vector angVFrames; //used by the Update() method
 	
+	protected boolean rotateWithOrbit = false;
+	protected Coordinate2D pointOfRotation = coordinates;
+	
 	protected Vector orbitalRotation = new Vector();
 	protected Vector orbitalAngularVelocity = new Vector();
 	protected Vector orbitalAngularAcceleration = new Vector();
@@ -78,10 +81,6 @@ public class Physics_2DPolygon extends Physics_2DDrawMovable implements Updatabl
 	protected int numPoints = 0;
 	
 	private ArrayList<PolyPoint> points = new ArrayList<PolyPoint>();
-	
-	protected Coordinate2D pointOfRotation = coordinates;
-
-	protected boolean rotateWithOrbit = false;
 	
 	private boolean isFilled = false;
 
@@ -163,22 +162,23 @@ public class Physics_2DPolygon extends Physics_2DDrawMovable implements Updatabl
 		
 		//orbital rotation
 		if (orbitalAngularAcceleration.getR() != 0) orbitalAngularVelocity.add(orbitalAngularAcceleration.tempStatMultiply(frames));
-			orbitalAngVFrames = orbitalAngularVelocity.tempStatMultiply(frames);
 			
-			orbitalRotation.add(orbitalAngVFrames);	
+		orbitalAngVFrames = orbitalAngularVelocity.tempStatMultiply(frames);
 			
-			rotationMatrix.calculateRotation(orbitalAngVFrames);
+		orbitalRotation.add(orbitalAngVFrames);	
 			
-			pORCoordsTemp.setPos(pointOfRotation);
+		rotationMatrix.calculateRotation(orbitalAngVFrames);
 			
-			getCoordinates().subtract(pORCoordsTemp);
-			((PolyPoint) getCoordinates()).rotate(rotationMatrix);
-			getCoordinates().add(pORCoordsTemp);
+		pORCoordsTemp.setPos(pointOfRotation);
 			
-			if (rotateWithOrbit ) {
-				updatePoints(); //this will rotate the points with the orbital motion
-				rotation.add(orbitalAngVFrames);
-			}
+		getCoordinates().subtract(pORCoordsTemp);
+		((PolyPoint) getCoordinates()).rotate(rotationMatrix);
+		getCoordinates().add(pORCoordsTemp);
+		
+		if (rotateWithOrbit ) {
+			updatePoints(); //this will rotate the points with the orbital motion
+			rotation.add(orbitalAngVFrames);
+		}
 			
 		
 		//rotation about a point
