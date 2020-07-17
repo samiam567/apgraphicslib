@@ -32,20 +32,25 @@ public class Room extends Physics_3DDrawMovable {
 	public class Room_floor extends Rectangle3D_Textured implements Tangible {
 
 		public Room_floor(Room parent) {
-			super(parent.getDrawer(), parent.getX(), parent.getY() + roomHeight/2, parent.getZ(), roomWidth, roomHeight,10);
+			super(parent.getDrawer(), parent.getX(), parent.getY() + roomHeight/2, parent.getZ(), roomWidth, roomHeight,2);
 			setTexture2D("./src/LegendOfJava2/assets/texture.jpg");
 			rotatePoints(new Vector3D(Math.PI/2,0,0));
 			
 			runner.drawer.add(this);
 			runner.camera.add(this);
+			
+			setCollisionCheckingAccuracy(3);
 		}
 		
 		
 		public void collision(CollisionEvent e) {
 			super.collision(e);
-			((Vector3D) runner.Ryan.getAcceleration()).setR(0);
-			runner.Ryan.getSpeed().setR(0);
-			runner.Ryan.setPos(runner.Ryan.getX(), runner.Ryan.getY()-1 ,runner.Ryan.getZ());
+			
+			if (e.objectHit.equals(runner.Ryan.head)) {
+				((Vector3D) runner.Ryan.getAcceleration()).setR(0);
+				runner.Ryan.getSpeed().setR(0);
+				runner.Ryan.setPos(runner.Ryan.getX(), runner.Ryan.getY()-1 ,runner.Ryan.getZ());
+			}
 		}
 	}
 

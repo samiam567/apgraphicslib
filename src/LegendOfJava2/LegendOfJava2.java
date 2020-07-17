@@ -13,6 +13,8 @@ public class LegendOfJava2 {
 	
 	Controller controller;
 	
+	public double gravity = 900;
+	
 	public static void main(String[] args) {
 		new LegendOfJava2();
 	}
@@ -24,11 +26,12 @@ public class LegendOfJava2 {
 		drawer.start();
 		Ryan = new Character(this, drawer.getFrameWidth()*0.5, drawer.getFrameHeight()*0.5, 0);
 		
-		Ryan.getAcceleration().setIJ(0,900);
+		Ryan.getAcceleration().setIJ(0,gravity);
 		
-		camera.setPointOfRotation(Ryan.getCoordinates());
-		camera.setRotateWithOrbit(true);
+	//	camera.setPointOfRotation(Ryan.getCoordinates());
+	//	camera.setRotateWithOrbit(true);
 		camera.setCameraPanVelocity(Ryan.getSpeed());
+		
 
 		APLabel LOJTitle = new APLabel(drawer, drawer.getFrameWidth()*0.5, 25);
 		LOJTitle.setName("LOJ Title text");

@@ -3,12 +3,17 @@ package LegendOfJava2;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
+import LegendOfJava.PlayerHead;
+import LegendOfJava.PlayerTorso;
+import apgraphicslib.Coordinate2D;
 import apgraphicslib.Coordinate3D;
 import apgraphicslib.Physics_3DDrawMovable;
 import apgraphicslib.Physics_3DTexturedEquationedPolygon;
 import apgraphicslib.Physics_3DTexturedPolygon;
+import apgraphicslib.Physics_engine_toolbox;
 import apgraphicslib.Settings;
 import apgraphicslib.Tangible;
+import apgraphicslib.Three_dimensional;
 import apgraphicslib.Updatable;
 import apgraphicslib.Vector3D;
 import shapes.Cylinder;
@@ -20,6 +25,8 @@ public class Character extends Physics_3DDrawMovable {
 	
 	public static double headDiameter;
 	private static double Upper_arm_length = Settings.height * 0.1;
+	private static double height;
+	public double jumpSpeed = -1000;
 	
 	Character_Head head;
 	private Upper_arm left_arm, right_arm;
@@ -36,10 +43,15 @@ public class Character extends Physics_3DDrawMovable {
 		double frameDiagonal = Math.sqrt(Math.pow(runner.drawer.getFrameWidth(),2) + Math.pow(runner.drawer.getFrameHeight(), 2));
 		headDiameter = frameDiagonal/20;
 		
+		
+		//must be updated as new bodyparts are added
+		height = headDiameter/2 + Upper_arm_length;
+		
+		
 		head = new Character_Head(this,x,y,z);
 		left_arm = new Upper_arm(this,head,-1);
 		right_arm = new Upper_arm(this,head,1);
-	
+		
 	}
 	
 	/**
@@ -60,13 +72,15 @@ public class Character extends Physics_3DDrawMovable {
 	public void Update(double frames) {
 		runner.camera.setCameraPanVelocity(getSpeed());
 	}
+	
+	
 
 
 	@Override
 	public void paint(Graphics page) {}
 	
 	
-	public class Character_Head extends Egg {
+	public class Character_Head extends Egg implements Tangible{
 		
 		private Character parent;
 		
@@ -86,9 +100,56 @@ public class Character extends Physics_3DDrawMovable {
 			acceleration = parent.acceleration;
 		}
 		
+		@Override
+		public void Update(double frames) {
+			//link this with the head
+			speed = parent.speed;
+			acceleration = parent.acceleration;
+			super.Update(frames);
+		}
+		
+		public boolean checkForCollision(Coordinate2D point, Tangible ob, double radius) {
+			
+			//getting the three-dimensional coordinates of point
+			Coordinate3D point3D;
+			try {
+				//try to make the point a 3D point
+				point3D = (Coordinate3D) point;
+			}catch(ClassCastException c) { //if the point was 2D, just set it at zPos 0 and carry on
+				point3D = new Coordinate3D(point.getX(),point.getY(),0);
+			}
+			
+			
+			
+			//getting the Three-dimensional equivalent position of the object the point is in
+			double obX = ob.getX();
+			double obY = ob.getY();
+			double obZ;
+			try {
+				obZ = ((Three_dimensional) ob).getZ();
+			}catch(ClassCastException c) {
+				obZ = 0;
+			}
+			
+			
+			//do a cylindrical boundary box covering the character
+			if ((point.getY() + obY >= getY() - headDiameter/2 - radius/2) && (point.getY() + obY <= getY() + height + radius/2) ) {
+				return (Physics_engine_toolbox.distance2D(getX(), getZ(), obX + point3D.getX(), obZ + point3D.getZ()) < headDiameter + radius);
+			}
+			
+			return false;
+		}
+		
+		
+		public Coordinate3D checkForCollision(Tangible object) {
+			//just worry about other obs hitting this as this method would take too long to be worth it. 
+			//Note that this means characters cannot hit each other
+			return null;
+		}	
+		
 	}
 	
-	private class Upper_arm extends Physics_3DTexturedEquationedPolygon implements Tangible {
+	private class Upper_arm extends Physics_3DTexturedEquationedPolygon {
 		
 		private Character parent;
 		
@@ -110,13 +171,20 @@ public class Character extends Physics_3DDrawMovable {
 				cPoint.setPos(cPoint.getX(), cPoint.getY() + getYSize()*2);
 			}
 			
-			//link this with the head
-			speed = head.getSpeed();
-			acceleration = head.getAcceleration();
-			angularAcceleration = head.getAngularAcceleration();
+			
 			
 			parent.runner.drawer.add(this);
 			parent.runner.camera.add(this);
+		}
+		
+		@Override
+		public void Update(double frames) {
+			//link this with the head
+			speed = head.getSpeed();
+			acceleration = head.getAcceleration();
+			angularVelocity = head.getAngularVelocity();
+			angularAcceleration = head.getAngularAcceleration();
+			super.Update(frames);
 		}
 		
 		//make a cylinder whose center point is at the far end

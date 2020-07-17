@@ -57,8 +57,8 @@ public class Controller implements MouseMotionListener, MouseListener, KeyListen
 		}
 		
 		if (e.getKeyChar() == ' ') { //space
-
-
+			runner.Ryan.getSpeed().setJ(runner.Ryan.getSpeed().getJ() + runner.Ryan.jumpSpeed);
+			runner.Ryan.getAcceleration().setJ(runner.Ryan.getAcceleration().getJ() + runner.gravity);
 		}
 		
 	}
@@ -111,7 +111,7 @@ public class Controller implements MouseMotionListener, MouseListener, KeyListen
 		Vector3D moveVec = new Vector3D(0/*e.getYOnScreen()-runner.drawer.getFrameHeight()/2*/,e.getXOnScreen()-runner.drawer.getFrameWidth()/2,0);
 	//	System.out.println(moveVec);
 		moveVec.multiply(0.01);
-		runner.camera.getRotation().add(moveVec);
+		((Vector3D) runner.camera.getRotation()).add(moveVec);
 		
 		mouseController.mouseMove(runner.drawer.getFrameWidth()/2,runner.drawer.getFrameHeight()/2);
 	}
