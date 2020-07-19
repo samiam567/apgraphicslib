@@ -9,7 +9,7 @@ public class Physics_runner {
 	
 	public static void main(String[] args) {
 		Settings.perspective = true;
-		Settings.targetFPS = 60;
+		Settings.targetFPS = 40;
 		
 		
 		drawer = new Object_draw();
@@ -22,7 +22,7 @@ public class Physics_runner {
 		drawer.add(fcps);
 		
 		
-		Cylinder square1 = new Cylinder(drawer, Settings.width/2, Settings.height/2,0,100,100,100,10);
+		Cylinder square1 = new Cylinder(drawer, Settings.width/2, Settings.height/2,0,100,100,100,5);
 		square1.setIsFilled(true);
 		
 		square1.setTexture("./src/LegendOfJava/assets/strawberry.jpg");

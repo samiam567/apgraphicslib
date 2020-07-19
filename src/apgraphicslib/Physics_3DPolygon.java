@@ -1,90 +1,12 @@
 package apgraphicslib;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
-
-import apgraphicslib.Physics_2DPolygon.AffineRotation;
-import apgraphicslib.Physics_2DPolygon.PolyPoint;
-import apgraphicslib.Physics_2DTexturedPolygon.RGBPoint2D;
 
 public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimensional, Rotatable {
 	
 	private double zSize;
 	
-	
-	public static class AffineRotation3D extends AffineRotation {
-		
-		//for the rot matrices, a 5 will be replaced by a trig function in the calculateRotation() method
-		private double[][] xRot = {
-				{1,0,0,0}, //0
-				{0,5,5,0}, //1
-				{0,5,5,0}, //2
-				{0,0,0,1}, //3
-		};
-		private double[][] yRot = {
-				{5,0,5,0}, //0
-				{0,1,0,0}, //1
-				{5,0,5,0}, //2
-				{0,0,0,1}, //3
-		}; 
-		private double[][] zRot = {
-				{5,5,0,0}, //0
-				{5,5,0,0}, //1
-				{0,0,1,0}, //2
-				{0,0,0,1}, //3
-		};
-		
-		private double[][] affRotMatrix;
-		private AffineRotation planeRotTheta = new AffineRotation(), planeRotPhi = new AffineRotation(), negativePlaneRotTheta = new AffineRotation(), negativePlaneRotPhi = new AffineRotation(), planeRotation = new AffineRotation();
-		private boolean advancedRotation = false;
-		public AffineRotation3D() {
-		
-		}
-		
-		public void calculateRotation(double xTheta, double yTheta, double zTheta) {	
-			//xRotation
-			xRot[1][1] = Math.cos(xTheta);
-			xRot[2][1] = -Math.sin(xTheta);
-			xRot[1][2] = Math.sin(xTheta);
-			xRot[2][2] = Math.cos(xTheta);
-			
-			//yRotation
-			yRot[0][0] = Math.cos(yTheta);
-			yRot[2][0] = Math.sin(yTheta);
-			yRot[0][2] = -Math.sin(yTheta);
-			yRot[2][2] = Math.cos(yTheta);
-			
-			//zRotation
-			zRot[0][0] = Math.cos(zTheta);
-			zRot[1][0] = -Math.sin(zTheta);
-			zRot[0][1] = Math.sin(zTheta);
-			zRot[1][1] = Math.cos(zTheta);
-		
-			affRotMatrix = Physics_engine_toolbox.matrixMultiply(xRot, yRot);
-			affRotMatrix = Physics_engine_toolbox.matrixMultiply(affRotMatrix, zRot);
-		}
-		
-		/**
-		 * {@summary will create a AffineRotation that will rotate the points rotation radians MORE than they already are rotated AROUND the passed Vector with the manitude of the passed vector}
-		 */
-		@Override
-		public void calculateRotation(Vector rotation) {
-			Vector3D rotTemp = ((Vector3D) rotation);
-			
-			if (Settings.advancedRotation) {
-				advancedRotation = true;
-				planeRotTheta.calculateRotation(new Vector(rotTemp.getTheta()));
-				planeRotPhi.calculateRotation(new Vector(rotTemp.getPhi()));
-				planeRotation.calculateRotation(new Vector(rotTemp.getR()));
-				negativePlaneRotPhi.calculateRotation(new Vector(-rotTemp.getPhi()));
-				negativePlaneRotTheta.calculateRotation(new Vector(-rotTemp.getTheta()));
-			}else {
-				advancedRotation = false;
-				calculateRotation(rotTemp.getI(),rotTemp.getJ(),rotTemp.getK());
-			}
-		}
-	}
 	
 	/**
 	 * {@code a 3D point designed for a Physics_3DPolygon. Can rotate itself}
@@ -96,7 +18,7 @@ public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimens
 		private double[] rotMagsStat = new double[3];
 		private double[] rotComps = new double[2];
 		
-		double prevAngle = 0;
+		private double prevAngle = 0;
 		public Point3D(double x, double y, double z) {
 			super(x, y,z);
 			
@@ -104,7 +26,8 @@ public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimens
 	
 	
 		/**
-		 * {@code rotates this point in accordance to the passed AffineRotation}
+		 * {@summary rotates this point in accordance to the passed AffineRotation}
+		 * {@code Note: Passed AffineRotation must be a AffineRotation3D}
 		 */
 		public void rotate(AffineRotation rot) {
 			AffineRotation3D AffineRot = (AffineRotation3D) rot;

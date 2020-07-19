@@ -8,7 +8,6 @@ import java.util.LinkedList;
 
 import javax.swing.JPanel;
 
-import apgraphicslib.Physics_2DPolygon.AffineRotation;
 import apgraphicslib.Physics_2DPolygon.PolyPoint;
 import apgraphicslib.Physics_2DPolygon.Point2D;
 
@@ -106,8 +105,7 @@ public abstract class Camera extends JPanel implements Updatable, Physics_engine
 		cameraRotation.add(cameraAngularVelocity.tempStatMultiply(Settings.timeSpeed / getDrawer().getActualFPS()));
 		
 		cameraPosition.add(cameraPanVelocity.tempStatMultiply(Settings.timeSpeed / getDrawer().getActualFPS()));
-		
-		
+	
 		for (CameraMovable cOb : cameraObs) {
 			cOb.updateCameraPaintData(this);
 		}

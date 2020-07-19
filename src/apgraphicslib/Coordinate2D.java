@@ -25,8 +25,13 @@ public class Coordinate2D extends Coordinate implements Two_dimensional {
 	 */
 	@Override
 	public void add(Vector addV) {
-		x += addV.getR() * 0.5;
-		y += addV.getR() * 0.5;
+		
+		try {
+			add((Vector2D) addV);
+		}catch(ClassCastException c) {
+			x += addV.getR() * 0.5;
+			y += addV.getR() * 0.5;
+		}
 	}
 	
 	/**

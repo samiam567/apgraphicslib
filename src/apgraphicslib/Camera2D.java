@@ -26,4 +26,8 @@ public class Camera2D extends Camera {
 		cameraAngularVelocity = vector;
 	}
 	
+	public Coordinate2D getCameraPosition() {
+		return cameraPosition;
+	}
+	
 }

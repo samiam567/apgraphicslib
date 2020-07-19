@@ -14,7 +14,6 @@ import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
 import apgraphicslib.Physics_2DPolygon.PolyPoint;
-import apgraphicslib.Physics_3DPolygon.AffineRotation3D;
 import apgraphicslib.Physics_3DPolygon.Point3D;
 import calculator_parser_solver.Equation;
 

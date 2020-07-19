@@ -1,6 +1,5 @@
 package apgraphicslib;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
@@ -18,23 +17,6 @@ public class Physics_2DPolygon extends Physics_2DDrawMovable implements Updatabl
 		public double getY();
 		public void rotate(Vector rotation);
 		public void add(Vector tempStatMultiply);
-	}
-	
-	protected static class AffineRotation {
-		protected double a,b,c,d;
-		protected Vector rotation;
-		
-		/**
-		 * {@summary will create a AffineRotation that will rotate the points [rotation] radians MORE than they already are rotated}
-		 */
-		protected void calculateRotation(Vector rotation) {
-			this.rotation = rotation;
-			double theta = rotation.getR();
-			a = Math.cos(theta);
-			b = -Math.sin(theta);
-			c = -b;
-			d = a;
-		}
 	}
 	
 	protected static class Point2D extends Coordinate2D implements PolyPoint, Two_dimensional {

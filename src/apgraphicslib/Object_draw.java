@@ -95,8 +95,6 @@ public class Object_draw extends JPanel {
 	
 	public void doUpdate() { //for update thread. Updates the objects
 		
-	
-		
 		try {			
 			frameStartTime = System.nanoTime();	
 			prePaintUpdateObjects();
@@ -436,8 +434,6 @@ public class Object_draw extends JPanel {
 	}
 
 	public void paint(Graphics page) {
-		
-
 		
 		try {
 			

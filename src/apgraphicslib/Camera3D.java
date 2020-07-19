@@ -1,7 +1,6 @@
 package apgraphicslib;
 
 import apgraphicslib.Physics_2DPolygon.Point2D;
-import apgraphicslib.Physics_3DPolygon.AffineRotation3D;
 import apgraphicslib.Physics_3DPolygon.Point3D;
 
 public class Camera3D extends Camera2D {
@@ -45,6 +44,10 @@ public class Camera3D extends Camera2D {
 	}
 	public void setCameraAngularVelocity(Vector3D newAngV) {
 		cameraAngularVelocity = newAngV;
+	}
+
+	public Coordinate3D getCameraPosition() {
+		return (Coordinate3D) cameraPosition;
 	}
 	
 	

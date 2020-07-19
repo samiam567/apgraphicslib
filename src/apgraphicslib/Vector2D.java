@@ -232,6 +232,22 @@ public class Vector2D extends Vector implements Two_dimensional {
 		return statMultiplyInto(multi, tempVec);
 	}
 	
+	/**
+	 * {@summary rotates this Vector using AffineRotation}
+	 * @param rotation
+	 */
+	public void rotate(Vector rotation) {
+		rotate(new AffineRotation(rotation));
+	}
+	
+	/**
+	 * {@summary rotates this Vector the passed affineRotation}
+	 * @param affRot
+	 */
+	public void rotate(AffineRotation rotation) {
+		setIJ(rotation.a * getI() + rotation.b * getJ(), rotation.c * getI() + rotation.d * getJ());
+	}
+	
 	public void setTheta(double theta1) {
 		theta = theta1;
 		polarToRectangular();

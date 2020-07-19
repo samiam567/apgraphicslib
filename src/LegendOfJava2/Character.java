@@ -26,7 +26,7 @@ public class Character extends Physics_3DDrawMovable {
 	public static double headDiameter;
 	private static double Upper_arm_length = Settings.height * 0.1;
 	private static double height;
-	public double jumpSpeed = -1000;
+	public double jumpSpeed = -400;
 	
 	Character_Head head;
 	private Upper_arm left_arm, right_arm;
@@ -70,7 +70,7 @@ public class Character extends Physics_3DDrawMovable {
 	
 	@Override
 	public void Update(double frames) {
-		runner.camera.setCameraPanVelocity(getSpeed());
+		super.Update(frames);
 	}
 	
 	
@@ -95,17 +95,20 @@ public class Character extends Physics_3DDrawMovable {
 			
 			parent.runner.camera.add(this);
 			parent.runner.drawer.add(this);
+		
 			
-			speed = parent.speed;
-			acceleration = parent.acceleration;
 		}
 		
 		@Override
 		public void Update(double frames) {
 			//link this with the head
-			speed = parent.speed;
-			acceleration = parent.acceleration;
+			
+			
 			super.Update(frames);
+			speed = parent.speed;
+			
+			
+			
 		}
 		
 		public boolean checkForCollision(Coordinate2D point, Tangible ob, double radius) {
@@ -180,12 +183,14 @@ public class Character extends Physics_3DDrawMovable {
 		@Override
 		public void Update(double frames) {
 			//link this with the head
-			speed = head.getSpeed();
-			acceleration = head.getAcceleration();
-			angularVelocity = head.getAngularVelocity();
-			angularAcceleration = head.getAngularAcceleration();
-
+			
 			super.Update(frames);
+			
+			speed = head.getSpeed();
+			angularVelocity = head.getAngularVelocity();
+		
+			
+			getCoordinates().setY(head.getY() + headDiameter/2);
 		}
 		
 		//make a cylinder whose center point is at the far end

@@ -26,16 +26,7 @@ public class LegendOfJava2 {
 		
 		Ryan = new Character(this, drawer.getFrameWidth()*0.5, drawer.getFrameHeight()*0.5, 0);
 		
-		
-		
-		
-	
-		
-		
-		Ryan.getAcceleration().setIJ(0,gravity);
-
-		
-		
+		Ryan.getAcceleration().setIJ(0,gravity);	
 
 		APLabel LOJTitle = new APLabel(drawer, drawer.getFrameWidth()*0.5, 25);
 		LOJTitle.setName("LOJ Title text");

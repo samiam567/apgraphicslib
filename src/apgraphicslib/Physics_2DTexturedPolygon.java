@@ -10,10 +10,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import javax.imageio.ImageIO;
 
-import apgraphicslib.Physics_2DPolygon.AffineRotation;
-
-
-
 public class Physics_2DTexturedPolygon extends Physics_2DPolygon implements Textured, Updatable {
 	
 	private class P2DPTexture {
