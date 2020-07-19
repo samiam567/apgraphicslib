@@ -184,6 +184,7 @@ public class Character extends Physics_3DDrawMovable {
 			acceleration = head.getAcceleration();
 			angularVelocity = head.getAngularVelocity();
 			angularAcceleration = head.getAngularAcceleration();
+
 			super.Update(frames);
 		}
 		

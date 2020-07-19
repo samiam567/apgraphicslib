@@ -20,17 +20,21 @@ public class LegendOfJava2 {
 	}
 	
 	public LegendOfJava2() {
-		camera = new Camera3D(new Coordinate3D(Settings.width/2, Settings.height/2,0));
+		camera = new LOJ2Camera(this, new Coordinate3D(Settings.width/2, Settings.height/2,0));
 		
 		drawer = new Object_draw(camera);
-		drawer.start();
+		
 		Ryan = new Character(this, drawer.getFrameWidth()*0.5, drawer.getFrameHeight()*0.5, 0);
 		
-		Ryan.getAcceleration().setIJ(0,gravity);
 		
-	//	camera.setPointOfRotation(Ryan.getCoordinates());
-	//	camera.setRotateWithOrbit(true);
-		camera.setCameraPanVelocity(Ryan.getSpeed());
+		
+		
+	
+		
+		
+		Ryan.getAcceleration().setIJ(0,gravity);
+
+		
 		
 
 		APLabel LOJTitle = new APLabel(drawer, drawer.getFrameWidth()*0.5, 25);
@@ -45,6 +49,6 @@ public class LegendOfJava2 {
 		Room room1 = new Room(this, drawer.getFrameWidth()/2, drawer.getFrameHeight()/2,0);
 		
 		
-		
+		drawer.start();
 	}
 }

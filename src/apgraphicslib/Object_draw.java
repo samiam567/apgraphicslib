@@ -94,6 +94,9 @@ public class Object_draw extends JPanel {
 	
 	
 	public void doUpdate() { //for update thread. Updates the objects
+		
+	
+		
 		try {			
 			frameStartTime = System.nanoTime();	
 			prePaintUpdateObjects();
@@ -434,6 +437,7 @@ public class Object_draw extends JPanel {
 
 	public void paint(Graphics page) {
 		
+
 		
 		try {
 			
@@ -472,7 +476,11 @@ public class Object_draw extends JPanel {
 	public Physics_frame getFrame() {
 		return frame;
 	}
-
+	
+	/**
+	 * 
+	 * @return the actual rate at which frames are being served, rather than the target FPS
+	 */
 	public double getActualFPS() {
 		return actualFPS;
 	}
@@ -509,5 +517,12 @@ public class Object_draw extends JPanel {
 		}
 	}
 	
+	public double getFrameCenterX() {
+		return ((double) getFrameWidth())/2;
+	}
+	
+	public double getFrameCenterY() {
+		return ((double) getFrameHeight())/2;
+	}
 
 }
