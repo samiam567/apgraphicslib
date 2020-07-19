@@ -28,9 +28,14 @@ public class AffineRotation3D extends AffineRotation {
 	public AffineRotation negativePlaneRotTheta = new AffineRotation();
 	public AffineRotation negativePlaneRotPhi = new AffineRotation();
 	public AffineRotation planeRotation = new AffineRotation();
-	public boolean advancedRotation = false;
+	public boolean advancedRotation = Settings.advancedRotation;
 	
+	public AffineRotation3D() {}
 	
+	public AffineRotation3D(Vector3D rotation) {
+		calculateRotation(rotation);
+	}
+
 	public void calculateRotation(double xTheta, double yTheta, double zTheta) {	
 		//xRotation
 		xRot[1][1] = Math.cos(xTheta);
@@ -61,15 +66,13 @@ public class AffineRotation3D extends AffineRotation {
 	public void calculateRotation(Vector rotation) {
 		Vector3D rotTemp = ((Vector3D) rotation);
 		
-		if (Settings.advancedRotation) {
-			advancedRotation = true;
+		if (advancedRotation) {
 			planeRotTheta.calculateRotation(new Vector(rotTemp.getTheta()));
 			planeRotPhi.calculateRotation(new Vector(rotTemp.getPhi()));
 			planeRotation.calculateRotation(new Vector(rotTemp.getR()));
 			negativePlaneRotPhi.calculateRotation(new Vector(-rotTemp.getPhi()));
 			negativePlaneRotTheta.calculateRotation(new Vector(-rotTemp.getTheta()));
 		}else {
-			advancedRotation = false;
 			calculateRotation(rotTemp.getI(),rotTemp.getJ(),rotTemp.getK());
 		}
 	}

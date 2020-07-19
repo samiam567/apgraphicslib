@@ -179,7 +179,7 @@ public class Polygon_drawer_tools extends Physics_drawable implements MouseListe
 		rotating = false;
 		
 		//reset camera
-		cam.cameraAngularVelocity.setR(0);
+		cam.getCameraAngularVelocity().setR(0);
 		cam.cameraRotation.setR(0);
 	}
 
@@ -219,8 +219,8 @@ public class Polygon_drawer_tools extends Physics_drawable implements MouseListe
 				prevPoint = newPoint;
 			}
 		}else if (rotating) {
-			((Vector3D) cam.cameraAngularVelocity).setIJK(prevPoint.getY()-e.getY(),e.getX()-prevPoint.getX(),0);
-			((Vector3D) cam.cameraAngularVelocity).multiply(0.01);
+			((Vector3D) cam.getCameraAngularVelocity()).setIJK(prevPoint.getY()-e.getY(),e.getX()-prevPoint.getX(),0);
+			((Vector3D) cam.getCameraAngularVelocity()).multiply(0.01);
 		}
 		
 		

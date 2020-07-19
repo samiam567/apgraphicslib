@@ -34,7 +34,7 @@ public class Room extends Physics_3DDrawMovable {
 		public Room_floor(Room parent) {
 			super(parent.getDrawer(), parent.getX(), parent.getY() + roomHeight/2, parent.getZ(), roomWidth, roomHeight,5);
 			setTexture2D("./src/LegendOfJava2/assets/texture.jpg");
-			rotatePoints(new Vector3D(Math.PI/3,0,0));
+			rotatePoints(new Vector3D(Math.PI/2,0,0));
 			
 			runner.drawer.add(this);
 			runner.camera.add(this);

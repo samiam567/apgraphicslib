@@ -40,7 +40,7 @@ public class Camera3D extends Camera2D {
 	
 	@Override
 	public void setCameraAngularVelocity(Vector newAngV) {
-		((Vector3D)cameraAngularVelocity).setR(newAngV.getR());
+		((Vector3D)getCameraAngularVelocity()).setR(newAngV.getR());
 	}
 	public void setCameraAngularVelocity(Vector3D newAngV) {
 		cameraAngularVelocity = newAngV;

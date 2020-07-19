@@ -1,5 +1,7 @@
 package apgraphicslib;
 
+import java.awt.Graphics;
+
 /**
  * @author samaim567
  *{@summary A Vector in 3D space. Extends Vector2D}
@@ -356,6 +358,62 @@ public class Vector3D extends Vector2D implements Three_dimensional {
 	public static double[] cross(double uI, double uJ, double uK, double qI, double qJ, double qK) {
 		return new double[] {uJ*qK-uK*qJ,-(uI*qK-uK*qI),uI*qJ-uJ*qI};
 	}
+	
+	/**
+	 * {@summary rotates this Vector using AffineRotation}
+	 * @param rotation
+	 */
+	public void rotate(Vector rotation) {
+		try {
+			rotate(new AffineRotation3D((Vector3D) rotation));
+		}catch(ClassCastException c) {
+			super.rotate(rotation);
+		}
+	}
+	
+	/**
+	 * {@summary rotates this Vector the passed AffineRotation}
+	 * @param affRot
+	 */
+	public void rotate(AffineRotation rotation) {
+		try {
+			rotate((AffineRotation3D) rotation);
+		}catch(ClassCastException c) {
+			super.rotate(rotation);
+		}
+	}
+	
+	/**
+	 * {@summary rotates this Vector the passed AffineRotation3D}
+	 * @param affRot
+	 */
+	public void rotate(AffineRotation3D AffineRot) {
+		if (AffineRot.advancedRotation) {	
+			//rotate to the plane of the Vector
+			setIJK(AffineRot.planeRotTheta.a * getI() + AffineRot.planeRotTheta.b * getJ(), AffineRot.planeRotTheta.c * getI() + AffineRot.planeRotTheta.d * getJ(),getK()); //rotate to match phi
+			setIJK(AffineRot.planeRotPhi.a * getI() + AffineRot.planeRotPhi.b * getK(), getJ(), AffineRot.planeRotPhi.c * getI() + AffineRot.planeRotPhi.d * getK()); //rotate to match theta
+			
+			//rotate in the plane of the Vector
+			setIJK(AffineRot.planeRotation.a * getI() + AffineRot.planeRotation.b * getJ(), AffineRot.planeRotation.c * getI() + AffineRot.planeRotation.d * getJ(), getK()); //rotate to match theta
+			
+			//rotate back to original position
+			setIJK(AffineRot.negativePlaneRotPhi.a * getI() + AffineRot.negativePlaneRotPhi.b * getK(), getJ(), AffineRot.negativePlaneRotPhi.c * getI() + AffineRot.negativePlaneRotPhi.d * getK()); //rotate to match theta
+			setIJK(AffineRot.negativePlaneRotTheta.a * getI() + AffineRot.negativePlaneRotTheta.b * getJ(), AffineRot.negativePlaneRotTheta.c * getI() + AffineRot.negativePlaneRotTheta.d * getJ(),getK()); //rotate to match phi
+			
+			
+		}else {
+			double[][] coords = {
+					{getI()}, 
+					{getJ()},
+					{getK()},
+					{0},
+			};
+			
+			double[][] newCoords = Physics_engine_toolbox.matrixMultiply(AffineRot.affRotMatrix, coords,false);
+			setIJK(newCoords[0][0],newCoords[1][0],newCoords[2][0]);
+		}
+	}
+	
 
 	public double getK() {
 		polarToRectangular();
@@ -430,6 +488,7 @@ public class Vector3D extends Vector2D implements Three_dimensional {
 	}
 
 	
+
 
 	
 

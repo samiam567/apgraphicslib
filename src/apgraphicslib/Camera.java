@@ -102,7 +102,7 @@ public abstract class Camera extends JPanel implements Updatable, Physics_engine
 		//end orbital rotation 
 		
 		
-		cameraRotation.add(cameraAngularVelocity.tempStatMultiply(Settings.timeSpeed / getDrawer().getActualFPS()));
+		cameraRotation.add(getCameraAngularVelocity().tempStatMultiply(Settings.timeSpeed / getDrawer().getActualFPS()));
 		
 		cameraPosition.add(cameraPanVelocity.tempStatMultiply(Settings.timeSpeed / getDrawer().getActualFPS()));
 	
@@ -257,5 +257,9 @@ public abstract class Camera extends JPanel implements Updatable, Physics_engine
 	
 	public int getFrameHeight() {
 		return frame.getHeight();
+	}
+
+	public Vector getCameraAngularVelocity() {
+		return cameraAngularVelocity;
 	}
 }

@@ -37,6 +37,11 @@ public class Controller implements MouseMotionListener, MouseListener, KeyListen
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if ( (e.getKeyChar() == 'w' ) || (e.getKeyCode() == 87)) {
+			Vector3D speedVec = new Vector3D(runner.camera.getDirectionFacing().getI(),0,runner.camera.getDirectionFacing().getK());
+			speedVec.multiply(1/runner.camera.getDirectionFacing().getR());
+			speedVec.multiply(100);
+			((Vector3D) runner.Ryan.getSpeed()).setIJK(speedVec.getI(),runner.Ryan.getSpeed().getI(),speedVec.getK());
+			
 			
 		}else if ((e.getKeyChar() == 's') || (e.getKeyCode() == 83)) {
 
@@ -65,7 +70,9 @@ public class Controller implements MouseMotionListener, MouseListener, KeyListen
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
+		if ( (e.getKeyChar() == 'w' ) || (e.getKeyCode() == 87) || (e.getKeyChar() == 's') || (e.getKeyCode() == 83) || (e.getKeyChar() == 'd') || (e.getKeyCode() == 68) || (e.getKeyChar() == 'a') || (e.getKeyCode() == 65) ) {
+			runner.Ryan.getSpeed().setR(0);
+		}
 		
 	}
 
@@ -100,18 +107,17 @@ public class Controller implements MouseMotionListener, MouseListener, KeyListen
 	}
 
 	@Override
-	public void mouseDragged(MouseEvent e) {
-	
-		
+	public void mouseDragged(MouseEvent e) {		
 		mouseController.mouseMove(runner.drawer.getFrameWidth()/2,runner.drawer.getFrameHeight()/2);
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		Vector3D moveVec = new Vector3D(0/*e.getYOnScreen()-runner.drawer.getFrameHeight()/2*/,e.getXOnScreen()-runner.drawer.getFrameWidth()/2,0);
-	//	System.out.println(moveVec);
+		Vector3D moveVec = new Vector3D(e.getYOnScreen()-runner.drawer.getFrameHeight()/2,e.getXOnScreen()-runner.drawer.getFrameWidth()/2,0);
+
 		moveVec.multiply(0.01);
 		((Vector3D) runner.camera.getRotation()).add(moveVec);
+		runner.camera.getDirectionFacing().rotate(moveVec);
 		
 		mouseController.mouseMove(runner.drawer.getFrameWidth()/2,runner.drawer.getFrameHeight()/2);
 	}

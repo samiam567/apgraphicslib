@@ -8,7 +8,7 @@ import apgraphicslib.Settings;
 
 public class LegendOfJava2 {
 	Object_draw drawer;
-	Camera3D camera;
+	LOJ2Camera camera;
 	Character Ryan;
 	
 	Controller controller;
@@ -20,6 +20,8 @@ public class LegendOfJava2 {
 	}
 	
 	public LegendOfJava2() {
+		Settings.advancedRotation = false;
+		
 		camera = new LOJ2Camera(this, new Coordinate3D(Settings.width/2, Settings.height/2,0));
 		
 		drawer = new Object_draw(camera);

@@ -28,6 +28,8 @@ public class Character extends Physics_3DDrawMovable {
 	private static double height;
 	public double jumpSpeed = -400;
 	
+
+	
 	Character_Head head;
 	private Upper_arm left_arm, right_arm;
 	
@@ -55,7 +57,7 @@ public class Character extends Physics_3DDrawMovable {
 	}
 	
 	/**
-	 * {@summary overriden to control all the body parts}
+	 * {@summary overridden to control all the body parts}
 	 */
 	@Override
 	public void setPos(double x, double y, double z) {
@@ -92,6 +94,7 @@ public class Character extends Physics_3DDrawMovable {
 			setTexture("./src/LegendOfJava2/assets/pointyHead.jpg");
 			rotatePoints(new Vector3D(Math.PI/2,0,Math.PI));
 			rotatePoints(new Vector3D(0,0,-Math.PI/2));
+			rotatePoints(new Vector3D(0,Math.PI,0));
 			
 			parent.runner.camera.add(this);
 			parent.runner.drawer.add(this);
@@ -101,10 +104,8 @@ public class Character extends Physics_3DDrawMovable {
 		
 		@Override
 		public void Update(double frames) {
-			//link this with the head
-			
-			
 			super.Update(frames);
+			
 			speed = parent.speed;
 			
 			

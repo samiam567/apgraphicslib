@@ -31,9 +31,7 @@ public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimens
 		 */
 		public void rotate(AffineRotation rot) {
 			AffineRotation3D AffineRot = (AffineRotation3D) rot;
-			if (AffineRot.advancedRotation) {
-				
-				
+			if (AffineRot.advancedRotation) {	
 				//rotate to the plane of the Vector
 				setPos(AffineRot.planeRotTheta.a * getX() + AffineRot.planeRotTheta.b * getY(), AffineRot.planeRotTheta.c * getX() + AffineRot.planeRotTheta.d * getY()); //rotate to match phi
 				setPos(AffineRot.planeRotPhi.a * getX() + AffineRot.planeRotPhi.b * getZ(), getY(), AffineRot.planeRotPhi.c * getX() + AffineRot.planeRotPhi.d * getZ()); //rotate to match theta
