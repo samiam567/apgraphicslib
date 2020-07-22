@@ -12,5 +12,5 @@ public interface ExpirableVectorAddable {
 	 * @param vecToAddTo
 	 * @return
 	 */
-	public Vector tempStatAdd(Vector vecToAddTo);
+	public Vector tempStatAdd(Vector vecToAddTo, double frames);
 }

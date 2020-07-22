@@ -49,6 +49,8 @@ public class Physics_2DPolygon extends Physics_2DDrawMovable implements Updatabl
 	protected Vector angularAcceleration = new Vector();
 	private Vector angVFrames; //used by the Update() method
 	
+	protected Vector additonalAngularVelocitiesVector = new Vector();
+	
 	protected boolean rotateWithOrbit = false;
 	protected Coordinate2D pointOfRotation = coordinates;
 	
@@ -57,6 +59,8 @@ public class Physics_2DPolygon extends Physics_2DDrawMovable implements Updatabl
 	protected Vector orbitalAngularAcceleration = new Vector();
 	private Vector orbitalAngVFrames; //used by the Update() method
 	protected Coordinate2D pORCoordsTemp = new Coordinate2D(0,0); //used by the Update() method
+	
+	private ArrayList<ExpirableVectorAddable> additionalAngularVelocities = new ArrayList<ExpirableVectorAddable>();
 	
 	//these are used for painting the object
 	protected int[] pointXValues;
@@ -67,12 +71,15 @@ public class Physics_2DPolygon extends Physics_2DDrawMovable implements Updatabl
 	
 	private boolean isFilled = false;
 
+	
+
 	public Physics_2DPolygon(Object_draw drawer, double x, double y) {
 		super(drawer, x, y);
 		coordinates = new Point2D(x,y); //Point2D so we can rotate the object about an outside point
 		pointXValues = new int[0];
 		pointYValues = new int[0];
 		pointOfRotation = coordinates;
+		
 	}
 	
 	public void addPoint(double x, double y) {
@@ -149,7 +156,7 @@ public class Physics_2DPolygon extends Physics_2DDrawMovable implements Updatabl
 		orbitalAngVFrames = orbitalAngularVelocity.tempStatMultiply(frames);
 			
 		orbitalRotation.add(orbitalAngVFrames);	
-			
+		
 		rotationMatrix.calculateRotation(orbitalAngVFrames);
 			
 		pORCoordsTemp.setPos(pointOfRotation);
@@ -164,13 +171,30 @@ public class Physics_2DPolygon extends Physics_2DDrawMovable implements Updatabl
 		}
 			
 		
-		//rotation about a point
+		//normal rotation
 		if (angularAcceleration.getR() != 0) angularVelocity.add(((Vector2D) angularAcceleration).tempStatMultiply(frames));
-		if ( angularVelocity.getR() != 0) {
+		
+		
+		if (additionalAngularVelocities.size() > 0) {
+			angVFrames = angularVelocity.tempStatMultiply(frames);
+			
+			additonalAngularVelocitiesVector.setR(0);
+			for (ExpirableVectorAddable expV : additionalAngularVelocities) {
+				expV.tempStatAdd(additonalAngularVelocitiesVector, frames);
+			}
+			
+			rotation.add(angVFrames);
+			rotation.add(additonalAngularVelocitiesVector);
+			
+			rotationMatrix.calculateRotation(additonalAngularVelocitiesVector.add(angVFrames));
+			
+			updatePoints();
+		}else if ( angularVelocity.getR() != 0) {
 			angVFrames = angularVelocity.tempStatMultiply(frames);
 			rotationMatrix.calculateRotation(angVFrames);
 			rotation.add(angVFrames);	
 			updatePoints();
+				
 		}
 		
 	
@@ -250,8 +274,16 @@ public class Physics_2DPolygon extends Physics_2DDrawMovable implements Updatabl
 	
 	@Override
 	public void setAngularVelocity(Vector newAngV) {
-	
 		angularVelocity = newAngV;
+	}
+	
+	/**
+	 * {@summary adds the specified angularVelocity for the specified number for frames. Can be used to make a one-time rotation without using setRotation}
+	 * @param newAngV
+	 * @param times
+	 */
+	public void addAngularVelocity(Vector newAngV, int frames) {
+		new ExpirableVectorAdd(newAngV, frames, additionalAngularVelocities);
 	}
 	
 	@Override

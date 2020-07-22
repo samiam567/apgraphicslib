@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import LegendOfJava.PlayerHead;
 import LegendOfJava.PlayerTorso;
+import apgraphicslib.Camera;
 import apgraphicslib.CollisionEvent;
 import apgraphicslib.Coordinate2D;
 import apgraphicslib.Coordinate3D;
@@ -162,6 +163,10 @@ public class Character extends Physics_3DDrawMovable {
 			return null;
 		}	
 		
+		@Override
+		public double getPaintOrderValue(Camera cam) { 	
+			return super.getPaintOrderValue(cam) - 10000000;
+		}
 	}
 	
 	private class Upper_arm extends Physics_3DTexturedEquationedPolygon {
@@ -205,7 +210,12 @@ public class Character extends Physics_3DDrawMovable {
 			getCoordinates().setY(head.getY() + headDiameter/2);
 		}
 		
-		//make a cylinder whose center point is at the far end
+		
+		@Override
+		public double getPaintOrderValue(Camera cam) { 	
+			return super.getPaintOrderValue(cam) - 10000000;
+		}
+		
 		@Override 
 		protected double[] equation(double theta, double phi) {
 			double x = getXSize() * Math.sin(theta);

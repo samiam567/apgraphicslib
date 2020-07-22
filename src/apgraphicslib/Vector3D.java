@@ -196,12 +196,25 @@ public class Vector3D extends Vector2D implements Three_dimensional {
 	
 	
 	
+	
 	/**
 	 * scales this Vector by the multiple without changing this vector
 	 * @param outputVec make this vec into the multiple
 	 */
 	public Vector3D statMultiplyInto(double mult, Vector3D outputVec) {
 		outputVec.setIJK(getI() * mult, getJ() * mult, getK() * mult);
+		return outputVec;
+	}
+	
+	public Vector statMultiplyInto(double mult, Vector outputVec) {
+		try {
+			((Vector2D) outputVec).setI(getI());
+			((Vector2D) outputVec).setJ(getJ());
+			((Vector3D) outputVec).setK(getK());
+		}catch(ClassCastException c) {}
+		
+		outputVec.setR(outputVec.getR() * mult);
+		
 		return outputVec;
 	}
 	
@@ -229,20 +242,41 @@ public class Vector3D extends Vector2D implements Three_dimensional {
 	 * @param outputVec puts the result of adding the passed Vector to this vector into the outputVec
 	 * @return outputVec
 	 */
-	public Vector3D statAddInto(Vector addVec, Vector3D outputVec) {
-		outputVec.setIJK(getI() + ((Vector2D) addVec).getI(), getJ() + ((Vector2D) addVec).getJ(),getK() + ((Vector3D) addVec).getK());
+	public Vector3D statAddInto(Vector3D addVec, Vector3D outputVec) {
+		outputVec.setIJK(getI() + addVec.getI(), getJ() + addVec.getJ(),getK() + addVec.getK());
 		return outputVec;
+	}
+	
+	/**
+	 * @param Vector3D addVec
+	 * @param outputVec puts the result of adding the passed Vector to this vector into the outputVec
+	 * @return outputVec
+	 */
+	public Vector statAddInto(Vector addVec, Vector outputVec) {
+		try { 
+			return statAddInto((Vector3D) addVec, (Vector3D) outputVec);
+		}catch(ClassCastException c) {
+			
+			try {
+				Vector3D outputVec3D = (Vector3D) outputVec;
+				outputVec3D.setIJ(getI() + ((Vector2D) addVec).getI(), getJ() + ((Vector2D) addVec).getJ());
+				return outputVec3D;
+			}catch(ClassCastException e) {
+				return super.statAddInto(addVec, outputVec);
+			}
+		}
 	}
 	
 	/**
 	 * {@code WARNING this method uses the temp protocol. If the return isn't IMMEDIATELY used it may be overwritten causing terrible awful errors}
 	 * {@summary adds the passed Vector to this Vector without changing this Vector}
-	 * @return a Vector3D representing the addition of this Vector and the passed Vector
+	 * @return a Vector representing the addition of this Vector and the passed Vector
 	 */
 	@Override
 	public Vector3D tempStatAdd(Vector addVec) {
-		return statAddInto(addVec, tempVec);
+		return (Vector3D) statAddInto(addVec, tempVec);
 	}
+	
 	
 	/**
 	 * @param Vector3D addVec

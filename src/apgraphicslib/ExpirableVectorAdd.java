@@ -11,9 +11,9 @@ public class ExpirableVectorAdd implements ExpirableVectorAddable {
 	private ArrayList<ExpirableVectorAddable> list; //this is the list of ExpirableVectorAddables that we will add and remove ourselves from
 	private int times, indx;
 
-	public ExpirableVectorAdd(Vector2D vector, int times, ArrayList<ExpirableVectorAddable> listToAddTo) {
+	public ExpirableVectorAdd(Vector newAngV, int times, ArrayList<ExpirableVectorAddable> listToAddTo) {
 		
-		this.vector = vector;
+		this.vector = newAngV;
 		
 		if (times <= 0) {
 			Exception e = new Exception("Times must be greater than zero");
@@ -31,16 +31,15 @@ public class ExpirableVectorAdd implements ExpirableVectorAddable {
 	}
 
 	@Override
-	public Vector tempStatAdd(Vector vecToAddTo) {
-		if (times == 1) {
+	public Vector tempStatAdd(Vector vecToAddTo, double frames) {
+		times-= frames;
+		
+		if (times <= 0) {
 			list.remove(indx); //remove this from the list of ExpirableVectorAddables so that we aren't added anymore
-		}else if (times < 1) { //check for any errors in counting off times
-			Exception e = new Exception("times should never be less than one");
-			e.printStackTrace();
 		}
 		
-		times--;
 		
-		return vecToAddTo.tempStatAdd(vector);
+		
+		return vecToAddTo.tempStatAdd(vector.statMultiply(frames));
 	}
 }

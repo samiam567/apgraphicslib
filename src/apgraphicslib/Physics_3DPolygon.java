@@ -126,6 +126,7 @@ public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimens
 		rotationMatrix = new AffineRotation3D();
 		pointOfRotation = coordinates;
 		pORCoordsTemp = new Coordinate3D(0,0,0);
+		additonalAngularVelocitiesVector = new Vector3D();
 	}
 		
 	public Physics_3DPolygon(Object_draw drawer, double x, double y, double z) {
@@ -142,6 +143,7 @@ public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimens
 		setPos(x,y,z);
 		pointOfRotation = coordinates;
 		pORCoordsTemp = new Coordinate3D(0,0,0);
+		additonalAngularVelocitiesVector = new Vector3D();
 	}
 	
 	/**
