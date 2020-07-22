@@ -40,7 +40,7 @@ public class Controller implements MouseMotionListener, MouseListener, KeyListen
 			Vector3D speedVec = new Vector3D(runner.camera.getDirectionFacing().getI(),0,runner.camera.getDirectionFacing().getK());
 			speedVec.multiply(1/runner.camera.getDirectionFacing().getR());
 			speedVec.multiply(100);
-			((Vector3D) runner.Ryan.getSpeed()).setIJK(speedVec.getI(),runner.Ryan.getSpeed().getI(),speedVec.getK());
+			((Vector3D) runner.Ryan.getSpeed()).setIJK(speedVec.getI(),runner.Ryan.getSpeed().getJ(),speedVec.getK());
 			
 			
 		}else if ((e.getKeyChar() == 's') || (e.getKeyCode() == 83)) {
@@ -116,8 +116,8 @@ public class Controller implements MouseMotionListener, MouseListener, KeyListen
 		Vector3D moveVec = new Vector3D(e.getYOnScreen()-runner.drawer.getFrameHeight()/2,e.getXOnScreen()-runner.drawer.getFrameWidth()/2,0);
 
 		moveVec.multiply(0.01);
-		((Vector3D) runner.camera.getRotation()).add(moveVec);
 		runner.camera.getDirectionFacing().rotate(moveVec);
+		((Vector3D) runner.camera.getRotation()).add(moveVec);
 		
 		mouseController.mouseMove(runner.drawer.getFrameWidth()/2,runner.drawer.getFrameHeight()/2);
 	}

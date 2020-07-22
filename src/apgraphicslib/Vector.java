@@ -53,6 +53,11 @@ public class Vector {
 		return new Vector(vec1.getR() + vec2.getR());
 	}
 	
+	public Vector statAddInto(Vector addVec, Vector outputVec) {
+		outputVec.setR(getR() + addVec.getR());
+		return outputVec;
+	}
+	
 	/**
 	 * 
 	 * @param vec1
@@ -94,6 +99,8 @@ public class Vector {
 		outputVec.setR(getR() * mult);
 		return outputVec;
 	}
+	
+	
 
 	/**
 	 * {@code WARNING this method uses the temp protocol. If the return isn't IMMEDIATELY used it may be overwritten causing terrible awful errors}
@@ -101,6 +108,10 @@ public class Vector {
 	 */
 	public Vector tempStatMultiply(double multi) {
 		return statMultiplyInto(multi, tempVec);
+	}
+
+	public Vector tempStatAdd(Vector vector) {
+		return statAddInto(vector,tempVec);
 	}
 
 	

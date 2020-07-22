@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import LegendOfJava.PlayerHead;
 import LegendOfJava.PlayerTorso;
+import apgraphicslib.CollisionEvent;
 import apgraphicslib.Coordinate2D;
 import apgraphicslib.Coordinate3D;
 import apgraphicslib.Physics_3DDrawMovable;
@@ -34,6 +35,7 @@ public class Character extends Physics_3DDrawMovable {
 	private Upper_arm left_arm, right_arm;
 	
 	private ArrayList<Physics_3DTexturedPolygon> bodyParts = new ArrayList<Physics_3DTexturedPolygon>();
+	public boolean isOnFloor = false;
 
 	
 	public Character(LegendOfJava2 runner, double x, double y, double z) {
@@ -108,9 +110,15 @@ public class Character extends Physics_3DDrawMovable {
 			
 			speed = parent.speed;
 			
-			
+			if (! isOnFloor) {
+				parent.getAcceleration().setJ(runner.gravity);
+			}else {
+				isOnFloor = false; //if we run into the floor this will be true by next update cycle
+			}
 			
 		}
+		
+	
 		
 		public boolean checkForCollision(Coordinate2D point, Tangible ob, double radius) {
 			
@@ -144,6 +152,9 @@ public class Character extends Physics_3DDrawMovable {
 			return false;
 		}
 		
+		public void collision(CollisionEvent e) {
+			//do nothing
+		}
 		
 		public Coordinate3D checkForCollision(Tangible object) {
 			//just worry about other obs hitting this as this method would take too long to be worth it. 

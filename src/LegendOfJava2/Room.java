@@ -44,13 +44,14 @@ public class Room extends Physics_3DDrawMovable {
 		
 		
 		public void collision(CollisionEvent e) {
-			super.collision(e);
+			//super.collision(e);
 			
 			if (e.objectHit.equals(runner.Ryan.head)) {
 				((Vector3D) runner.Ryan.getAcceleration()).setR(0);
-				runner.Ryan.getSpeed().setR(0);
+				runner.Ryan.getSpeed().setJ(0);
 				runner.Ryan.setPos(runner.Ryan.getX(), runner.Ryan.getY()-1 ,runner.Ryan.getZ());
-//				runner.camera.getCameraPosition().setY(runner.camera.getY()-1); //this should work but it doesn't
+				runner.Ryan.isOnFloor = true;
+				runner.camera.getCameraPosition().setPos(runner.Ryan.getX(), runner.Ryan.getY(), runner.Ryan.getZ()); //this should work but it doesn't
 			}
 		}
 	}

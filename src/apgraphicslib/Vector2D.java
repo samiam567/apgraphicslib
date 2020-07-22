@@ -178,10 +178,16 @@ public class Vector2D extends Vector implements Two_dimensional {
 	 * @param outputVec puts the result of adding the passed Vector to this vector into the outputVec
 	 * @return outputVec
 	 */
-	public Vector2D statAddInto(Vector addVec, Vector2D outputVec) {
-		outputVec.setI(getI() + ((Vector2D) addVec).getI());
-		outputVec.setJ(getJ() + ((Vector2D) addVec).getJ());
-		return outputVec;
+	public Vector statAddInto(Vector addVec, Vector outputVec) {
+		try {
+			Vector2D outVec = (Vector2D) outputVec;
+			outVec.setI(getI() + ((Vector2D) addVec).getI());
+			outVec.setJ(getJ() + ((Vector2D) addVec).getJ());
+			return outVec;
+		}catch(ClassCastException c) {
+			return super.statAddInto(addVec, outputVec);
+		}
+		
 	}
 	
 	/**
@@ -189,7 +195,7 @@ public class Vector2D extends Vector implements Two_dimensional {
 	 * {@summary adds the passed Vector to this Vector without changing this Vector}
 	 * @return a Vector3D representing the addition of this Vector and the passed Vector
 	 */
-	public Vector2D tempStatAdd(Vector addVec) {
+	public Vector tempStatAdd(Vector addVec) {
 		return statAddInto(addVec, tempVec);
 	}
 
