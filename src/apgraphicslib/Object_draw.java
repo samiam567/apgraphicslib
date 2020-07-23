@@ -140,12 +140,12 @@ public class Object_draw extends JPanel {
 		
 			current_frame++;
 	    }catch(ConcurrentModificationException c) {
-	    	c.printStackTrace();
+	    	c.printStackTrace(out);
 		}catch(NullPointerException e) {
 			out.println("nullPointer in object_draw.java");
-			e.printStackTrace();
+			e.printStackTrace(out);
 		}catch(NoSuchElementException n) {//if the element was deleted while this process was being run	(hopefully)	
-			n.printStackTrace();
+			n.printStackTrace(out);
 		} 	
 		
 	}
@@ -348,6 +348,7 @@ public class Object_draw extends JPanel {
 			}
 		}catch(ConcurrentModificationException c) {
 			System.out.println(c.toString());
+			c.printStackTrace(out);
 		}
 	}
 	
@@ -358,6 +359,7 @@ public class Object_draw extends JPanel {
 			}
 		}catch(ConcurrentModificationException c) {
 			System.out.println(c.toString());
+			c.printStackTrace(out);
 		}
 	}
 
@@ -458,6 +460,7 @@ public class Object_draw extends JPanel {
 		
 		}catch(ConcurrentModificationException c) {
 			out.println(c);
+			c.printStackTrace(out);
 		}
 	}
 

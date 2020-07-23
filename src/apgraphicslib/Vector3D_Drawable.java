@@ -1,33 +1,22 @@
 package apgraphicslib;
 
 import java.awt.Color;
+import java.awt.Graphics;
 
-/**
- * @author samiam567
- * {@summary Generic class that implements Drawable. @see Drawable }
- */
-public abstract class Physics_drawable extends Physics_object implements Drawable, Two_dimensional {
-	protected Coordinate2D coordinates;
-	private double xSize, ySize;
-	protected double maxSize;
+public class Vector3D_Drawable extends Vector3D implements Drawable {
+	protected Coordinate3D coordinates;
 	private boolean isVisible = true;
 	
+	private String name;
+	
+	private Object_draw drawer;
 	private Color color = Color.BLACK;
 	
-	public Physics_drawable(Object_draw drawer, double x, double y) {
-		super(drawer);
-		coordinates = new Coordinate2D(x,y);
+	public Vector3D_Drawable(double i, double j, double k, Object_draw drawer, double x, double y) {
+		super(i,j,k);
+		coordinates = new Coordinate3D(x,y,0);
+		this.drawer = drawer;
 	}
-	
-	
-	
-	public void setSize(double xSize, double ySize) {
-		this.xSize = xSize;
-		this.ySize = ySize;
-		maxSize = Math.sqrt(xSize*xSize+ySize*ySize);
-	}
-	
-
 
 	@Override
 	public double getX() {
@@ -39,6 +28,11 @@ public abstract class Physics_drawable extends Physics_object implements Drawabl
 		return coordinates.getY();
 	}
 	
+	public double getZ() {
+		return coordinates.getZ();
+	}
+	
+	
 	public void setColor(Color newColor) {
 		color = newColor;
 	}
@@ -48,7 +42,7 @@ public abstract class Physics_drawable extends Physics_object implements Drawabl
 	}
 
 	@Override
-	public Coordinate2D getCoordinates() {
+	public Coordinate3D getCoordinates() {
 		return coordinates;
 	}
 
@@ -65,17 +59,6 @@ public abstract class Physics_drawable extends Physics_object implements Drawabl
 	public void setY(double y) {
 		coordinates.setY(y);
 	}
-
-
-	@Override
-	public double getXSize() {
-		return xSize;
-	}
-
-	@Override
-	public double getYSize() {
-		return ySize;
-	}
 	
 	/**
 	 * {@summary this controls the order at which the objects are painted. the higher the number, the further back the object will be and it will be painted earlier}
@@ -88,8 +71,14 @@ public abstract class Physics_drawable extends Physics_object implements Drawabl
 		}
 	}
 
-
-
+	public void setCoordinates(Coordinate3D newCoords) {
+		this.coordinates = newCoords;
+	}
+	
+	public void setPos(double x, double y, double z) {
+		this.coordinates.setPos(x, y, z);
+	}
+	
 	public boolean getIsVisible() {
 		return isVisible;
 	}
@@ -102,5 +91,34 @@ public abstract class Physics_drawable extends Physics_object implements Drawabl
 
 	public double getPaintOrderValue(Camera cam) {
 		return Physics_engine_toolbox.distance(getCoordinates(), cam.getCoordinates());
-	}	
+	}
+
+
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+
+
+	@Override
+	public void setName(String newName) {
+		this.name = newName;
+		
+	}
+
+
+
+	@Override
+	public Object_draw getDrawer() {
+		return drawer;
+	}
+
+	
+	public void paint(Graphics page) {
+		page.drawLine((int) getX(),(int) getY(),(int) (Settings.width/2 + getI()),(int) ( Settings.height/2 + getJ()));
+	}
+
+
 }

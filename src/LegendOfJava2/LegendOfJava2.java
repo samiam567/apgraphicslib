@@ -2,7 +2,9 @@ package LegendOfJava2;
 
 import apgraphicslib.APLabel;
 import apgraphicslib.Camera3D;
+import apgraphicslib.CameraMovable;
 import apgraphicslib.Coordinate3D;
+import apgraphicslib.Drawable;
 import apgraphicslib.Object_draw;
 import apgraphicslib.Settings;
 
@@ -25,6 +27,9 @@ public class LegendOfJava2 {
 		camera = new LOJ2Camera(this, new Coordinate3D(Settings.width/2, Settings.height/2,0));
 		
 		drawer = new Object_draw(camera);
+		
+		drawer.add((Drawable) camera.getDirectionFacing());
+		camera.addPaintOnly((Drawable) camera.getDirectionFacing());
 		
 		Ryan = new Character(this, drawer.getFrameWidth()*0.5, drawer.getFrameHeight()*0.5, 0);
 		

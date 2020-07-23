@@ -22,25 +22,19 @@ public class Physics_runner {
 		drawer.add(fcps);
 		
 		
-		Cylinder square1 = new Cylinder(drawer, Settings.width/2, Settings.height/2,0,100,100,100,5);
-		square1.setIsFilled(true);
-		
-		square1.setTexture("./src/LegendOfJava/assets/strawberry.jpg");
-		drawer.add(square1);	
-		
+		Vector3D_Drawable vec1 = new Vector3D_Drawable(100,200,0,drawer, drawer.getFrameCenterX(), drawer.getFrameCenterY());
+		drawer.add(vec1);
 				
 		drawer.start();
 		
 
-	//	cam.setCameraPanVelocity(new Vector2D(100,5));
-	
-	
-		square1.setAngularVelocity(new Vector3D(-1,-0,-1));
+		Vector3D rotation = new Vector3D(0,0,0.001);
 	
 		//wait for close
 		while (drawer.getFrame().isVisible()) {
+			vec1.rotate(rotation);
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(1);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 				break;

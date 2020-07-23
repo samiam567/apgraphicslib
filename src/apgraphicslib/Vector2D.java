@@ -341,8 +341,6 @@ public class Vector2D extends Vector implements Two_dimensional {
 	}
 
 
-	public void paint(Graphics page) {
-		page.drawLine( Settings.width/2, Settings.height/2,(int) (Settings.width/2 + getI()),(int) ( Settings.height/2 + getJ()));
-	}
+	
 	
 }
