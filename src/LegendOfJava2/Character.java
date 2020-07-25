@@ -30,6 +30,7 @@ public class Character extends Physics_3DDrawMovable {
 	private static double height;
 	public double jumpSpeed = -400;
 	
+	public int movementDirection = 0; //0 = none, 1 = w, 2 = s, 3 = a, 4 = d
 
 	
 	Character_Head head;
@@ -76,6 +77,15 @@ public class Character extends Physics_3DDrawMovable {
 	@Override
 	public void Update(double frames) {
 		super.Update(frames);
+		
+		if (movementDirection != 0) { //we are moving
+			Vector3D speedVec = new Vector3D(runner.camera.getDirectionFacing().getI(),0,runner.camera.getDirectionFacing().getK());			
+			speedVec.multiply(1/runner.camera.getDirectionFacing().getR());
+			speedVec.multiply(100);
+			((Vector3D) runner.Ryan.getSpeed()).setIJK(speedVec.getI(),runner.Ryan.getSpeed().getJ(),speedVec.getK());
+		}
+		
+		runner.camera.getCameraPosition().add(getSpeed().tempStatMultiply(frames));
 	}
 	
 	
@@ -116,6 +126,7 @@ public class Character extends Physics_3DDrawMovable {
 			}else {
 				isOnFloor = false; //if we run into the floor this will be true by next update cycle
 			}
+			
 			
 		}
 		

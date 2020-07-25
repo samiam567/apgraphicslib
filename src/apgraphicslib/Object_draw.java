@@ -289,30 +289,21 @@ public class Object_draw extends JPanel {
 	public void remove(Physics_engine_compatible removeOb) {
 		objects.remove(removeOb);
 		
-		try {
-			getDrawables().remove((Drawable) removeOb);
-		}catch(ClassCastException c) {
-			//ob is not drawable
+		if (Drawable.class.isAssignableFrom(removeOb.getClass())) {
+			drawables.remove((Drawable) removeOb);
 		}
 		
-		try {
+		if (Tangible.class.isAssignableFrom(removeOb.getClass())) {
 			tangibles.remove((Tangible)removeOb);
-		}catch(ClassCastException e) {
-			//ob is not tangible
 		}
 		
-		try {
+		if (Resizable.class.isAssignableFrom(removeOb.getClass())) {
 			resizables.remove((Resizable) removeOb);
-		}catch(ClassCastException e) {
-			//ob is not resizable
 		}
 		
-		try {
+		if (Updatable.class.isAssignableFrom(removeOb.getClass())) {
 			updatables.remove((Updatable) removeOb);
-		}catch(ClassCastException e) {
-			//ob is not updatable
 		}
-
 		
 		out.println("Removed " + ((Physics_engine_compatible) removeOb).getName() + " from " + getName());
 		

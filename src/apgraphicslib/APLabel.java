@@ -29,9 +29,8 @@ public class APLabel extends Physics_drawable implements CameraMovable {
 	public void paint(Camera cam, Graphics page) {
 		double x,y=0;
 		x = cam.getCoordinates().getX();
-		try {
-			y = cam.getCoordinates().getY();
-		}catch(ClassCastException c) {}
+		y = cam.getCoordinates().getY();
+		
 		
 		page.setFont(font);
 		page.drawString(message, (int) ( getX() - x + cam.getFrameWidth()/2 - message.length()*Math.sqrt(font.getSize2D()) ), (int) ( + getY() - y +cam.getFrameHeight()/2 - Math.sqrt(font.getSize2D())));

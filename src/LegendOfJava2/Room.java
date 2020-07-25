@@ -34,7 +34,7 @@ public class Room extends Physics_3DDrawMovable {
 		public Room_floor(Room parent) {
 			super(parent.getDrawer(), parent.getX(), parent.getY() + roomHeight/2, parent.getZ(), roomWidth, roomHeight,5);
 			setTexture2D("./src/LegendOfJava2/assets/texture.jpg");
-			rotatePoints(new Vector3D(Math.PI/2,0,0));
+			rotatePoints(new Vector3D(Math.PI/3,0,0));
 			
 			runner.drawer.add(this);
 			runner.camera.add(this);
@@ -50,8 +50,9 @@ public class Room extends Physics_3DDrawMovable {
 				((Vector3D) runner.Ryan.getAcceleration()).setR(0);
 				runner.Ryan.getSpeed().setJ(0);
 				runner.Ryan.setPos(runner.Ryan.getX(), runner.Ryan.getY()-1 ,runner.Ryan.getZ());
+				runner.camera.getCameraPosition().setY(runner.camera.getCameraPosition().getY()-1);
 				runner.Ryan.isOnFloor = true;
-				runner.camera.getCameraPosition().setPos(runner.Ryan.getX(), runner.Ryan.getY(), runner.Ryan.getZ()); //this should work but it doesn't
+			
 			}
 		}
 	}

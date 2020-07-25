@@ -53,7 +53,7 @@ public abstract class Camera extends JPanel implements Updatable, Physics_engine
 		setName("Unnamed Camera");
 		numCameras++;
 		id = numCameras;
-		this.cameraPosition = new Point2D(cameraPosition.getX(), cameraPosition.getY());
+		this.setCameraPosition(new Point2D(cameraPosition.getX(), cameraPosition.getY()));
 		cameraPanVelocity = new Vector(0);
 		cameraRotation = new Vector(0);
 		cameraAngularVelocity = new Vector(0);
@@ -104,7 +104,7 @@ public abstract class Camera extends JPanel implements Updatable, Physics_engine
 		
 		cameraRotation.add(getCameraAngularVelocity().tempStatMultiply(Settings.timeSpeed / getDrawer().getActualFPS()));
 		
-		cameraPosition.add(cameraPanVelocity.tempStatMultiply(Settings.timeSpeed / getDrawer().getActualFPS()));
+		getCameraPosition().add(cameraPanVelocity.tempStatMultiply(Settings.timeSpeed / getDrawer().getActualFPS()));
 	
 		for (CameraMovable cOb : cameraObs) {
 			cOb.updateCameraPaintData(this);
@@ -123,6 +123,7 @@ public abstract class Camera extends JPanel implements Updatable, Physics_engine
 		}	
 	}
 	
+
 	@Override
 	public void paint(Graphics page) {	
 	
@@ -207,7 +208,7 @@ public abstract class Camera extends JPanel implements Updatable, Physics_engine
 	}
 
 	public Coordinate2D getCoordinates() {
-		return cameraPosition;
+		return getCameraPosition();
 	}
 	
 	public int getId() {
@@ -219,9 +220,29 @@ public abstract class Camera extends JPanel implements Updatable, Physics_engine
 	}
 	
 	public void setOrbitalRotation(Vector rotVec) {
-		orbitalRotation = rotVec;
+		addOrbitalRotation(orbitalRotation.multiply(-1), rotateWithOrbit);
+		addOrbitalRotation(rotVec,rotateWithOrbit);
 	}
 	
+	public void addOrbitalRotation(Vector orbitalAngularVelocity, boolean rotateWithOrbit) {
+		//orbital rotation
+						
+		orbitalRotation.add(orbitalAngularVelocity);	
+						
+		rotationMatrix.calculateRotation(orbitalAngularVelocity);
+					
+		pORCoordsTemp.setPos(pointOfRotation);
+						
+		getCoordinates().subtract(pORCoordsTemp);
+		((PolyPoint) getCoordinates()).rotate(rotationMatrix);
+		getCoordinates().add(pORCoordsTemp);
+				
+		if (rotateWithOrbit) {
+			cameraRotation.add(orbitalAngularVelocity);
+		}
+				
+		//end orbital rotation 
+	}
 
 	public void setOrbitalAngularVelocity(Vector newAngV) {
 		orbitalAngularVelocity = newAngV;
@@ -261,5 +282,13 @@ public abstract class Camera extends JPanel implements Updatable, Physics_engine
 
 	public Vector getCameraAngularVelocity() {
 		return cameraAngularVelocity;
+	}
+
+	public Coordinate2D getCameraPosition() {
+		return cameraPosition;
+	}
+
+	public void setCameraPosition(Coordinate2D cameraPosition) {
+		this.cameraPosition = cameraPosition;
 	}
 }

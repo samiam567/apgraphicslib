@@ -8,7 +8,7 @@ public class Camera3D extends Camera2D {
 	public Camera3D(Coordinate3D cameraPosition) {
 		super(cameraPosition);
 		
-		this.cameraPosition = new Point3D(cameraPosition.getX(), cameraPosition.getY(), cameraPosition.getZ());
+		this.setCameraPosition(new Point3D(cameraPosition.getX(), cameraPosition.getY(), cameraPosition.getZ()));
 		
 		cameraPanVelocity = new Vector3D();
 		cameraRotation = new Vector3D();
@@ -28,6 +28,10 @@ public class Camera3D extends Camera2D {
 	}
 	public void setCameraPosition(Point3D newPos) {
 		cameraPosition = newPos;
+	}
+	
+	public void setPos(double x, double y, double z) {
+		((Coordinate3D) cameraPosition).setPos(x, y, z);
 	}
 	
 	@Override

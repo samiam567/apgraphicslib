@@ -13,6 +13,11 @@ public class Camera2D extends Camera {
 		super(cameraPosition);
 		cameraPanVelocity = new Vector2D(0,0);
 	}
+	
+	public void setPos(double x, double y) {
+		cameraPosition.setX(x);
+		cameraPosition.setY(y);
+	}
 
 	public void setCameraPosition(Point2D newPos) {
 		cameraPosition = newPos;

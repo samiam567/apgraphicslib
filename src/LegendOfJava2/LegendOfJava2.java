@@ -28,10 +28,9 @@ public class LegendOfJava2 {
 		
 		drawer = new Object_draw(camera);
 		
-		drawer.add((Drawable) camera.getDirectionFacing());
-		camera.addPaintOnly((Drawable) camera.getDirectionFacing());
-		
 		Ryan = new Character(this, drawer.getFrameWidth()*0.5, drawer.getFrameHeight()*0.5, 0);
+		
+		camera.setPointOfRotation(Ryan.head.getCoordinates());
 		
 		Ryan.getAcceleration().setIJ(0,gravity);	
 
@@ -44,6 +43,8 @@ public class LegendOfJava2 {
 		
 		controller = new Controller(this);
 		
+		
+		@SuppressWarnings("unused")
 		Room room1 = new Room(this, drawer.getFrameWidth()/2, drawer.getFrameHeight()/2,0);
 		
 		

@@ -16,6 +16,7 @@ import apgraphicslib.Vector3D;
 public class Controller implements MouseMotionListener, MouseListener, KeyListener{
 	private Robot mouseController;
 	private LegendOfJava2 runner;
+	private boolean mouseMovementActive = true;
 
 	public Controller(LegendOfJava2 runner) {
 		this.runner = runner;
@@ -37,26 +38,27 @@ public class Controller implements MouseMotionListener, MouseListener, KeyListen
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if ( (e.getKeyChar() == 'w' ) || (e.getKeyCode() == 87)) {
-			Vector3D speedVec = new Vector3D(runner.camera.getDirectionFacing().getI(),0,runner.camera.getDirectionFacing().getK());
-			speedVec.multiply(1/runner.camera.getDirectionFacing().getR());
-			speedVec.multiply(100);
-			((Vector3D) runner.Ryan.getSpeed()).setIJK(speedVec.getI(),runner.Ryan.getSpeed().getJ(),speedVec.getK());
-			
-			
+			runner.Ryan.movementDirection = 1;
 		}else if ((e.getKeyChar() == 's') || (e.getKeyCode() == 83)) {
-
+			runner.Ryan.movementDirection = 2;
+		}else if ((e.getKeyChar() == 'a') || (e.getKeyCode() == 68)) {
+			runner.Ryan.movementDirection = 3;
+		}else if ( (e.getKeyChar() == 'd') || (e.getKeyCode() == 65)) {
+			runner.Ryan.movementDirection = 4;
 		}
 		
 		if (e.getKeyCode() == 16) { //SHIFT key
 	
 		}
 		
-		if ((e.getKeyChar() == 'd') || (e.getKeyCode() == 68)) {
+		if (e.getKeyCode() == 27) { // Esc key
+			mouseMovementActive = false;
+		}
+		
+		
 
-		}if ( (e.getKeyChar() == 'a') || (e.getKeyCode() == 65)) {
-
-		}else if (e.getExtendedKeyCode() == 38) { //UP arrow key
-
+		if (e.getExtendedKeyCode() == 38) { //UP arrow key
+		
 		}else if (e.getExtendedKeyCode() == 40) { //DOWN arrow key
 	
 		}
@@ -72,18 +74,21 @@ public class Controller implements MouseMotionListener, MouseListener, KeyListen
 	public void keyReleased(KeyEvent e) {
 		if ( (e.getKeyChar() == 'w' ) || (e.getKeyCode() == 87) || (e.getKeyChar() == 's') || (e.getKeyCode() == 83) || (e.getKeyChar() == 'd') || (e.getKeyCode() == 68) || (e.getKeyChar() == 'a') || (e.getKeyCode() == 65) ) {
 			runner.Ryan.getSpeed().setR(0);
+			runner.Ryan.movementDirection = 0;
 		}
 		
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		mouseMovementActive = true;
 		//TODO make Ryan attack
 		
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
+		mouseMovementActive = true;
 		// TODO Auto-generated method stub
 		
 	}
@@ -113,13 +118,16 @@ public class Controller implements MouseMotionListener, MouseListener, KeyListen
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		Vector3D moveVec = new Vector3D(e.getYOnScreen()-runner.drawer.getFrameHeight()/2,e.getXOnScreen()-runner.drawer.getFrameWidth()/2,0);
-
-		moveVec.multiply(0.01);
-		runner.camera.getDirectionFacing().rotate(moveVec);
-		((Vector3D) runner.camera.getRotation()).add(moveVec);
-		
-		mouseController.mouseMove(runner.drawer.getFrameWidth()/2,runner.drawer.getFrameHeight()/2);
+		if (mouseMovementActive) {
+			Vector3D moveVec = new Vector3D(e.getYOnScreen()-runner.drawer.getFrameHeight()/2,e.getXOnScreen()-runner.drawer.getFrameWidth()/2,0);
+	
+			moveVec.multiply(0.01);
+			runner.camera.getDirectionFacing().rotate(moveVec);
+			//((Vector3D) runner.camera.getRotation()).add(moveVec);
+			runner.camera.addOrbitalRotation(moveVec,true);
+			
+			mouseController.mouseMove(runner.drawer.getFrameWidth()/2,runner.drawer.getFrameHeight()/2);
+		}
 	}
 	
 	private void addControllerToComponents() {

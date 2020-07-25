@@ -25,9 +25,9 @@ public class Coordinate3D extends Coordinate2D implements Three_dimensional {
 	
 	@Override
 	public void setPos(Coordinate2D newCoords) {
-		try {
+		if (Coordinate3D.class.isAssignableFrom(newCoords.getClass())) {
 			setPos(newCoords.getX(), newCoords.getY(), ((Coordinate3D) newCoords).getZ());	
-		}catch(ClassCastException c) {
+		}else{
 			super.setPos(newCoords);
 		}
 	}
@@ -38,13 +38,13 @@ public class Coordinate3D extends Coordinate2D implements Three_dimensional {
 	 */
 	@Override
 	public void add(Coordinate addCoord) {	
-		try {
+		if (Coordinate3D.class.isAssignableFrom(addCoord.getClass())) {
 			x += ((Coordinate2D) addCoord).getX();
 			y += ((Coordinate2D) addCoord).getY();
-		
 			z += ((Coordinate3D) addCoord).getZ();
-	
-		}catch(ClassCastException c) {}
+		}else {
+			super.add(addCoord);
+		}
 		
 	}
 	
@@ -53,18 +53,16 @@ public class Coordinate3D extends Coordinate2D implements Three_dimensional {
 	 * @param addV
 	 */
 	@Override
-	public void subtract(Coordinate addCoord) {	
-		try {
-			x -= ((Coordinate2D) addCoord).getX();
-			y -= ((Coordinate2D) addCoord).getY();
-		
-			z -= ((Coordinate3D) addCoord).getZ();
-	
-		}catch(ClassCastException c) {}
-		
+	public void subtract(Coordinate subCoord) {	
+		if (Coordinate3D.class.isAssignableFrom(subCoord.getClass())) {
+			x -= ((Coordinate2D) subCoord).getX();
+			y -= ((Coordinate2D) subCoord).getY();
+			z -= ((Coordinate3D) subCoord).getZ();
+		}else {
+			super.subtract(subCoord);
+		}
 	}
 	
-
 	/**
 	 * {@summary adds the vector to the coordinate as if it were a vector. (x + i, y + j, z + k)}
 	 * @param addV
@@ -76,13 +74,21 @@ public class Coordinate3D extends Coordinate2D implements Three_dimensional {
 		y += addV.getJ();
 		
 
-		try {
+		if (Vector3D.class.isAssignableFrom(addV.getClass())) {
 			z += ((Vector3D) addV).getK();
-	
-		}catch(ClassCastException c) {}
+		}
 		
 	}
 	
+	@Override
+	public void add(Vector addV) {
+		if (Vector2D.class.isAssignableFrom(addV.getClass())) {
+			add((Vector2D) addV);
+		}else {
+			super.add(addV);
+		}
+	}
+ 	
 	/**
 	 * @deprecated a coordinate does not have a size
 	 */

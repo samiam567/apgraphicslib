@@ -25,10 +25,9 @@ public class Coordinate2D extends Coordinate implements Two_dimensional {
 	 */
 	@Override
 	public void add(Vector addV) {
-		
-		try {
+		if (Vector2D.class.isAssignableFrom(addV.getClass())) {
 			add((Vector2D) addV);
-		}catch(ClassCastException c) {
+		}else{
 			x += addV.getR() * 0.5;
 			y += addV.getR() * 0.5;
 		}
@@ -106,10 +105,11 @@ public class Coordinate2D extends Coordinate implements Two_dimensional {
 	 * @param addV
 	 */
 	public void add(Coordinate addCoord) {
-		try {
-			x += ((Coordinate2D) addCoord).getX();
+		x += addCoord.getX();
+		
+		if (Coordinate2D.class.isAssignableFrom(addCoord.getClass())) {
 			y += ((Coordinate2D) addCoord).getY();
-		}catch(ClassCastException c) {}		
+		}
 	}
 	
 	/**
@@ -117,9 +117,10 @@ public class Coordinate2D extends Coordinate implements Two_dimensional {
 	 * @param addV
 	 */
 	public void subtract(Coordinate addCoord) {
-		try {
-			x -= ((Coordinate2D) addCoord).getX();
+		x -= addCoord.getX();
+		
+		if (Coordinate2D.class.isAssignableFrom(addCoord.getClass())) {
 			y -= ((Coordinate2D) addCoord).getY();
-		}catch(ClassCastException c) {}		
+		}
 	}
 }

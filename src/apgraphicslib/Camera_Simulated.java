@@ -32,12 +32,12 @@ public class Camera_Simulated extends Physics_object implements Updatable, Mouse
 		
 		
 		for (Updatable cUp : getDrawer().getUpdatables()) {
-			try {
+			if (Camera_Simulated_objectable.class.isAssignableFrom(cUp.getClass())) {
 				cOb = (Camera_Simulated_objectable) cUp;
 				cOb.setOrbitalAngularVelocity(((Vector3D)cOb.getOrbitalAngularVelocity()).statAdd(cameraRotateVelocity).subtract(prevCameraRotateVelocity));
 				cOb.setSpeed( ((Vector3D)cOb.getSpeed()).statAdd(cameraPanVelocity).subtract(prevCameraPanVelocity) );
 				
-			}catch(ClassCastException c) {}
+			}
 		}
 		prevCameraRotateVelocity.setIJK(cameraRotateVelocity);
 		prevCameraPanVelocity.setIJK(cameraPanVelocity);
@@ -48,10 +48,10 @@ public class Camera_Simulated extends Physics_object implements Updatable, Mouse
 		
 		Camera_Simulated_objectable cOb;
 		for (Updatable cUp : getDrawer().getUpdatables()) {
-			try {
+			if (Camera_Simulated_objectable.class.isAssignableFrom(cUp.getClass())) {
 				cOb = (Camera_Simulated_objectable) cUp;
 				cOb.setPointOfRotation(cameraCenter, true);
-			}catch(ClassCastException c) {}
+			}
 		}
 	}
 	
