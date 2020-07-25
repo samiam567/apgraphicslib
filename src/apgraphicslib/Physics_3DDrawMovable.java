@@ -19,14 +19,13 @@ public abstract class Physics_3DDrawMovable extends Physics_2DDrawMovable implem
 	
 	@Override
 	public void setSpeed(Vector newSpeed) {
-		try { //vec is 3d
+		if (Vector3D.class.isAssignableFrom(newSpeed.getClass())) { //vec is 3d
 			speed = ((Vector3D) newSpeed);
-		}catch(ClassCastException c) { //if the speed vector has too few dimensions, just use the ones we are given
-			try{ //vec is 2d
-				((Vector3D) getSpeed()).setSize(((Vector2D) newSpeed).getI(), ((Vector2D) newSpeed).getJ());
-			}catch(ClassCastException e) {
-				super.setSpeed(newSpeed); //let the super class deal with this one-dimensional vector
-			}
+		}else if (Vector3D.class.isAssignableFrom(newSpeed.getClass())) { //vec is 2d
+			//if the speed vector has too few dimensions, just use the ones we are given
+			((Vector3D) getSpeed()).setSize(((Vector2D) newSpeed).getI(), ((Vector2D) newSpeed).getJ());
+		}else{
+			super.setSpeed(newSpeed); //let the super class deal with this one-dimensional vector
 		}
 		
 	}
@@ -62,14 +61,13 @@ public abstract class Physics_3DDrawMovable extends Physics_2DDrawMovable implem
 	 */
 	@Override
 	public void setAcceleration(Vector newAcceleration) {
-		try { //vec is 3d
+		if (Vector3D.class.isAssignableFrom(newAcceleration.getClass())) { //vec is 3d
 			acceleration = ((Vector3D) newAcceleration);
-		}catch(ClassCastException c) { //if the acceleration vector has too few dimensions, just use the ones we are given
-			try{ //vec is 2d
-				((Vector3D) getAcceleration()).setSize(((Vector2D) newAcceleration).getI(), ((Vector2D) newAcceleration).getJ());
-			}catch(ClassCastException e) {
-				super.setAcceleration(newAcceleration); //let the super class deal with this one-dimensional vector
-			}
+		}else if (Vector2D.class.isAssignableFrom(newAcceleration.getClass())) { //vec is 2d 
+			//if the acceleration vector has too few dimensions, just use the ones we are given
+			((Vector3D) getAcceleration()).setSize(((Vector2D) newAcceleration).getI(), ((Vector2D) newAcceleration).getJ());
+		}else{
+			super.setAcceleration(newAcceleration); //let the super class deal with this one-dimensional vector
 		}
 	}
 	

@@ -254,50 +254,35 @@ public class Object_draw extends JPanel {
 		
 	}
 	
-	public void addDrawOnly(Drawable addOb) {
-		try {
-			objects.add((Physics_engine_compatible) addOb);
-			getDrawables().add(addOb);
-			out.println("Added " + ((Physics_engine_compatible) addOb).getName() + " to " + getName() + " (drawOnly)");
-		}catch(ClassCastException c) {
-			out.println("tried to add a non-Physics_engine_compatible to an Object_draw. Terminating...");
-			c.printStackTrace();
-			return;
-		}
-
+	public void addDrawOnly(Drawable addOb) {	
+		objects.add(addOb);
+		getDrawables().add(addOb);
+		out.println("Added " +  addOb.getName() + " to " + getName() + " (drawOnly)");		
 	}
 	
 	public void add(Physics_engine_compatible addOb) {
 		pause();
 		objects.add(addOb);
 		
-		try {
-			getDrawables().add((Drawable) addOb);
-		}catch(ClassCastException c) {
-			//ob is not drawable
+		if (Drawable.class.isAssignableFrom(addOb.getClass())) {
+			drawables.add((Drawable) addOb);
 		}
 		
-		try {
+		if (Tangible.class.isAssignableFrom(addOb.getClass())) {
 			tangibles.add((Tangible) addOb);
-		}catch(ClassCastException e) {
-			//ob is not tangible
 		}
 		
-		try {
+		if (Resizable.class.isAssignableFrom(addOb.getClass())) {
 			resizables.add((Resizable) addOb);
-		}catch(ClassCastException e) {
-			//ob is not resizable
 		}
 		
-		try {
+		if (Updatable.class.isAssignableFrom(addOb.getClass())) {
 			updatables.add((Updatable) addOb);
-		}catch(ClassCastException e) {
-			//ob is not updatable
 		}
 		
 		out.println("Added " + ((Physics_engine_compatible) addOb).getName() + " to " + getName());
 		
-		frameStep = 1; //this keeps the updater from freezing due to the sudden change in processing power required
+		frameStep = 1; //this keeps the updater from freezing due to the possible sudden change in processing power required
 		resume();
 	}
 	

@@ -34,9 +34,9 @@ public abstract class Physics_2DDrawMovable extends Physics_drawable implements 
 	 */
 	@Override
 	public void setSpeed(Vector newSpeed) {
-		try {
+		if (Vector2D.class.isAssignableFrom(newSpeed.getClass())) {
 			speed = (Vector2D) newSpeed;
-		}catch(ClassCastException c) { //if the speed vector has too few dimensions, just use the ones we are given
+		}else{ //if the speed vector has too few dimensions, just use the ones we are given
 			speed.setR(newSpeed.getR());
 		}
 		
@@ -52,9 +52,9 @@ public abstract class Physics_2DDrawMovable extends Physics_drawable implements 
 	 */
 	@Override
 	public void setAcceleration(Vector newAcceleration) {
-		try {
+		if (Vector2D.class.isAssignableFrom(newAcceleration.getClass())) {
 			acceleration = (Vector2D) newAcceleration;
-		}catch(ClassCastException c) { //if the speed vector has too few dimensions, just use the ones we are given
+		}else{ //if the speed vector has too few dimensions, just use the ones we are given
 			speed.setR(newAcceleration.getR());
 		}
 		

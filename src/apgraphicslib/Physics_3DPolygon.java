@@ -189,15 +189,18 @@ public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimens
 		double xPofRot = pointOfRotation.getX();
 		double yPofRot = pointOfRotation.getY();
 		double zPofRot = 0;
-		try {
+		if (Coordinate3D.class.isAssignableFrom(pointOfRotation.getClass())) {
 			zPofRot = ((Coordinate3D) pointOfRotation).getZ();
-		}catch(ClassCastException c) {c.printStackTrace();}
+		}else{
+			ClassCastException c = new ClassCastException("point of rotation is not a coordinate3D");
+			c.printStackTrace(getDrawer().out);
+		}
 		
 		//calculate the rotation
-		try {
+		if (Vector3D.class.isAssignableFrom(rotation.getClass())) {
 			rotationMatrix.calculateRotation((Vector3D) rotation);
 			this.rotation.add(rotation);
-		}catch(ClassCastException c) {
+		}else{
 			Vector3D rot = new Vector3D(0,0,rotation.getR());
 			rotationMatrix.calculateRotation(rot);
 			this.rotation.add(rot);
@@ -219,14 +222,13 @@ public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimens
 	 */
 	@Override
 	public void setSpeed(Vector newSpeed) {
-		try { //vec is 3d
+		if (Vector3D.class.isAssignableFrom(newSpeed.getClass())) { //vec is 3d
 			speed = ((Vector3D) newSpeed);
-		}catch(ClassCastException c) { //if the speed vector has too few dimensions, just use the ones we are given
-			try{ //vec is 2d
-				((Vector3D) getSpeed()).setSize(((Vector2D) newSpeed).getI(), ((Vector2D) newSpeed).getJ());
-			}catch(ClassCastException e) {
-				super.setSpeed(newSpeed); //let the super class deal with this one-dimensional vector
-			}
+		}else if (Vector2D.class.isAssignableFrom(newSpeed.getClass())) {//vec is 2d   
+			//if the speed vector has too few dimensions, just use the ones we are given
+			((Vector3D) getSpeed()).setSize(((Vector2D) newSpeed).getI(), ((Vector2D) newSpeed).getJ());
+		}else{
+			super.setSpeed(newSpeed); //let the super class deal with this one-dimensional vector
 		}
 		
 	}
@@ -303,14 +305,13 @@ public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimens
 	 */
 	@Override
 	public void setAcceleration(Vector newAcceleration) {
-		try { //vec is 3d
+		if (Vector3D.class.isAssignableFrom(newAcceleration.getClass())) { //vec is 3d
 			acceleration = ((Vector3D) newAcceleration);
-		}catch(ClassCastException c) { //if the acceleration vector has too few dimensions, just use the ones we are given
-			try{ //vec is 2d
-				((Vector3D) getAcceleration()).setSize(((Vector2D) newAcceleration).getI(), ((Vector2D) newAcceleration).getJ());
-			}catch(ClassCastException e) {
-				super.setAcceleration(newAcceleration); //let the super class deal with this one-dimensional vector
-			}
+		}else if (Vector2D.class.isAssignableFrom(newAcceleration.getClass())) { //vec is 2d	
+			 //if the acceleration vector has too few dimensions, just use the ones we are given
+			((Vector3D) getAcceleration()).setSize(((Vector2D) newAcceleration).getI(), ((Vector2D) newAcceleration).getJ());
+		}else{
+			super.setAcceleration(newAcceleration); //let the super class deal with this one-dimensional vector
 		}
 	}
 	
@@ -329,14 +330,12 @@ public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimens
 	public void setRotation(Vector newRot) {
 		getDrawer().pause();
 		rotate(rotation.statMultiply(-1));
-		try {
+		if (Vector3D.class.isAssignableFrom(newRot.getClass())) {
 			rotation = (Vector3D) newRot;
-		}catch(ClassCastException c) {
-			try {
-				((Vector3D) rotation).setSize(((Vector2D) newRot).getI(),((Vector2D) newRot).getJ(), ((Vector3D)this.rotation).getK());
-			}catch(ClassCastException e) {
-				((Vector2D) rotation).setR(newRot.getR());
-			}
+		}else if (Vector2D.class.isAssignableFrom(newRot.getClass())) {
+			((Vector3D) rotation).setSize(((Vector2D) newRot).getI(),((Vector2D) newRot).getJ(), ((Vector3D)rotation).getK());
+		}else{
+			((Vector2D) rotation).setR(newRot.getR());
 		}
 		
 		rotate(rotation);
@@ -347,14 +346,12 @@ public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimens
 	
 	@Override
 	public void setAngularVelocity(Vector newAngV) {
-		try {
+		if (Vector3D.class.isAssignableFrom(newAngV.getClass())) {
 			angularVelocity = (Vector3D) newAngV;
-		}catch(ClassCastException c) {
-			try {
-				((Vector3D)angularVelocity).setIJK(((Vector2D) newAngV).getI(),((Vector2D) newAngV).getJ(),((Vector3D)angularVelocity).getK());
-			}catch(ClassCastException d) {
-				((Vector3D) angularVelocity).setR(newAngV.getR());
-			}
+		}else if (Vector2D.class.isAssignableFrom(newAngV.getClass())) {
+			((Vector3D)angularVelocity).setIJK(((Vector2D) newAngV).getI(),((Vector2D) newAngV).getJ(),((Vector3D)angularVelocity).getK());
+		}else{
+			((Vector3D) angularVelocity).setR(newAngV.getR());
 		}
 	}
 
@@ -364,14 +361,12 @@ public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimens
 	 */
 	@Override
 	public void setAngularAcceleration(Vector newAngAccel) {
-		try {
-			orbitalAngularAcceleration = (Vector3D) newAngAccel;
-		}catch(ClassCastException c) {
-			try {
-				((Vector3D) orbitalAngularAcceleration).setIJK(((Vector2D) newAngAccel).getI(),((Vector2D) newAngAccel).getJ(),((Vector3D)orbitalAngularAcceleration).getK());
-			}catch(ClassCastException d) {
-				((Vector3D) orbitalAngularAcceleration).setR(newAngAccel.getR());
-			}
+		if (Vector3D.class.isAssignableFrom(newAngAccel.getClass())) {
+			angularAcceleration = (Vector3D) newAngAccel;
+		}else if (Vector2D.class.isAssignableFrom(newAngAccel.getClass())){
+			((Vector3D) angularAcceleration).setIJK(((Vector2D) newAngAccel).getI(),((Vector2D) newAngAccel).getJ(),((Vector3D)orbitalAngularAcceleration).getK());
+		}else{
+			((Vector3D) angularAcceleration).setR(newAngAccel.getR());
 		}
 	}
 	
@@ -379,14 +374,13 @@ public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimens
 	public void setOrbitalRotation(Vector newRot) {
 		getDrawer().pause();
 		rotateAbout(orbitalRotation.statMultiply(-1),pointOfRotation);
-		try {
+		
+		if (Vector3D.class.isAssignableFrom(newRot.getClass())) {
 			orbitalRotation = (Vector3D) newRot;
-		}catch(ClassCastException c) {
-			try {
-				((Vector3D) orbitalRotation).setSize(((Vector2D) newRot).getI(),((Vector2D)newRot).getJ(), ((Vector3D)this.orbitalRotation).getK());
-			}catch(ClassCastException e) {
-				((Vector2D) orbitalRotation).setR(newRot.getR());
-			}
+		}else if (Vector2D.class.isAssignableFrom(newRot.getClass())) {
+			((Vector3D) orbitalRotation).setSize(((Vector2D) newRot).getI(),((Vector2D)newRot).getJ(), ((Vector3D)this.orbitalRotation).getK());
+		}else{
+			((Vector2D) orbitalRotation).setR(newRot.getR());
 		}
 		
 		rotateAbout(orbitalRotation,pointOfRotation);
@@ -397,14 +391,12 @@ public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimens
 	
 	@Override
 	public void setOrbitalAngularVelocity(Vector newAngV) {
-		try {
+		if (Vector3D.class.isAssignableFrom(newAngV.getClass())) {
 			orbitalAngularVelocity = (Vector3D) newAngV;
-		}catch(ClassCastException c) {
-			try {
-				((Vector3D)orbitalAngularVelocity).setIJK(((Vector2D) newAngV).getI(),((Vector2D) newAngV).getJ(),((Vector3D)orbitalAngularVelocity).getK());
-			}catch(ClassCastException d) {
-				((Vector3D) orbitalAngularVelocity).setR(newAngV.getR());
-			}
+		}else if (Vector2D.class.isAssignableFrom(newAngV.getClass())) {
+			((Vector3D)orbitalAngularVelocity).setIJK(((Vector2D) newAngV).getI(),((Vector2D) newAngV).getJ(),((Vector3D)orbitalAngularVelocity).getK());
+		}else{
+			((Vector3D) orbitalAngularVelocity).setR(newAngV.getR());
 		}
 	}
 
@@ -414,23 +406,21 @@ public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimens
 	 */
 	@Override
 	public void setOrbitalAngularAcceleration(Vector newAngAccel) {
-		try {
+		if (Vector3D.class.isAssignableFrom(newAngAccel.getClass())) {
 			orbitalAngularAcceleration = (Vector3D) newAngAccel;
-		}catch(ClassCastException c) {
-			try {
-				((Vector3D) orbitalAngularAcceleration).setIJK(((Vector2D) newAngAccel).getI(),((Vector2D) newAngAccel).getJ(),((Vector3D) orbitalAngularAcceleration).getK());
-			}catch(ClassCastException d) {
-				((Vector3D) orbitalAngularAcceleration).setR(newAngAccel.getR());
-			}
+		}else if (Vector2D.class.isAssignableFrom(newAngAccel.getClass())) {
+			((Vector3D) orbitalAngularAcceleration).setIJK(((Vector2D) newAngAccel).getI(),((Vector2D) newAngAccel).getJ(),((Vector3D) orbitalAngularAcceleration).getK());
+		}else{
+			((Vector3D) orbitalAngularAcceleration).setR(newAngAccel.getR());
 		}
 	}
 
 	@Override
 	public void setPointOfRotation(Coordinate2D newPointOfRotation, boolean rotateWithOrbit) {
 		this.rotateWithOrbit = rotateWithOrbit;
-		try {
+		if (Coordinate3D.class.isAssignableFrom(newPointOfRotation.getClass())) {
 			pointOfRotation = (Coordinate3D) newPointOfRotation;
-		}catch(ClassCastException c ) {
+		}else{
 			pointOfRotation.setPos(newPointOfRotation.getX(), newPointOfRotation.getY());
 		}
 	}
@@ -515,9 +505,9 @@ public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimens
 		
 		double camX = cam.getCoordinates().getX(), camY = cam.getCoordinates().getY(), camZ = 0;
 		
-		try {
+		if (Coordinate3D.class.isAssignableFrom(cam.getCoordinates().getClass())) {
 			camZ = ((Coordinate3D) cam.getCoordinates()).getZ();
-		}catch(ClassCastException c) {}
+		}
 		
 		double offSetX = camX - cam.getFrameWidth()/2;
 		double offSetY = camY - cam.getFrameHeight()/2;
@@ -525,20 +515,16 @@ public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimens
 		
 		Vector3D camRotation;
 		
-		try {
+		if (Vector3D.class.isAssignableFrom(cam.getRotation().getClass())) {
 			camRotation = (Vector3D) cam.getRotation();
-		}catch(ClassCastException c) {
+		}else{
 			camRotation = new Vector3D(0,0,cam.getRotation().getR());
 		}
 		
-	//	System.out.println(camRotation);
 		
 		AffineRotation3D affRot = new AffineRotation3D();
 	
 		affRot.calculateRotation(camRotation);
-		
-		
-		
 		
 		data.center.setPos(getX() - offSetX - camX, getY() - offSetY - camY, getZ() - offSetZ - camZ);
 		

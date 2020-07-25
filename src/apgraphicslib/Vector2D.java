@@ -137,22 +137,22 @@ public class Vector2D extends Vector implements Two_dimensional {
 	 * {@summary adds the passed vector to this Vector}
 	 */
 	public Vector2D add(Vector addVec) {
-		try {
+		if (Vector2D.class.isAssignableFrom(addVec.getClass())) {
 			setI(((Vector2D) addVec).getI() + getI());
 			setJ(((Vector2D) addVec).getJ() + getJ());
-		}catch(ClassCastException c) {
+		} else {
 			setR(getR() + addVec.getR());
 		}
     	return this;
 	}
 	
 	public Vector2D subtract(Vector sVec) {
-		try {
+		if (Vector2D.class.isAssignableFrom(sVec.getClass())) {
 			Vector2D subVec = (Vector2D) sVec;
 			i -= subVec.getI();
 			j -= subVec.getJ();
 			rectangularToPolar();
-		}catch(ClassCastException c) {
+		}else{
 			setR(getR()-sVec.getR());
 		}
 		return this;
@@ -179,12 +179,12 @@ public class Vector2D extends Vector implements Two_dimensional {
 	 * @return outputVec
 	 */
 	public Vector statAddInto(Vector addVec, Vector outputVec) {
-		try {
+		if ( Vector2D.class.isAssignableFrom(outputVec.getClass()) && Vector2D.class.isAssignableFrom(addVec.getClass())) {
 			Vector2D outVec = (Vector2D) outputVec;
 			outVec.setI(getI() + ((Vector2D) addVec).getI());
 			outVec.setJ(getJ() + ((Vector2D) addVec).getJ());
 			return outVec;
-		}catch(ClassCastException c) {
+		}else{
 			return super.statAddInto(addVec, outputVec);
 		}
 		

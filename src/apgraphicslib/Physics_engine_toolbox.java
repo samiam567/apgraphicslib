@@ -318,9 +318,9 @@ public class Physics_engine_toolbox {
 	 * {@code automatically determines which distance method to use but runs a little slower}
 	 */
 	public static double distance(Coordinate2D point1, Coordinate2D point2) {
-		try { 
+		if (Coordinate3D.class.isAssignableFrom(point1.getClass()) && Coordinate3D.class.isAssignableFrom(point2.getClass())) {
 			return distance3D((Coordinate3D) point1,(Coordinate3D) point2);
-		}catch(ClassCastException c) {
+		}else{
 			return distance2D(point1, point2);
 		}
 	}

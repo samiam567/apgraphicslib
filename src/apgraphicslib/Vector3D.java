@@ -1,7 +1,5 @@
 package apgraphicslib;
 
-import java.awt.Graphics;
-
 /**
  * @author samaim567
  *{@summary A Vector in 3D space. Extends Vector2D}
@@ -207,14 +205,16 @@ public class Vector3D extends Vector2D implements Three_dimensional {
 	}
 	
 	public Vector statMultiplyInto(double mult, Vector outputVec) {
-		if (outputVec.getClass().equals(Vector2D.class)) {
-			((Vector2D) outputVec).setI(getI());
-			((Vector2D) outputVec).setJ(getJ());
-		}else if (outputVec.getClass().equals(Vector3D.class)) {
-			((Vector3D) outputVec).setK(getK());
+		if (Vector3D.class.isAssignableFrom(outputVec.getClass())) {
+			((Vector2D) outputVec).setI(getI() * mult);
+			((Vector2D) outputVec).setJ(getJ() * mult);
+			((Vector3D) outputVec).setK(getK() * mult);
+		} else if (Vector2D.class.isAssignableFrom(outputVec.getClass())) {
+			((Vector2D) outputVec).setI(getI() * mult);
+			((Vector2D) outputVec).setJ(getJ() * mult);
+		}else { //Vector
+			outputVec.setR(outputVec.getR() * mult);
 		}
-		
-		outputVec.setR(outputVec.getR() * mult);
 		
 		return outputVec;
 	}
@@ -254,15 +254,14 @@ public class Vector3D extends Vector2D implements Three_dimensional {
 	 * @return outputVec
 	 */
 	public Vector statAddInto(Vector addVec, Vector outputVec) {
-		if (addVec.getClass().equals(Vector3D.class) && outputVec.getClass().equals(Vector3D.class)) {
+		if (Vector3D.class.isAssignableFrom(addVec.getClass()) && Vector3D.class.isAssignableFrom(outputVec.getClass())) {
 			return statAddInto((Vector3D) addVec, (Vector3D) outputVec);
 		}else {
-			
-			try {
+			if (Vector3D.class.isAssignableFrom(outputVec.getClass()) && (Vector2D.class.isAssignableFrom(addVec.getClass()))) {
 				Vector3D outputVec3D = (Vector3D) outputVec;
 				outputVec3D.setIJ(getI() + ((Vector2D) addVec).getI(), getJ() + ((Vector2D) addVec).getJ());
 				return outputVec3D;
-			}catch(ClassCastException e) {
+			}else{
 				return super.statAddInto(addVec, outputVec);
 			}
 		}
@@ -303,9 +302,9 @@ public class Vector3D extends Vector2D implements Three_dimensional {
 	 * {@summary adds addVec to this vector}
 	 */
 	public Vector3D add(Vector addVec) {
-		try {
+		if (Vector3D.class.isAssignableFrom(addVec.getClass())) {
 			add((Vector3D) addVec);
-		}catch(ClassCastException c) {
+		}else {
 			super.add(addVec);
 		}
 		return this;
@@ -335,9 +334,9 @@ public class Vector3D extends Vector2D implements Three_dimensional {
 	 * {@summary adds addVec to this vector}
 	 */
 	public Vector3D subtract(Vector subVec) {
-		try {
+		if (Vector3D.class.isAssignableFrom(subVec.getClass())) {
 			subtract((Vector3D) subVec);
-		}catch(ClassCastException c) {
+		}else {
 			super.subtract(subVec);
 		}
 		return this;
@@ -398,10 +397,11 @@ public class Vector3D extends Vector2D implements Three_dimensional {
 	 * {@summary rotates this Vector using AffineRotation}
 	 * @param rotation
 	 */
+	@Override
 	public void rotate(Vector rotation) {
-		try {
+		if (Vector3D.class.isAssignableFrom(rotation.getClass())) {
 			rotate(new AffineRotation3D((Vector3D) rotation));
-		}catch(ClassCastException c) {
+		} else {
 			super.rotate(rotation);
 		}
 	}
@@ -411,9 +411,9 @@ public class Vector3D extends Vector2D implements Three_dimensional {
 	 * @param affRot
 	 */
 	public void rotate(AffineRotation rotation) {
-		try {
+		if (AffineRotation3D.class.isAssignableFrom(rotation.getClass())) {
 			rotate((AffineRotation3D) rotation);
-		}catch(ClassCastException c) {
+		} else { 
 			super.rotate(rotation);
 		}
 	}

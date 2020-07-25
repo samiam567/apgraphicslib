@@ -1,7 +1,5 @@
 package apgraphicslib;
 
-import shapes.Cylinder;
-
 public class Physics_runner {
 
 	private static Object_draw drawer;
@@ -27,38 +25,46 @@ public class Physics_runner {
 		Vector3D_Drawable vec1 = new Vector3D_Drawable(100,200,0,drawer, drawer.getFrameCenterX(), drawer.getFrameCenterY());
 		drawer.add(vec1);
 				
-		drawer.start();
+		
 		
 
-		Vector rotation = new Vector2D(0,0);
+		Vector rotation = new Vector();
 		
 		long tryStartTime = System.nanoTime();
 		for (int i = 0; i < 100; i++) {
 			try {
 				((Vector3D) rotation).setK(Math.random());
 			}catch(ClassCastException c) {
-				((Vector2D) rotation).setJ(-Math.random());
+				try {
+					((Vector2D) rotation).setJ(1);
+				}catch(ClassCastException d) {
+					rotation.setR(1);
+				}
 			}
 		}
 		long tryEndTime = System.nanoTime();
 		
 		long ifStartTime = System.nanoTime();
 		for (int i = 0; i < 100; i++) {
-			if (rotation.getClass().equals(Vector3D.class)) {
+			if (Vector3D.class.isAssignableFrom(rotation.getClass())) {
 				((Vector3D) rotation).setK(Math.random());
-			} else {
+			} else if ((Vector2D.class.isAssignableFrom(rotation.getClass()))) {
 				((Vector2D) rotation).setJ(-Math.random());
+			}else {
+				rotation.setR(1);
 			}
 		}
 		long ifEndTime = System.nanoTime();
 		
 		System.out.println("try: " + (tryEndTime-tryStartTime));
-		System.out.println("if: " + (ifEndTime-ifStartTime));
-		System.out.println("difference: " + (((double)(ifEndTime-ifStartTime))/((double)(tryEndTime-tryStartTime))) );
-		System.out.println("difference: " + (((double)(tryEndTime-tryStartTime))/((double)(ifEndTime-ifStartTime))) );
+		System.out.println("if:  " + (ifEndTime-ifStartTime));
+		System.out.println("difference: " + (((double)(ifEndTime-ifStartTime))/((double)(tryEndTime-tryStartTime))) + " of the try time" );
+		System.out.println("difference: " + (((double)(tryEndTime-tryStartTime))/((double)(ifEndTime-ifStartTime))) + " times faster");
 		
 		
-		System.exit(1);
+		
+		
+		drawer.start();
 		
 		//wait for close
 		while (drawer.getFrame().isVisible()) {

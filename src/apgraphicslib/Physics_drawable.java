@@ -81,9 +81,9 @@ public abstract class Physics_drawable extends Physics_object implements Drawabl
 	 * {@summary this controls the order at which the objects are painted. the higher the number, the further back the object will be and it will be painted earlier}
 	 */
 	public double getPaintOrderValue() { 
-		try {
+		if (Three_dimensional.class.isAssignableFrom(this.getClass())) {
 			return ((Three_dimensional) this).getZ();
-		}catch(ClassCastException c) {
+		}else{
 			return -Settings.distanceFromScreen - 0.1; //always paint 2D components on top
 		}
 	}

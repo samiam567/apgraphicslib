@@ -487,9 +487,9 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 		
 			double camX = cam.getCoordinates().getX(), camY = cam.getCoordinates().getY(), camZ = 0;
 			
-			try {
+			if (Coordinate3D.class.isAssignableFrom(cam.getCoordinates().getClass())) {
 				camZ = ((Coordinate3D) cam.getCoordinates()).getZ();
-			}catch(ClassCastException c) {}
+			}
 			
 			double offSetX = camX - cam.getFrame().getWidth()/2;
 			double offSetY = camY - cam.getFrame().getHeight()/2;
@@ -497,9 +497,9 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 			
 			Vector3D camRotation;
 			
-			try {
+			if (Vector3D.class.isAssignableFrom(cam.getRotation().getClass())) {
 				camRotation = (Vector3D) cam.getRotation();
-			}catch(ClassCastException c) {
+			}else{
 				camRotation = new Vector3D(0,0,cam.getRotation().getR());
 			}
 			
@@ -973,27 +973,23 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 	
 	public CollisionEvent getCollisionEvent(Tangible o2, Coordinate2D pointOfCollision) {
 		Vector relativeSpeed;
-		try { 
+		
+		if (Vector3D.class.isAssignableFrom(o2.getSpeed().getClass()) && Vector3D.class.isAssignableFrom(getSpeed().getClass())) {
 			relativeSpeed = Vector3D.subtract((Vector3D) o2.getSpeed(),(Vector3D) getSpeed());
-		}catch(ClassCastException DDD) {
-			try {
-				relativeSpeed = Vector2D.subtract((Vector2D) o2.getSpeed(),(Vector2D) getSpeed());
-			}catch(ClassCastException DD) {
-				relativeSpeed = Vector.subtract(o2.getSpeed(),getSpeed());
-			}
+		}else if (Vector2D.class.isAssignableFrom(o2.getSpeed().getClass()) && Vector2D.class.isAssignableFrom(getSpeed().getClass())) {
+			relativeSpeed = Vector2D.subtract((Vector2D) o2.getSpeed(),(Vector2D) getSpeed());
+		}else{
+			relativeSpeed = Vector.subtract(o2.getSpeed(),getSpeed());
+			
 		}
 		
 		Vector2D normalVec;
 	
-		try {
-			
+		if (Coordinate3D.class.isAssignableFrom(pointOfCollision.getClass())) {
 			normalVec = new Vector3D(getCoordinates(), (Coordinate3D) pointOfCollision);
-		}catch(ClassCastException c) { //if the point was 2D, just set it at zPos 0 and carry on
+		}else{ //if the point was 2D, just set it at zPos 0 and carry on
 			normalVec = new Vector2D(getCoordinates(),pointOfCollision);
 		}
-		
-		
-		
 		
 		return new CollisionEvent(pointOfCollision, normalVec,(Tangible) this, relativeSpeed);
 	}
@@ -1002,10 +998,10 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 		
 		//getting the three-dimensional coordinates of point
 		Coordinate3D point3D;
-		try {
+		if (Coordinate3D.class.isAssignableFrom(point.getClass())) {
 			//try to make the point a 3D point
 			point3D = (Coordinate3D) point;
-		}catch(ClassCastException c) { //if the point was 2D, just set it at zPos 0 and carry on
+		}else{ //if the point was 2D, just set it at zPos 0 and carry on
 			point3D = new Coordinate3D(point.getX(),point.getY(),0);
 		}
 		
@@ -1015,9 +1011,9 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 		double obX = ob.getX();
 		double obY = ob.getY();
 		double obZ;
-		try {
+		if (Three_dimensional.class.isAssignableFrom(ob.getClass())) {
 			obZ = ((Three_dimensional) ob).getZ();
-		}catch(ClassCastException c) {
+		}else{
 			obZ = 0;
 		}
 		
