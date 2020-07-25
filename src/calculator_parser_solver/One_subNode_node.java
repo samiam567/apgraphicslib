@@ -17,8 +17,8 @@ public class One_subNode_node extends EquationNode {
 	@Override
 	public double getValue() {
 		if (! isCalculated()) {
-			value = operation(subNode.getValue()); 
 			calculated();
+			value = operation(subNode.getValue()); 
 		}
 		return value;
 	}

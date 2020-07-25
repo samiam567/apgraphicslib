@@ -52,7 +52,7 @@ public class ValueNode extends EquationNode {
 	
 	@Override
 	public long getLevel() {
-		return 1000000000000000000L;
+		return Long.MAX_VALUE;
 	}
 	
 	public void setValue(double value) {

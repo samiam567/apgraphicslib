@@ -45,8 +45,8 @@ public abstract class Two_subNode_node extends EquationNode {
 	public double getValue() {
 		
 		if (! isCalculated()) {
-			value = operation(leftSubNode.getValue(), rightSubNode.getValue()); 
 			calculated();
+			value = operation(leftSubNode.getValue(), rightSubNode.getValue()); 
 		}
 		
 		return value;

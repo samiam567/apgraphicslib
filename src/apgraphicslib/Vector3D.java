@@ -207,11 +207,12 @@ public class Vector3D extends Vector2D implements Three_dimensional {
 	}
 	
 	public Vector statMultiplyInto(double mult, Vector outputVec) {
-		try {
+		if (outputVec.getClass().equals(Vector2D.class)) {
 			((Vector2D) outputVec).setI(getI());
 			((Vector2D) outputVec).setJ(getJ());
+		}else if (outputVec.getClass().equals(Vector3D.class)) {
 			((Vector3D) outputVec).setK(getK());
-		}catch(ClassCastException c) {}
+		}
 		
 		outputVec.setR(outputVec.getR() * mult);
 		
@@ -253,9 +254,9 @@ public class Vector3D extends Vector2D implements Three_dimensional {
 	 * @return outputVec
 	 */
 	public Vector statAddInto(Vector addVec, Vector outputVec) {
-		try { 
+		if (addVec.getClass().equals(Vector3D.class) && outputVec.getClass().equals(Vector3D.class)) {
 			return statAddInto((Vector3D) addVec, (Vector3D) outputVec);
-		}catch(ClassCastException c) {
+		}else {
 			
 			try {
 				Vector3D outputVec3D = (Vector3D) outputVec;

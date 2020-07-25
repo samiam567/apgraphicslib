@@ -37,7 +37,7 @@ public class Polygon_drawer_tools extends Physics_drawable implements MouseListe
 	
 	private ScoreBoard zDisplay, zOffsetDisplay;
 	
-	private Equation zAxis = new Equation("(x/30)^2 + (y/30)^2"); 
+	private Equation zAxis = new Equation("1000*rand(x)"); 
 
 	
 	public static void main(String[] args) {
@@ -50,7 +50,6 @@ public class Polygon_drawer_tools extends Physics_drawable implements MouseListe
 		this.cam = cam;
 		this.drawer = drawer;
 		drawer.addCamera(cam);
-		cam.setDrawer(drawer);
 		
 		zDisplay = new ScoreBoard(drawer,100, 25, "Current zPosition: ", newPointZ);
 		zDisplay.setColor(Color.cyan);
@@ -62,7 +61,7 @@ public class Polygon_drawer_tools extends Physics_drawable implements MouseListe
 		
 		zAxis.setPrintStream(drawer.getOutputStream());
 		
-		object = new Physics_3DTexturedPolygon(drawer, drawer.getFrameWidth()/2, drawer.getFrameHeight()/2,0,5);
+		object = new Physics_3DTexturedPolygon(drawer, drawer.getFrameWidth()/2, drawer.getFrameHeight()/2,0,2);
 		
 		
 		
