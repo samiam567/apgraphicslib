@@ -23,15 +23,14 @@ public class LegendOfJava2 {
 	
 	public LegendOfJava2() {
 		Settings.advancedRotation = false;
+		Settings.perspective = false;
 		
 		camera = new LOJ2Camera(this, new Coordinate3D(Settings.width/2, Settings.height/2,0));
 		
 		drawer = new Object_draw(camera);
 		
 		Ryan = new Character(this, drawer.getFrameWidth()*0.5, drawer.getFrameHeight()*0.5, 0);
-		
-		camera.setPointOfRotation(Ryan.head.getCoordinates());
-		
+	
 		Ryan.getAcceleration().setIJ(0,gravity);	
 
 		APLabel LOJTitle = new APLabel(drawer, drawer.getFrameWidth()*0.5, 25);

@@ -122,9 +122,8 @@ public class Controller implements MouseMotionListener, MouseListener, KeyListen
 			Vector3D moveVec = new Vector3D(e.getYOnScreen()-runner.drawer.getFrameHeight()/2,e.getXOnScreen()-runner.drawer.getFrameWidth()/2,0);
 	
 			moveVec.multiply(0.01);
-			runner.camera.getDirectionFacing().rotate(moveVec);
-			//((Vector3D) runner.camera.getRotation()).add(moveVec);
-			runner.camera.addOrbitalRotation(moveVec,true);
+			((Vector3D) runner.camera.getRotation()).add(moveVec);
+			
 			
 			mouseController.mouseMove(runner.drawer.getFrameWidth()/2,runner.drawer.getFrameHeight()/2);
 		}

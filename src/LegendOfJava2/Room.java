@@ -14,6 +14,7 @@ public class Room extends Physics_3DDrawMovable {
 	private double roomHeight;
 	private double roomWidth;
 	private LegendOfJava2 runner;
+	private static int incCharHeightOnCollide = 1;
 	
 	public Room(LegendOfJava2 runner, double x, double y, double z) {
 		super(runner.drawer, x, y, z);
@@ -44,14 +45,14 @@ public class Room extends Physics_3DDrawMovable {
 		
 		
 		public void collision(CollisionEvent e) {
-			//super.collision(e);
 			
-			if (e.objectHit.equals(runner.Ryan.head)) {
+			if (e.objectHit.equals(runner.Ryan.head)) {	
+				
 				((Vector3D) runner.Ryan.getAcceleration()).setR(0);
 				runner.Ryan.getSpeed().setJ(0);
-				runner.Ryan.setPos(runner.Ryan.getX(), runner.Ryan.getY()-1 ,runner.Ryan.getZ());
-				runner.camera.getCameraPosition().setY(runner.camera.getCameraPosition().getY()-1);
-				runner.Ryan.isOnFloor = true;
+				runner.Ryan.setPos(runner.Ryan.getX(), runner.Ryan.getY()-incCharHeightOnCollide ,runner.Ryan.getZ());
+				runner.camera.getCameraPosition().setY(runner.camera.getCameraPosition().getY()-incCharHeightOnCollide);
+				runner.Ryan.hitFloorLastFrame = true;
 			
 			}
 		}

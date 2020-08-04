@@ -33,12 +33,12 @@ public class Character extends Physics_3DDrawMovable {
 	public int movementDirection = 0; //0 = none, 1 = w, 2 = s, 3 = a, 4 = d
 
 	
-	Character_Head head;
+	public Character_Head head;
 	private Upper_arm left_arm, right_arm;
 	
 	private ArrayList<Physics_3DTexturedPolygon> bodyParts = new ArrayList<Physics_3DTexturedPolygon>();
 	public boolean isOnFloor = false;
-
+	public boolean hitFloorLastFrame = false;
 	
 	public Character(LegendOfJava2 runner, double x, double y, double z) {
 		super(runner.drawer, x, y, z);
@@ -121,13 +121,21 @@ public class Character extends Physics_3DDrawMovable {
 			
 			speed = parent.speed;
 			
-			if (! isOnFloor) {
-				parent.getAcceleration().setJ(runner.gravity);
+				
+			if (hitFloorLastFrame) {
+				isOnFloor = true;
 			}else {
-				isOnFloor = false; //if we run into the floor this will be true by next update cycle
+				isOnFloor = false;
 			}
 			
+			if (! isOnFloor) {
+				parent.getAcceleration().setJ(runner.gravity);
+			}
 			
+			hitFloorLastFrame = false; //if we run into the floor this will be true by next update cycle
+			
+			
+			System.out.println("Head: " + getCoordinates());
 		}
 		
 	
