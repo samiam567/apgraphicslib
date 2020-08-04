@@ -267,18 +267,15 @@ public class Physics_2DTexturedPolygon extends Physics_2DPolygon implements Text
 			
 			double camX = cam.getCoordinates().getX(), camY = cam.getCoordinates().getY();
 			
-			double offSetX = camX - cam.getFrameWidth()/2;
-			double offSetY = camY - cam.getFrameHeight()/2;
-			
 			AffineRotation affRot = new AffineRotation();
 			affRot.calculateRotation(cam.getRotation());
 			
 			
-			data.x = affRot.a * (getX() - offSetX - camX) + affRot.b * (getY() - offSetY - camY);
-			data.y = affRot.c * (getX() - offSetX - camX) + affRot.d * (getY() - offSetY - camY);
+			data.x = affRot.a * (getX() - camX) + affRot.b * (getY() - camY);
+			data.y = affRot.c * (getX() - camX) + affRot.d * (getY() - camY);
 			
-			data.x += camX;
-			data.y += camY;
+			data.x += cam.getFrameWidth()/2;
+			data.y += cam.getFrameHeight()/2;
 			
 		
 			

@@ -491,9 +491,7 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 				camZ = ((Coordinate3D) cam.getCoordinates()).getZ();
 			}
 			
-			double offSetX = camX - cam.getFrame().getWidth()/2;
-			double offSetY = camY - cam.getFrame().getHeight()/2;
-			double offSetZ = camZ;
+		
 			
 			Vector3D camRotation;
 			
@@ -507,16 +505,14 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 		
 			affRot.calculateRotation(camRotation);
 			
-			data.center.setPos(getX() - offSetX - camX, getY() - offSetY - camY, getZ() - offSetZ - camZ);
+			//we are about to change the data so it is not currently sorted
+			data.sorted  = false;
+			
+			data.center.setPos(getX() - camX, getY() - camY, getZ() - camZ);
 			
 			data.center.rotate(affRot);
 			
-			data.center.add(cam.getCoordinates());
-
-			
-			
-			//we are about to change the data so it is not currently sorted
-			data.sorted  = false;
+			data.center.setPos(data.center.getX() + cam.getFrameWidth()/2,data.center.getY() + cam.getFrameHeight()/2,data.center.getZ());
 			
 			int i;
 			

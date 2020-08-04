@@ -387,23 +387,18 @@ public class Physics_2DPolygon extends Physics_2DDrawMovable implements Updatabl
 	public void updateCameraPaintData(Camera cam) {
 		
 		CameraPaintData data = getCameraPaintData(cam);
-		
-		
-		
+
 		double camX = cam.getCoordinates().getX(), camY = cam.getCoordinates().getY();
-		
-		double offSetX = camX - cam.getFrameWidth()/2;
-		double offSetY = camY - cam.getFrameHeight()/2;
 		
 		AffineRotation affRot = new AffineRotation();
 		affRot.calculateRotation(cam.getRotation());
 		
 		
-		double obX = affRot.a * (getX() - offSetX - camX) + affRot.b * (getY() - offSetY - camY);
-		double obY = affRot.c * (getX() - offSetX - camX) + affRot.d * (getY() - offSetY - camY);
+		double obX = affRot.a * (getX() - camX) + affRot.b * (getY() - camY);
+		double obY = affRot.c * (getX() - camX) + affRot.d * (getY() - camY);
 		
-		obX += camX;
-		obY += camY;
+		obX += cam.getFrameWidth()/2;
+		obY += cam.getFrameHeight()/2;
 
 		if (points.size() != data.camPointXValues.length) {
 			data.camPointXValues = new int[points.size()];
