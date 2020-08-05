@@ -23,6 +23,8 @@ import shapes.Egg;
 
 public class Character extends Physics_3DDrawMovable {
 	public static int platePointSize = 5;
+	public static int movementSpeed = 300;
+	
 	private LegendOfJava2 runner;
 	
 	public static double headDiameter;
@@ -81,7 +83,7 @@ public class Character extends Physics_3DDrawMovable {
 		if (movementDirection != 0) { //we are moving
 			Vector3D speedVec = new Vector3D(runner.camera.getDirectionFacing().getI(),0,runner.camera.getDirectionFacing().getK());			
 			speedVec.multiply(1/runner.camera.getDirectionFacing().getR());
-			speedVec.multiply(100);
+			speedVec.multiply(movementSpeed);
 			((Vector3D) runner.Ryan.getSpeed()).setIJK(speedVec.getI(),runner.Ryan.getSpeed().getJ(),speedVec.getK());
 		}
 		
@@ -133,9 +135,7 @@ public class Character extends Physics_3DDrawMovable {
 			}
 			
 			hitFloorLastFrame = false; //if we run into the floor this will be true by next update cycle
-			
-			
-			System.out.println("Head: " + getCoordinates());
+
 		}
 		
 	

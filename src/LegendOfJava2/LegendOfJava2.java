@@ -6,6 +6,7 @@ import apgraphicslib.CameraMovable;
 import apgraphicslib.Coordinate3D;
 import apgraphicslib.Drawable;
 import apgraphicslib.Object_draw;
+import apgraphicslib.Polygon_drawer_tools;
 import apgraphicslib.Settings;
 
 public class LegendOfJava2 {

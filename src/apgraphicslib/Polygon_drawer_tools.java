@@ -37,7 +37,7 @@ public class Polygon_drawer_tools extends Physics_drawable implements MouseListe
 	
 	private ScoreBoard zDisplay, zOffsetDisplay;
 	
-	private Equation zAxis = new Equation("1000*rand(x)"); 
+	private Equation zAxis = new Equation("(x/10)^2"); 
 
 	
 	public static void main(String[] args) {

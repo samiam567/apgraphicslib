@@ -27,8 +27,6 @@ public class LOJ2Camera extends Camera3D {
 		directionFacingBuffer.setIJK(0,0,1);
 		directionFacingBuffer.rotate(cameraRotation);
 		directionFacing.setIJK(directionFacingBuffer.getI(), directionFacingBuffer.getJ(), directionFacingBuffer.getK());
-		
-		System.out.println("Cam: " + getCoordinates());
 	}
 
 	@Override
