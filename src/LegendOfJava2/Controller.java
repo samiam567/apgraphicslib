@@ -39,14 +39,18 @@ public class Controller implements MouseMotionListener, MouseListener, KeyListen
 	public void keyPressed(KeyEvent e) {
 		if ( (e.getKeyChar() == 'w' ) || (e.getKeyCode() == 87)) {
 			runner.Ryan.movementDirection = 1;
+			runner.Ryan.Update(0.00001);
 		}else if ((e.getKeyChar() == 's') || (e.getKeyCode() == 83)) {
 			runner.Ryan.movementDirection = 2;
+			runner.Ryan.Update(0.00001);
 		}else if ((e.getKeyChar() == 'a') || (e.getKeyCode() == 65)) {
 			System.out.println("a");
 			runner.Ryan.movementDirection = 3;
+			runner.Ryan.Update(0.00001);
 		}else if ( (e.getKeyChar() == 'd') || (e.getKeyCode() == 68)) {
 			System.out.println("d");
 			runner.Ryan.movementDirection = 4;
+			runner.Ryan.Update(0.00001);
 		}
 		
 		if (e.getKeyCode() == 16) { //SHIFT key
