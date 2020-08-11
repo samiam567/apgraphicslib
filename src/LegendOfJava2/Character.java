@@ -17,13 +17,14 @@ import apgraphicslib.Settings;
 import apgraphicslib.Tangible;
 import apgraphicslib.Three_dimensional;
 import apgraphicslib.Updatable;
+import apgraphicslib.Vector2D;
 import apgraphicslib.Vector3D;
 import shapes.Cylinder;
 import shapes.Egg;
 
 public class Character extends Physics_3DDrawMovable {
 	public static int platePointSize = 5;
-	public static int movementSpeed = 300;
+	public static int movementSpeed = 1000;
 	
 	private LegendOfJava2 runner;
 	
@@ -34,6 +35,7 @@ public class Character extends Physics_3DDrawMovable {
 	
 	public int movementDirection = 0; //0 = none, 1 = w, 2 = s, 3 = a, 4 = d
 
+	private Vector3D directionFacing = new Vector3D(0,0,1);
 	
 	public Character_Head head;
 	private Upper_arm left_arm, right_arm;
@@ -41,6 +43,7 @@ public class Character extends Physics_3DDrawMovable {
 	private ArrayList<Physics_3DTexturedPolygon> bodyParts = new ArrayList<Physics_3DTexturedPolygon>();
 	public boolean isOnFloor = false;
 	public boolean hitFloorLastFrame = false;
+
 	
 	public Character(LegendOfJava2 runner, double x, double y, double z) {
 		super(runner.drawer, x, y, z);
@@ -60,6 +63,33 @@ public class Character extends Physics_3DDrawMovable {
 		left_arm = new Upper_arm(this,head,-1);
 		right_arm = new Upper_arm(this,head,1);
 		
+		
+	}
+	
+	public Vector3D getRotation() {
+		return (Vector3D) head.getRotation();
+	}
+	
+	public void setRotation(Vector3D rotation) {
+		for (Physics_3DTexturedPolygon cBodyPart : bodyParts) {
+			cBodyPart.setOrbitalRotation(rotation);
+		}
+	}
+	
+	public void setAngularVelocity(Vector3D angV) {
+		for (Physics_3DTexturedPolygon cBodyPart : bodyParts) {
+			if (Character_Head.class.isAssignableFrom(cBodyPart.getClass())) {
+				cBodyPart.setAngularVelocity(angV);
+			}else {
+				cBodyPart.setOrbitalAngularVelocity(angV);
+			}
+		}
+	}
+	
+	public void addAngularVelocity(Vector3D angV) {
+		for (Physics_3DTexturedPolygon cBodyPart : bodyParts) {
+			cBodyPart.getAngularVelocity().add(angV);
+		}
 	}
 	
 	/**
@@ -80,11 +110,42 @@ public class Character extends Physics_3DDrawMovable {
 	public void Update(double frames) {
 		super.Update(frames);
 		
+		directionFacing.rotate(head.getAngularVelocity().statMultiply(frames));
+		
 		if (movementDirection != 0) { //we are moving
 			Vector3D speedVec = new Vector3D(runner.camera.getDirectionFacing().getI(),0,runner.camera.getDirectionFacing().getK());			
 			speedVec.multiply(1/runner.camera.getDirectionFacing().getR());
 			speedVec.multiply(movementSpeed);
-			((Vector3D) runner.Ryan.getSpeed()).setIJK(speedVec.getI(),runner.Ryan.getSpeed().getJ(),speedVec.getK());
+			
+		
+			
+			if (movementDirection == 1) { //forwards
+				//speedVec is already pointing in the right direction
+				
+			}else if (movementDirection == 2) { //backwards
+				speedVec.multiply(-1);		
+			}else if (movementDirection == 3) { //left
+				speedVec.rotate(new Vector3D(0,Math.PI/2, 0));				
+			}else if (movementDirection == 4) { //right
+				speedVec.rotate(new Vector3D(0,-Math.PI/2, 0));
+			}
+			
+			//Set our speed
+			getSpeed().setI(speedVec.getI());
+			((Vector3D) getSpeed()).setK(speedVec.getK());
+			
+			
+			//turn towards the direction we are walking
+			double angleDiff = Math.atan2(speedVec.getK(), speedVec.getI()) - Math.atan2(directionFacing.getK(), directionFacing.getI());
+			
+			if (Math.abs(angleDiff) <= Math.PI) {
+				setAngularVelocity(new Vector3D(0,5*angleDiff,0));
+			}else {
+				setAngularVelocity(new Vector3D(0,-5*angleDiff,0));
+			}
+		
+		}else {
+			setAngularVelocity(new Vector3D(0,0,0));
 		}
 		
 		runner.camera.getCameraPosition().add(getSpeed().tempStatMultiply(frames));
@@ -107,14 +168,14 @@ public class Character extends Physics_3DDrawMovable {
 			this.parent = parent;
 			setName("Character head");
 			setTexture("./src/LegendOfJava2/assets/pointyHead.jpg");
-			rotatePoints(new Vector3D(Math.PI/2,0,Math.PI));
-			rotatePoints(new Vector3D(0,0,-Math.PI/2));
-			rotatePoints(new Vector3D(0,Math.PI,0));
+			
+			rotatePoints(new Vector3D(Math.PI/4,Math.PI,-Math.PI/2));
 			
 			parent.runner.camera.add(this);
 			parent.runner.drawer.add(this);
-		
 			
+			setPointOfRotation(getCoordinates(),true);
+		
 		}
 		
 		@Override
@@ -133,6 +194,7 @@ public class Character extends Physics_3DDrawMovable {
 			if (! isOnFloor) {
 				parent.getAcceleration().setJ(runner.gravity);
 			}
+			
 			
 			hitFloorLastFrame = false; //if we run into the floor this will be true by next update cycle
 
@@ -210,7 +272,7 @@ public class Character extends Physics_3DDrawMovable {
 				cPoint.setPos(cPoint.getX(), cPoint.getY() + getYSize()*2);
 			}
 			
-			
+			setPointOfRotation(parent.head.getCoordinates(),true);
 			
 			parent.runner.drawer.add(this);
 			parent.runner.camera.add(this);
@@ -220,10 +282,11 @@ public class Character extends Physics_3DDrawMovable {
 		public void Update(double frames) {
 			//link this with the head
 			
+			speed = head.getSpeed();
+			
 			super.Update(frames);
 			
-			speed = head.getSpeed();
-			angularVelocity = head.getAngularVelocity();
+			
 		
 			
 			getCoordinates().setY(head.getY() + headDiameter/2);

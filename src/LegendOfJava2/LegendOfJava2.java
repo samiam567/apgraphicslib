@@ -24,7 +24,7 @@ public class LegendOfJava2 {
 	
 	public LegendOfJava2() {
 		Settings.advancedRotation = false;
-		Settings.perspective = false;
+		Settings.perspective = true;
 		
 		camera = new LOJ2Camera(this, new Coordinate3D(Settings.width/2, Settings.height/2,0));
 		
