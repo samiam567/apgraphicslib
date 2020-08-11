@@ -94,32 +94,33 @@ public class Controller implements MouseMotionListener, MouseListener, KeyListen
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		mouseMovementActive = true;
-		// TODO Auto-generated method stub
-		
+		mouseMovementActive = true;	
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent e) {		
-		mouseController.mouseMove(runner.drawer.getFrameWidth()/2,runner.drawer.getFrameHeight()/2);
+		if (mouseMovementActive) {
+			Vector3D moveVec = new Vector3D(e.getYOnScreen()-runner.drawer.getFrameHeight()/2,e.getXOnScreen()-runner.drawer.getFrameWidth()/2,0);
+	
+			moveVec.multiply(0.01);
+			((Vector3D) runner.camera.getRotation()).add(moveVec);
+			
+			
+			mouseController.mouseMove(runner.drawer.getFrameWidth()/2,runner.drawer.getFrameHeight()/2);
+		}
 	}
 
 	@Override

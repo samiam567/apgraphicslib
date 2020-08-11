@@ -110,7 +110,7 @@ public class Character extends Physics_3DDrawMovable {
 	public void Update(double frames) {
 		super.Update(frames);
 		
-		directionFacing.rotate(head.getAngularVelocity().statMultiply(frames));
+		
 		
 		if (movementDirection != 0) { //we are moving
 			Vector3D speedVec = new Vector3D(runner.camera.getDirectionFacing().getI(),0,runner.camera.getDirectionFacing().getK());			
@@ -139,9 +139,9 @@ public class Character extends Physics_3DDrawMovable {
 			double angleDiff = Math.atan2(speedVec.getK(), speedVec.getI()) - Math.atan2(directionFacing.getK(), directionFacing.getI());
 			
 			if (Math.abs(angleDiff) <= Math.PI) {
-				setAngularVelocity(new Vector3D(0,5*angleDiff,0));
+				setAngularVelocity(new Vector3D(0,10*angleDiff,0));
 			}else {
-				setAngularVelocity(new Vector3D(0,-5*angleDiff,0));
+				setAngularVelocity(new Vector3D(0,-10*angleDiff,0));
 			}
 		
 		}else {
@@ -181,6 +181,7 @@ public class Character extends Physics_3DDrawMovable {
 		@Override
 		public void Update(double frames) {
 			super.Update(frames);
+			directionFacing.rotate(head.getAngularVelocity().statMultiply(frames));
 			
 			speed = parent.speed;
 			
@@ -263,7 +264,7 @@ public class Character extends Physics_3DDrawMovable {
 			this.side = side;
 			
 			setName("Upper arm");
-			setTexture("./src/LegendOfJava2/assets/pointyHead.jpg");
+			setTexture("./src/LegendOfJava2/assets/ShieldAndSword.jpg");
 			
 			Coordinate3D cPoint;
 			
