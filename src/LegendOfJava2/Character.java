@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import LegendOfJava.PlayerHead;
 import LegendOfJava.PlayerTorso;
+import apgraphicslib.AffineRotation3D;
 import apgraphicslib.Camera;
 import apgraphicslib.CollisionEvent;
 import apgraphicslib.Coordinate2D;
@@ -23,7 +24,7 @@ import shapes.Cylinder;
 import shapes.Egg;
 
 public class Character extends Physics_3DDrawMovable {
-	public static int platePointSize = 5;
+	public static int platePointSize = 10;
 	public static int movementSpeed = 1000;
 	
 	private LegendOfJava2 runner;
@@ -32,6 +33,9 @@ public class Character extends Physics_3DDrawMovable {
 	private static double Upper_arm_length = Settings.height * 0.1;
 	private static double height;
 	public double jumpSpeed = -400;
+	
+	private AffineRotation3D piovertwoinY = new AffineRotation3D(new Vector3D(0,Math.PI/2,0));
+	private AffineRotation3D negativepiovertwoinY = new AffineRotation3D(new Vector3D(0,-Math.PI/2,0));
 	
 	public int movementDirection = 0; //0 = none, 1 = w, 2 = s, 3 = a, 4 = d
 
@@ -43,6 +47,8 @@ public class Character extends Physics_3DDrawMovable {
 	private ArrayList<Physics_3DTexturedPolygon> bodyParts = new ArrayList<Physics_3DTexturedPolygon>();
 	public boolean isOnFloor = false;
 	public boolean hitFloorLastFrame = false;
+	
+	
 
 	
 	public Character(LegendOfJava2 runner, double x, double y, double z) {
@@ -86,6 +92,16 @@ public class Character extends Physics_3DDrawMovable {
 		}
 	}
 	
+	public void setAngularVelocity(double i, double j, double k) {
+		for (Physics_3DTexturedPolygon cBodyPart : bodyParts) {
+			if (Character_Head.class.isAssignableFrom(cBodyPart.getClass())) {
+				((Vector3D) cBodyPart.getAngularVelocity()).setIJK(i,j,k);
+			}else {
+				((Vector3D) cBodyPart.getOrbitalAngularVelocity()).setIJK(i,j,k);
+			}
+		}
+	}
+	
 	public void addAngularVelocity(Vector3D angV) {
 		for (Physics_3DTexturedPolygon cBodyPart : bodyParts) {
 			cBodyPart.getAngularVelocity().add(angV);
@@ -125,9 +141,9 @@ public class Character extends Physics_3DDrawMovable {
 			}else if (movementDirection == 2) { //backwards
 				speedVec.multiply(-1);		
 			}else if (movementDirection == 3) { //left
-				speedVec.rotate(new Vector3D(0,Math.PI/2, 0));				
+				speedVec.rotate(piovertwoinY);				
 			}else if (movementDirection == 4) { //right
-				speedVec.rotate(new Vector3D(0,-Math.PI/2, 0));
+				speedVec.rotate(negativepiovertwoinY);
 			}
 			
 			//Set our speed
@@ -139,13 +155,13 @@ public class Character extends Physics_3DDrawMovable {
 			double angleDiff = Math.atan2(speedVec.getK(), speedVec.getI()) - Math.atan2(directionFacing.getK(), directionFacing.getI());
 			
 			if (Math.abs(angleDiff) <= Math.PI) {
-				setAngularVelocity(new Vector3D(0,10*angleDiff,0));
+				setAngularVelocity(0,10*angleDiff,0);
 			}else {
-				setAngularVelocity(new Vector3D(0,-10*angleDiff,0));
+				setAngularVelocity(0,-10*angleDiff,0);
 			}
 		
 		}else {
-			setAngularVelocity(new Vector3D(0,0,0));
+			setAngularVelocity(0,0,0);
 		}
 		
 		runner.camera.getCameraPosition().add(getSpeed().tempStatMultiply(frames));
@@ -161,6 +177,7 @@ public class Character extends Physics_3DDrawMovable {
 	public class Character_Head extends Egg implements Tangible{
 		
 		private Character parent;
+		private int loopsWithoutCollision = 0;
 		
 		public Character_Head(Character parent, double x, double y, double z) {
 			super(parent.getDrawer(), x, y, z, headDiameter, headDiameter, headDiameter, platePointSize);
@@ -175,7 +192,7 @@ public class Character extends Physics_3DDrawMovable {
 			parent.runner.drawer.add(this);
 			
 			setPointOfRotation(getCoordinates(),true);
-		
+			
 		}
 		
 		@Override
@@ -187,6 +204,12 @@ public class Character extends Physics_3DDrawMovable {
 			
 				
 			if (hitFloorLastFrame) {
+				loopsWithoutCollision = 0;
+			}else {
+				loopsWithoutCollision++;
+			}
+			
+			if (loopsWithoutCollision < 4) {
 				isOnFloor = true;
 			}else {
 				isOnFloor = false;

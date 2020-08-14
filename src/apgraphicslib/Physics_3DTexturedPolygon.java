@@ -963,7 +963,7 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 	 **/
 	public void setCollisionCheckingAccuracy(int gain) {
 		if (gain > 0) {
-			collisionCheckGain = 1;
+			collisionCheckGain = gain;
 		}else {
 			Exception e = new Exception("collisionGain must be an integer greater than 0");
 			e.printStackTrace();
@@ -1029,7 +1029,7 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 		int pointCounter = 10;
 		for (Coordinate3D cPoint : getPlatePoints()) {
 			if (pointCounter % collisionCheckGain == 0) { //only check every [collisionCheckGain] points
-				if (Physics_engine_toolbox.objectRelativePointDistance3D(obX, obY, obZ, point3D, getX(), getY(), getZ(), cPoint) <= radius + platePointSize * collisionCheckGain/2) {
+				if (Physics_engine_toolbox.objectRelativePointDistance3D(obX, obY, obZ, point3D, getX(), getY(), getZ(), cPoint) <= radius + platePointSize * collisionCheckGain) {
 					return true;
 				}
 				
@@ -1048,15 +1048,13 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 	 * @return the point of contact or null if the objects are not collided
 	 */
 	public Coordinate3D checkForCollision(Tangible object) {
-		int pointCounter = 10;
-		for (Coordinate3D cPoint : getPlatePoints()) {
-			if (pointCounter % collisionCheckGain == 0) { //only check every [collisionCheckGain] points
-				if (object.checkForCollision(cPoint, (Tangible) this, platePointSize * collisionCheckGain/2)) {
+		Coordinate3D cPoint;
+	
+		for (int i = 0; i < getPlatePoints().size(); i+= collisionCheckGain) {
+				cPoint = getPlatePoints().get(i);
+				if (object.checkForCollision(cPoint, (Tangible) this, platePointSize * collisionCheckGain)) {
 					return cPoint;
 				}
-			
-			}
-			pointCounter++;
 		}
 		return null;
 	}

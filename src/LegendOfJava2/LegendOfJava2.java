@@ -1,10 +1,14 @@
 package LegendOfJava2;
 
+import java.awt.Color;
+
 import apgraphicslib.APLabel;
 import apgraphicslib.Camera3D;
 import apgraphicslib.CameraMovable;
 import apgraphicslib.Coordinate3D;
 import apgraphicslib.Drawable;
+import apgraphicslib.FCPS_display;
+import apgraphicslib.FPS_display;
 import apgraphicslib.Object_draw;
 import apgraphicslib.Polygon_drawer_tools;
 import apgraphicslib.Settings;
@@ -30,6 +34,17 @@ public class LegendOfJava2 {
 		
 		drawer = new Object_draw(camera);
 		
+		
+		FPS_display fpsView = new FPS_display(drawer, Settings.width * 0.01 + 28, Settings.height*0.05);
+		fpsView.setColor(Color.white);
+		drawer.add(fpsView);
+		camera.addPaintOnly(fpsView);
+		FCPS_display fcpsView = new FCPS_display(drawer, Settings.width * 0.01 + 43, Settings.height*0.05 + 15);
+		fcpsView.setColor(Color.white);
+		drawer.add(fcpsView);
+		camera.addPaintOnly(fcpsView);
+		
+		
 		Ryan = new Character(this, drawer.getFrameWidth()*0.5, drawer.getFrameHeight()*0.5, 0);
 	
 		Ryan.getAcceleration().setIJ(0,gravity);	
@@ -45,7 +60,7 @@ public class LegendOfJava2 {
 		
 		
 		@SuppressWarnings("unused")
-		Room room1 = new Room(this, drawer.getFrameWidth()/2, drawer.getFrameHeight()/2,0);
+		Room room1 = new Room_doubleDecker(this, drawer.getFrameWidth()/2, drawer.getFrameHeight()/2,0);
 		
 		
 		drawer.start();
