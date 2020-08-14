@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
+//TODO make calculator put earlier operations of same order of ops value higher than later ones (left to right execution)
+
 /**
  * {@summary this equation class will store the tree of operations and values that make up an equation and it will be capable of solving itself with different values}
  * @author apun1
@@ -42,7 +44,6 @@ public class Equation extends One_subNode_node {
 			
 			Equation eq = new Equation(input);
 			
-			JOptionPane.showMessageDialog(null, eq.solve());
 			JOptionPane.showMessageDialog(null, eq.solve());
 			
 			input = "";
@@ -259,7 +260,8 @@ public class Equation extends One_subNode_node {
 		EquationNode lowestNode = arr[0];
 		EquationNode n;
 		int lowestIndx = 0;
-		for (int i = 0; i < arr.length; i++) {
+		for (int i = arr.length-1; i > 0; i--) { //TODO delete one of these
+	//	for (int i = 0; i < arr.length; i++) {
 			n = arr[i];
 			if ( n.getLevel() < lowestNode.getLevel() ) {
 				lowestNode = n;
@@ -362,6 +364,7 @@ public class Equation extends One_subNode_node {
 	 * @return the solution to the equation. If the equation has been solved before and no modifications have been made, it will simply return the value of the previous calculation.
 	 */
 	public double solve() {
+		if (printInProgress) System.out.println(getValue());
 		return getValue();
 	}
 	
@@ -443,6 +446,7 @@ public class Equation extends One_subNode_node {
 		Equation e4 = new Equation("45/2 + sin(10-5)/3"); //testing Sine
 		Equation e5 = new Equation("4rt(tan(atan(0.12))) + 13-sqrt4"); //test sin, asin,sqrt,rt
 		Equation e6 = new Equation("sqrt(3^2 + 4^2) * ( (abs(3)/3 * abs(4)/4) * (_abs(3)/3 + _abs(4)/4) - 1)"); //test abs and negatives
+		Equation e7 = new Equation("1/2*3/2"); //test left to right execution
 		
 		if (e1.solve() == (1+1)) { 
 			System.out.println("e1 worked!");
@@ -483,6 +487,13 @@ public class Equation extends One_subNode_node {
 			System.out.println("e6 worked!");
 		}else {
 			System.out.println("e6 failed :(");
+			successful = false;
+		}
+		
+		if (e7.solve() ==  1D/2*3/2){
+			System.out.println("e7 worked!");
+		}else {
+			System.out.println("e7 failed :(");
 			successful = false;
 		}
 		
