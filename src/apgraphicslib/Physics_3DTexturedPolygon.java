@@ -629,23 +629,22 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 			
 			
 			double parallaxValue;
-			
-			RGBPoint3D cPoint;
-	 		for (int i = 0; i < dataPointSet.size(); i++ ) {
-	 			cPoint = dataPointSet.get(i);
+
+	 		for (RGBPoint3D cPoint : dataPointSet) {
 	 			
-	 			if (cam.perspective) {
-					//as z gets bigger, the object gets further away from the viewer, and the object appears to be smaller
-					if (cPoint.getZ() + data.center.getZ() == 0) {
-						parallaxValue = 1;
+	 			if (cPoint.getZ() + getZ()  >= minZToPaintPoints + ((Three_dimensional) cam.getCoordinates()).getZ()) {
+		 			if (cam.perspective) {
+						//as z gets bigger, the object gets further away from the viewer, and the object appears to be smaller
+						if (((data.center.getZ() + cPoint.getZ()) + -minZToPaintPoints) == 0) {
+							parallaxValue = 1;
+						}else {
+							parallaxValue = (-minZToPaintPoints) / ((data.center.getZ() + cPoint.getZ()) + -minZToPaintPoints);
+						}
 					}else {
-						parallaxValue = (Settings.distanceFromScreen) / ((data.center.getZ() + cPoint.getZ()) + Settings.distanceFromScreen);
+						parallaxValue = 1;
 					}
-				}else {
-					parallaxValue = 1;
-				}
 				
-				if (cPoint.getZ() + getZ() >= minZToPaintPoints) {
+				
 					page.setColor(new Color(cPoint.R,cPoint.G,cPoint.B,cPoint.alpha));
 					
 					page.fillRect((int) cPoint.getX() - 1, (int) cPoint.getY() - 1,(int) (platePointSize*parallaxValue) + 2,(int) (platePointSize*parallaxValue) + 2);

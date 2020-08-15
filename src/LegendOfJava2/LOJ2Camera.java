@@ -10,8 +10,7 @@ import apgraphicslib.Vector3D_Drawable;
 public class LOJ2Camera extends Camera3D {
 	private LegendOfJava2 runner;
 	
-	private Vector3D directionFacing = new Vector3D(0,0,1);
-	private Vector3D directionFacingBuffer = new Vector3D(0,0,1);
+	
 
 	
 	public LOJ2Camera(LegendOfJava2 runner, Coordinate3D cameraPosition) {
@@ -20,22 +19,13 @@ public class LOJ2Camera extends Camera3D {
 	
 		
 	}
-	
-	@Override
-	public void Update(double frames) {
-		super.Update(frames);
-		directionFacingBuffer.setIJK(0,0,1);
-		directionFacingBuffer.rotate(cameraRotation);
-		directionFacing.setIJK(directionFacingBuffer.getI(), directionFacingBuffer.getJ(), directionFacingBuffer.getK());
-	}
+
 
 	@Override
 	public void prePaintUpdate() {
 		super.prePaintUpdate();
 	}
 
-	public Vector3D getDirectionFacing() {
-		return directionFacing;
-	}
+	
 
 }

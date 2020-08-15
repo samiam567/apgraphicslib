@@ -20,6 +20,17 @@ public class Camera3D extends Camera2D {
 		
 		rotationMatrix = new AffineRotation3D();
 		pORCoordsTemp = new Coordinate3D(0,0,0);
+		
+		directionFacing = new Vector3D(0,0,1);
+		directionFacingBuffer = new Vector3D(0,0,1);
+	}
+	
+	@Override
+	protected void updateDirectionFacing() {
+		((Vector3D) directionFacingBuffer).setIJK(0,0,1);
+		directionFacingBuffer.rotate(cameraRotation);
+		((Vector3D) directionFacing).setIJK(directionFacingBuffer.getI(), directionFacingBuffer.getJ(), ((Vector3D) directionFacingBuffer).getK());
+		
 	}
 
 	@Override
@@ -54,6 +65,8 @@ public class Camera3D extends Camera2D {
 		return (Coordinate3D) cameraPosition;
 	}
 	
-	
+	public Vector3D getDirectionFacing() {
+		return (Vector3D) directionFacing;
+	}
 
 }

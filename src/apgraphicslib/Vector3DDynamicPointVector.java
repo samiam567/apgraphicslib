@@ -16,6 +16,12 @@ public class Vector3DDynamicPointVector extends Vector3D {
 		rectangularCalculated = true;
 	}
 	
+	public void setPoints(Coordinate3D pI, Coordinate3D pF) {
+		this.pI = pI;
+		this.pF = pF;
+		rectangularCalculated = true;
+		polarCalculated = false;
+	}
 	/**
 	 * @return a conventional Vector equivalent to this one
 	 */
@@ -58,10 +64,6 @@ public class Vector3DDynamicPointVector extends Vector3D {
 		rectangularToPolar(); //calculate theta,phi
 		return phi;
 	}
-
-	
-	
-
 	
 	/**
 	 * @deprecated

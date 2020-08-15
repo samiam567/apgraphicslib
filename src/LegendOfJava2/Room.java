@@ -7,6 +7,7 @@ import LegendOfJava2.Character.Character_Head;
 import apgraphicslib.CollisionEvent;
 import apgraphicslib.Physics_3DDrawMovable;
 import apgraphicslib.Physics_3DTexturedPolygon;
+import apgraphicslib.Settings;
 import apgraphicslib.Tangible;
 import apgraphicslib.Vector3D;
 import shapes.Rectangle3D_Textured;
@@ -19,7 +20,7 @@ public class Room extends Physics_3DDrawMovable {
 	private LegendOfJava2 runner;
 	private ArrayList<Physics_3DTexturedPolygon> roomObjects = new ArrayList<Physics_3DTexturedPolygon>();
 	private static double incCharHeightOnCollide = 0.1;
-	private static int platePointSize = 15;
+	private static int platePointSize = 30;
 	
 	
 	/**
@@ -77,7 +78,9 @@ public class Room extends Physics_3DDrawMovable {
 			runner.drawer.add(this);
 			runner.camera.add(this);
 			
-			setCollisionCheckingAccuracy(3);
+			setCollisionCheckingAccuracy(7);
+			
+			setMinZToPaintPoints(-Settings.distanceFromScreen);
 		}
 		
 		public void Update(double frames) {

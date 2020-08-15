@@ -20,7 +20,7 @@ public class LegendOfJava2 {
 	
 	Controller controller;
 	
-	public double gravity = 900;
+	public double gravity = 1000;
 	
 	public static void main(String[] args) {
 		new LegendOfJava2();
