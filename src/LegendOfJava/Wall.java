@@ -28,6 +28,7 @@ public class Wall extends Physics_3DTexturedPolygon implements Three_dimensional
 		wallRotation = rotation;
 		
 		setMinZToPaintPoints(0);
+		setCollisionCheckingAccuracy(2);
 		
 		setPos(x,y,z);
 	}
@@ -79,15 +80,10 @@ public class Wall extends Physics_3DTexturedPolygon implements Three_dimensional
 	
 	@Override
 	public Coordinate3D checkForCollision(Tangible object) {	
-		try {
-			//if the object is another wall return null
-			@SuppressWarnings("unused")
-			Wall w = (Wall) object;
-			return null;
-		}catch(ClassCastException c) {
-			//otherwise check collision normally
+		if ( ! Wall.class.isAssignableFrom(object.getClass())) {
 			return super.checkForCollision(object);
 		}
+		return null;
 	}
 	
 	public void collision(CollisionEvent e) {
@@ -108,6 +104,7 @@ public class Wall extends Physics_3DTexturedPolygon implements Three_dimensional
 		}
 		Room.roomSpeed.setIJK(0, 0, 0);
 		getDrawer().resume();
+		
 	}
 	
 	

@@ -1048,13 +1048,14 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 	 * @return the point of contact or null if the objects are not collided
 	 */
 	public Coordinate3D checkForCollision(Tangible object) {
-		Coordinate3D cPoint;
-	
-		for (int i = 0; i < getPlatePoints().size(); i+= collisionCheckGain) {
-				cPoint = getPlatePoints().get(i);
-				if (object.checkForCollision(cPoint, (Tangible) this, platePointSize * collisionCheckGain)) {
+		int pointCounter = 100;
+		for (Coordinate3D cPoint : getPlatePoints()) {
+			if (pointCounter % collisionCheckGain == 0) { //only check every [collisionCheckGain] points
+				if (object.checkForCollision(cPoint, (Tangible) this, platePointSize * collisionCheckGain/2)) {
 					return cPoint;
 				}
+			}
+			pointCounter++;
 		}
 		return null;
 	}

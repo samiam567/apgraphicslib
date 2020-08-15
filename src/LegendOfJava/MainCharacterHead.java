@@ -11,6 +11,7 @@ public class MainCharacterHead extends PlayerHead implements Tangible {
 
 	public MainCharacterHead(Character parentPlayer, int ppSize) {
 		super(parentPlayer, ppSize);
+		setCollisionCheckingAccuracy(2);
 	}
 	
 	public boolean checkForCollision(Coordinate2D point, Tangible ob, double radius) {
