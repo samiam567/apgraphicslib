@@ -3,6 +3,7 @@ package calculator_parser_solver;
 import java.io.PrintStream;
 import java.util.ArrayList;
 
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 //TODO make calculator put earlier operations of same order of ops value higher than later ones (left to right execution)
@@ -23,6 +24,7 @@ public class Equation extends One_subNode_node {
 	
 	public static final boolean printInProgress = false;
 	
+	private static JFrame calculatorAnchor = new JFrame();	
 	private PrintStream out = System.out;
 			
 	private EquationNode[] nodes;
@@ -33,18 +35,47 @@ public class Equation extends One_subNode_node {
 	 */
 	public static void main(String[] args) { 
 		testCalculator();
+		
+		calculatorAnchor.setVisible(true);
+		calculatorAnchor.setSize(300,10);
+		calculatorAnchor.setTitle("Calculator Parser/Solver - Programmed by Alec Pannunzio");
+		
 		String input = "";
 		
 		while (true) { //if the user presses cancel the program will automatically terminate
 			while (input.length() == 0) {
-				input = JOptionPane.showInputDialog(null,"Type in what you want to solve");
+				input = JOptionPane.showInputDialog(calculatorAnchor,"Type in what you want to solve");
+				
+				if (input.equals("/move")) {
+					JOptionPane.showMessageDialog(calculatorAnchor, "Press ok to be able to move the calculator for a limited amount of time");
+					
+					try {
+						Thread.sleep(3500);
+					}catch(InterruptedException i) {
+						i.printStackTrace();
+					}
+					input = "";
+				}else if (input.isBlank() || input.contains("exit")) {
+					System.out.println("terminating");
+					calculatorAnchor.dispose();
+					System.exit(1);
+					System.out.println("exited");
+				}
 			}
 		
 			System.out.println("Input: " + input);
 			
-			Equation eq = new Equation(input);
 			
-			JOptionPane.showMessageDialog(null, eq.solve());
+			try {
+				Equation eq = new Equation(input);
+				JOptionPane.showMessageDialog(calculatorAnchor, eq.solve());
+			}catch(Exception e) {
+				e.printStackTrace();
+				System.out.println("terminating because of an exception");
+				calculatorAnchor.dispose();
+				System.out.println("exited");
+				System.exit(1);
+			}
 			
 			input = "";
 		}
@@ -364,7 +395,7 @@ public class Equation extends One_subNode_node {
 	 * @return the solution to the equation. If the equation has been solved before and no modifications have been made, it will simply return the value of the previous calculation.
 	 */
 	public double solve() {
-		if (printInProgress) System.out.println(getValue());
+		if (printInProgress) out.println(getValue());
 		return getValue();
 	}
 	
@@ -496,11 +527,12 @@ public class Equation extends One_subNode_node {
 			System.out.println("e7 failed :(");
 			successful = false;
 		}
-		
+
 		if (successful) {
 			System.out.println("test complete. All systems functional");
 		}else {
 			System.out.println("test FAILED. One or more equations gave an incorrect answer.");
+			JOptionPane.showMessageDialog(null, "Calculator Test failed. One or more systems did not yield a correct answer");
 		}
 		
 	}

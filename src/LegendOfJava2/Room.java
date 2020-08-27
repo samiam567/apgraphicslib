@@ -93,19 +93,10 @@ public class Room extends Physics_3DDrawMovable {
 			if (e.objectHit.equals(runner.Ryan.head)) {	
 				Character r = runner.Ryan;
 				
-				//if (Math.abs(runner.Ryan.getSpeed().getJ()) < 0.1) {
-				/*if (Math.abs(runner.Ryan.getSpeed().getJ()) > runner.gravity) {
-					
-				}else if ((Math.abs(r.getSpeed().getI()) + Math.abs(((Vector3D) r.getSpeed()).getK())) > 1 ){
-					
-				}
-					incCharHeightOnCollide = 1;
-				}
-			*/	
 				if (r.isOnFloor) {
-					incCharHeightOnCollide = (int) (r.getSpeed().getR() * getDrawer().getFrameStep() * 0.1);
+					incCharHeightOnCollide = (int) (r.getSpeed().getR() * getDrawer().getFrameStep() * 0.07);
 				}else {
-					incCharHeightOnCollide = (int) (r.getSpeed().getJ() * getDrawer().getFrameStep() * 0.1);
+					incCharHeightOnCollide = (int) (r.getSpeed().getJ() * getDrawer().getFrameStep() * 0.05);
 				}
 			
 				((Vector3D) runner.Ryan.getAcceleration()).setIJK(0,0,0);

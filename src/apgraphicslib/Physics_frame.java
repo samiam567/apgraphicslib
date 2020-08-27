@@ -7,7 +7,7 @@ import java.awt.Rectangle;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class Physics_frame extends JFrame{
+public class Physics_frame extends JFrame {
 	/**
 	 * 
 	 */
@@ -18,7 +18,7 @@ public class Physics_frame extends JFrame{
 
 	private static int frameCount;
 	
-	public Physics_frame(JPanel panel) {
+	public Physics_frame(JPanel object_draw) {
 		frameCount++;
 		setSize((int) (Settings.width), (int) (Settings.height));
 		setTitle("Physics-Engine V" + Settings.version + "           Programmed by Alec Pannunzio ID:" + frameCount);
@@ -27,7 +27,7 @@ public class Physics_frame extends JFrame{
 		setBackground(Settings.frameColor);		
 		cp.setBackground(Settings.frameColor);
 		
-		cp.add(panel); //add the drawer to the content pane
+		cp.add(object_draw); //add the drawer to the content pane
 	
 		setVisible(true);
 	}

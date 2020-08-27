@@ -44,11 +44,9 @@ public class Controller implements MouseMotionListener, MouseListener, KeyListen
 			runner.Ryan.movementDirection = 2;
 			runner.Ryan.Update(0.00001);
 		}else if ((e.getKeyChar() == 'a') || (e.getKeyCode() == 65)) {
-			System.out.println("a");
 			runner.Ryan.movementDirection = 3;
 			runner.Ryan.Update(0.00001);
 		}else if ( (e.getKeyChar() == 'd') || (e.getKeyCode() == 68)) {
-			System.out.println("d");
 			runner.Ryan.movementDirection = 4;
 			runner.Ryan.Update(0.00001);
 		}

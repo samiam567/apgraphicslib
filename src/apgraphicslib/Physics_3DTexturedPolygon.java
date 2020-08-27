@@ -632,7 +632,7 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 
 	 		for (RGBPoint3D cPoint : dataPointSet) {
 	 			
-	 			if (cPoint.getZ() + getZ()  >= minZToPaintPoints + ((Three_dimensional) cam.getCoordinates()).getZ()) {
+	 			if (cPoint.getZ() + data.center.getZ()  >= minZToPaintPoints) {
 		 			if (cam.perspective) {
 						//as z gets bigger, the object gets further away from the viewer, and the object appears to be smaller
 						if (((data.center.getZ() + cPoint.getZ()) + -minZToPaintPoints) == 0) {

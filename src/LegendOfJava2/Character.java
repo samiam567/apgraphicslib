@@ -32,7 +32,7 @@ public class Character extends Physics_3DDrawMovable {
 	public static double headDiameter;
 	private static double Upper_arm_length = Settings.height * 0.1;
 	private static double height;
-	public double jumpSpeed = -400;
+	public double jumpSpeed = -800;
 	
 	private AffineRotation3D piovertwoinY = new AffineRotation3D(new Vector3D(0,Math.PI/2,0));
 	private AffineRotation3D negativepiovertwoinY = new AffineRotation3D(new Vector3D(0,-Math.PI/2,0));
@@ -251,7 +251,7 @@ public class Character extends Physics_3DDrawMovable {
 			
 			
 			//do a cylindrical boundary box covering the character
-			if ((point.getY() + obY >= getY() - headDiameter/2 - radius/2) && (point.getY() + obY <= getY() + height + radius/2) ) {
+			if ((point.getY() + obY >= getY() - headDiameter/2 - radius/2) && (point.getY() + obY <= getY() + height + radius/2 - 25) ) {
 				return (Physics_engine_toolbox.distance2D(getX(), getZ(), obX + point3D.getX(), obZ + point3D.getZ()) < headDiameter + radius);
 			}
 			
