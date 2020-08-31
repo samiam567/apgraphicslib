@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-//TODO make calculator put earlier operations of same order of ops value higher than later ones (left to right execution)
 
 /**
  * {@summary this equation class will store the tree of operations and values that make up an equation and it will be capable of solving itself with different values}
@@ -22,6 +21,7 @@ public class Equation extends One_subNode_node {
 	
 	private ArrayList<ValueNode> variables;
 	
+	public static final boolean JOptionPane_error_messages = true;
 	public static final boolean printInProgress = false;
 	
 	private static JFrame calculatorAnchor = new JFrame();	
@@ -48,7 +48,7 @@ public class Equation extends One_subNode_node {
 				
 				if (input.equals("/move")) {
 					JOptionPane.showMessageDialog(calculatorAnchor, "Press ok to be able to move the calculator for a limited amount of time");
-					
+			
 					try {
 						Thread.sleep(3500);
 					}catch(InterruptedException i) {
@@ -239,6 +239,7 @@ public class Equation extends One_subNode_node {
 					}else {
 						Exception e = new Exception("operation not found in operations array: " + inputBuffer);
 						e.printStackTrace(out);
+						if (JOptionPane_error_messages) JOptionPane.showMessageDialog(calculatorAnchor, e.toString() + "\n" + e.getStackTrace().toString());
 					}
 					inputBuffer = ""; //clear the inputBuffer
 				}
@@ -262,9 +263,11 @@ public class Equation extends One_subNode_node {
 		if (parenthesisLevel > 0) {
 			Exception e = new Exception("ParenthesisError: missing close-parenthesis");
 			e.printStackTrace(out);
+			if (JOptionPane_error_messages) JOptionPane.showMessageDialog(calculatorAnchor, e.toString() + "\n" + e.getStackTrace().toString());
 		}else if (parenthesisLevel < 0) {
 			Exception e = new Exception("ParenthesisError: missing open-parenthesis");
 			e.printStackTrace(out);
+			if (JOptionPane_error_messages) JOptionPane.showMessageDialog(calculatorAnchor, e.toString() + "\n" + e.getStackTrace().toString());
 		}
 		
 		
@@ -314,6 +317,7 @@ public class Equation extends One_subNode_node {
 				if (lowestIndx != 0) {
 					Exception e = new Exception("there should be nothing to the right of a lowest-priority single-node operation");
 					e.printStackTrace(out);
+					if (JOptionPane_error_messages) JOptionPane.showMessageDialog(calculatorAnchor, e.toString() + "\n" + e.getStackTrace().toString());
 				}
 				
 				node.setSubNode(getTree(resizeNodesArray(arr,lowestIndx+1,arr.length-1)));
@@ -381,6 +385,7 @@ public class Equation extends One_subNode_node {
 		default:
 			Exception e = new Exception("operation not found in createOperation: " + op);
 			e.printStackTrace(out);
+			if (JOptionPane_error_messages) JOptionPane.showMessageDialog(calculatorAnchor, e.toString() + "\n" + e.getStackTrace().toString());
 			break;
 			
 		}
@@ -434,6 +439,7 @@ public class Equation extends One_subNode_node {
 		}catch(IndexOutOfBoundsException i) {
 			Exception e = new Exception("Variable index not found. That Variable dosen't exist. Indx: " + varIndx);
 			e.printStackTrace(out);
+			if (JOptionPane_error_messages) JOptionPane.showMessageDialog(calculatorAnchor, e.toString() + "\n" + e.getStackTrace().toString());
 		}
 	}
 
@@ -461,6 +467,7 @@ public class Equation extends One_subNode_node {
 		}catch(IndexOutOfBoundsException i) {
 			Exception e = new Exception("Variable index not found. That Varaible dosen't exist. Indx: " + varIndx);
 			e.printStackTrace(out);
+			if (JOptionPane_error_messages) JOptionPane.showMessageDialog(calculatorAnchor, e.toString() + "\n" + e.getStackTrace().toString());
 			return null;
 		}
 	}
@@ -478,6 +485,7 @@ public class Equation extends One_subNode_node {
 		Equation e5 = new Equation("4rt(tan(atan(0.12))) + 13-sqrt4"); //test sin, asin,sqrt,rt
 		Equation e6 = new Equation("sqrt(3^2 + 4^2) * ( (abs(3)/3 * abs(4)/4) * (_abs(3)/3 + _abs(4)/4) - 1)"); //test abs and negatives
 		Equation e7 = new Equation("1/2*3/2"); //test left to right execution
+		Equation e8 = new Equation("atan(_sqrt(3))"); //testing arctan
 		
 		if (e1.solve() == (1+1)) { 
 			System.out.println("e1 worked!");
@@ -527,12 +535,20 @@ public class Equation extends One_subNode_node {
 			System.out.println("e7 failed :(");
 			successful = false;
 		}
+		
+		
+		if (e8.solve() ==  Math.atan(-Math.sqrt(3))){
+			System.out.println("e8 worked!");
+		}else {
+			System.out.println("e8 failed :(");
+			successful = false;
+		}
 
 		if (successful) {
 			System.out.println("test complete. All systems functional");
 		}else {
 			System.out.println("test FAILED. One or more equations gave an incorrect answer.");
-			JOptionPane.showMessageDialog(null, "Calculator Test failed. One or more systems did not yield a correct answer");
+			JOptionPane.showMessageDialog(null, "Calculator Test failed. One or more equations did not yield a correct answer");
 		}
 		
 	}
