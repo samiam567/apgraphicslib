@@ -4,6 +4,10 @@ public class One_subNode_node extends EquationNode {
 	
 	private EquationNode subNode;
 	
+	public One_subNode_node() {
+		orderOfOpsLevel = 3;
+	}
+	
 	public EquationNode getSubNode() {
 		return subNode;
 	}

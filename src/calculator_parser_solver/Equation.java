@@ -24,9 +24,10 @@ public class Equation extends One_subNode_node {
 	public static final boolean JOptionPane_error_messages = true;
 	public static final boolean printInProgress = false;
 	
-	private static JFrame calculatorAnchor = new JFrame();	
+	private static JFrame calculatorAnchor;	
 	private PrintStream out = System.out;
-			
+		
+	private static double prevAns = 0; //used by the main method
 	private EquationNode[] nodes;
 	
 	/**
@@ -34,8 +35,11 @@ public class Equation extends One_subNode_node {
 	 * @param equation
 	 */
 	public static void main(String[] args) { 
-		testCalculator();
+	
+		System.out.println("Test took " + testCalculator() + " nanos");
 		
+		calculatorAnchor = new JFrame();
+	
 		calculatorAnchor.setVisible(true);
 		calculatorAnchor.setSize(300,10);
 		calculatorAnchor.setTitle("Calculator Parser/Solver - Programmed by Alec Pannunzio");
@@ -48,7 +52,7 @@ public class Equation extends One_subNode_node {
 				
 				if (input.equals("/move")) {
 					JOptionPane.showMessageDialog(calculatorAnchor, "Press ok to be able to move the calculator for a limited amount of time");
-			
+					
 					try {
 						Thread.sleep(3500);
 					}catch(InterruptedException i) {
@@ -66,9 +70,11 @@ public class Equation extends One_subNode_node {
 			System.out.println("Input: " + input);
 			
 			
+			
 			try {
 				Equation eq = new Equation(input);
-				JOptionPane.showMessageDialog(calculatorAnchor, eq.solve());
+				prevAns = eq.solve();
+				JOptionPane.showMessageDialog(calculatorAnchor, eq.value);
 			}catch(Exception e) {
 				e.printStackTrace();
 				System.out.println("terminating because of an exception");
@@ -166,6 +172,10 @@ public class Equation extends One_subNode_node {
 		
 		//create nodes
 		
+		while(equation.contains("ans")) {
+			equation = equation.replace("ans", "" + prevAns);
+		}
+		
 		nodes = new EquationNode[0];
 		
 		variables.clear();
@@ -217,7 +227,7 @@ public class Equation extends One_subNode_node {
 			
 			
 			if (indexOf(inputBuffer,operations) != -1) { //catch if we have two operations in a row ex: 1 + sin(25) or 1 + _3
-				addToNodesArray(createOperation(inputBuffer,parenthesisLevel));
+				addToNodesArray(createOperation(inputBuffer,parenthesisLevel,mode));
 				inputBuffer = "";
 				prevMode = "unknown";
 			}
@@ -235,7 +245,7 @@ public class Equation extends One_subNode_node {
 					inputBuffer = ""; //clear the inputBuffer
 				}else if (prevMode.equals("operation") || prevMode.equals("multi-char-operation") ) {
 					if (indexOf(inputBuffer,operations) != -1) {
-						addToNodesArray(createOperation(inputBuffer,parenthesisLevel));
+						addToNodesArray(createOperation(inputBuffer,parenthesisLevel,mode));
 					}else {
 						Exception e = new Exception("operation not found in operations array: " + inputBuffer);
 						e.printStackTrace(out);
@@ -294,8 +304,7 @@ public class Equation extends One_subNode_node {
 		EquationNode lowestNode = arr[0];
 		EquationNode n;
 		int lowestIndx = 0;
-		for (int i = arr.length-1; i > 0; i--) { //TODO delete one of these
-	//	for (int i = 0; i < arr.length; i++) {
+		for (int i = arr.length-1; i > 0; i--) {
 			n = arr[i];
 			if ( n.getLevel() < lowestNode.getLevel() ) {
 				lowestNode = n;
@@ -315,9 +324,9 @@ public class Equation extends One_subNode_node {
 				One_subNode_node node = (One_subNode_node) lowestNode;
 				if (printInProgress) out.println("one_subnode");
 				if (lowestIndx != 0) {
-					Exception e = new Exception("there should be nothing to the right of a lowest-priority single-node operation");
+					Exception e = new Exception("there should be nothing to the left of a lowest-priority single-node operation");
 					e.printStackTrace(out);
-					if (JOptionPane_error_messages) JOptionPane.showMessageDialog(calculatorAnchor, e.toString() + "\n" + e.getStackTrace().toString());
+					if (JOptionPane_error_messages) JOptionPane.showMessageDialog(calculatorAnchor, e.toString() + "\n" + "Node: " + node.toString() + "\nOpsLvl: " + node.orderOfOpsLevel);
 				}
 				
 				node.setSubNode(getTree(resizeNodesArray(arr,lowestIndx+1,arr.length-1)));
@@ -330,12 +339,12 @@ public class Equation extends One_subNode_node {
 		return lowestNode;
 	}
 	
-	private EquationNode createOperation(String op, int parenthesisLevel) {
+	private EquationNode createOperation(String op, int parenthesisLevel, String mode) {
 		EquationNode node = null;
 		
 		switch (op) {
 		case("_"):
-			node = new Negative();
+			node = new Negative(mode);
 			break;
 		case("sin"):
 			node = new Sine();
@@ -473,20 +482,26 @@ public class Equation extends One_subNode_node {
 	}
 	
 	@SuppressWarnings("unused")
-	private static void testCalculator() {
+	private static long testCalculator() {
 		System.out.println("Testing calculator to ensure accuracy...");
 		
+		System.out.println("Building equations...");
 		boolean successful = true;
 		
 		Equation e1 = new Equation("1 + 1");  // start simple
-		Equation e2 = new Equation("1 + 2 * 6^2"); //get a little more complicated
+		Equation e2 = new Equation("1 + 2 * 6^2"); //get a little more complicated, test negative exponents
 		Equation e3 = new Equation("((4^2*3-45)^(1+1*4) / 3) * 2"); //REALLY complicated
 		Equation e4 = new Equation("45/2 + sin(10-5)/3"); //testing Sine
 		Equation e5 = new Equation("4rt(tan(atan(0.12))) + 13-sqrt4"); //test sin, asin,sqrt,rt
 		Equation e6 = new Equation("sqrt(3^2 + 4^2) * ( (abs(3)/3 * abs(4)/4) * (_abs(3)/3 + _abs(4)/4) - 1)"); //test abs and negatives
 		Equation e7 = new Equation("1/2*3/2"); //test left to right execution
 		Equation e8 = new Equation("atan(_sqrt(3))"); //testing arctan
-		
+		Equation e9 = new Equation("4*10^_31*sin24"); //testing negative exponents
+		Equation e10 = new Equation("1 + _ans * 4");
+
+		long start = System.nanoTime();
+			
+		System.out.println("equations built. Testing accuracy...");
 		if (e1.solve() == (1+1)) { 
 			System.out.println("e1 worked!");
 		}else {
@@ -543,7 +558,22 @@ public class Equation extends One_subNode_node {
 			System.out.println("e8 failed :(");
 			successful = false;
 		}
-
+	
+		if (e9.solve() ==  4*Math.pow(10, -31)*Math.sin(24)){
+			System.out.println("e9 worked!");
+		}else {
+			System.out.println("e9 failed :(");
+			successful = false;
+		}
+		
+	
+		if (e10.solve() ==  1 + -e9.solve() * 4){
+			System.out.println("e10 worked!");
+		}else {
+			System.out.println("e10 failed :(");
+			successful = false;
+		}
+		
 		if (successful) {
 			System.out.println("test complete. All systems functional");
 		}else {
@@ -551,8 +581,11 @@ public class Equation extends One_subNode_node {
 			JOptionPane.showMessageDialog(null, "Calculator Test failed. One or more equations did not yield a correct answer");
 		}
 		
+		long end = System.nanoTime();
+		
+		return end-start;
 	}
-
+		
 
 	public void setPrintStream(PrintStream outputStream) {
 		out = outputStream;

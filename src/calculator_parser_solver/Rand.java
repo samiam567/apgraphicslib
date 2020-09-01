@@ -13,7 +13,7 @@ public class Rand extends One_subNode_node {
 	Random rand;
 	
 	public Rand() {
-		orderOfOpsLevel = 4;
+
 		rand = new Random();
 	}
 	
