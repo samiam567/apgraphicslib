@@ -33,7 +33,7 @@ public class Vector3D extends Vector2D implements Three_dimensional {
 	
 	public Vector3D(Coordinate3D pI, Coordinate3D pF) {
 		super(1657934);
-		setIJK(pI,pF);
+		setIJK(pF.getX() - pI.getX(),pF.getY() - pI.getY(),pF.getZ() - pI.getZ());
 	}
 	
 	/**
@@ -69,10 +69,6 @@ public class Vector3D extends Vector2D implements Three_dimensional {
 	 */
 	public void setIJK(Vector3D newValuesVec) {
 		setIJK(newValuesVec.getI(), newValuesVec.getJ(), newValuesVec.getK());
-	}
-
-	public void setIJK(Coordinate3D o1Coord, Coordinate3D o2Coord) {
-		setIJK(o2Coord.getX()-o1Coord.getX(),o2Coord.getY()-o1Coord.getY(),o2Coord.getZ()-o1Coord.getZ());
 	}
 
 	public void setK(double newK) {
