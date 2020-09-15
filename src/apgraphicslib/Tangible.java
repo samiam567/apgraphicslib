@@ -21,7 +21,7 @@ public interface Tangible extends Updatable, Movable, Two_dimensional {
 	 * @param object the object to check if this one is collided with
 	 * @return the point of contact or null if the objects are not collided
 	 */
-	public Coordinate2D checkForCollision(Tangible current_object);
+	public Coordinate2D checkForCollision(Tangible current_object, Vector3D directionVec);
 	
 	/**
 	 * @param point the coordinate to check if it is in the object
@@ -29,7 +29,7 @@ public interface Tangible extends Updatable, Movable, Two_dimensional {
 	 * @param radius the radius around the point to check in
 	 * @return whether the passed coordinate is within the passed radius of the edges of this object
 	 */
-	public boolean checkForCollision(Coordinate2D point,Tangible ob, double radius);
+	public boolean checkForCollision(Coordinate2D point,Tangible ob, Vector3D directionVec, double radius);
 	
 	/**
 	 * {@summary called when a collision is detected

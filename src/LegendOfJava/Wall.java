@@ -65,7 +65,7 @@ public class Wall extends Physics_3DTexturedPolygon implements Three_dimensional
 	
 	
 	@Override
-	public boolean checkForCollision(Coordinate2D point, Tangible ob, double radius) {
+	public boolean checkForCollision(Coordinate2D point, Tangible ob, Vector3D directionVec, double radius) {
 		try {
 			//if the object is another wall return false
 			@SuppressWarnings("unused")
@@ -73,15 +73,15 @@ public class Wall extends Physics_3DTexturedPolygon implements Three_dimensional
 			return false;
 		}catch(ClassCastException c) {
 			//otherwise check collision normally
-			return super.checkForCollision(point, ob, radius);
+			return super.checkForCollision(point, ob,directionVec, radius);
 		}
 	}
 	
 	
 	@Override
-	public Coordinate3D checkForCollision(Tangible object) {	
+	public Coordinate3D checkForCollision(Tangible object, Vector3D directionVec) {	
 		if ( ! Wall.class.isAssignableFrom(object.getClass())) {
-			return super.checkForCollision(object);
+			return super.checkForCollision(object,directionVec);
 		}
 		return null;
 	}
