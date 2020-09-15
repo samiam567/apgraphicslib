@@ -8,7 +8,6 @@ import apgraphicslib.Physics_2DTexturedPolygon;
 import apgraphicslib.Physics_engine_toolbox;
 import apgraphicslib.Tangible;
 import apgraphicslib.Three_dimensional;
-import apgraphicslib.Vector3D;
 
 public class Rectangle_Textured extends Physics_2DTexturedPolygon {
 
@@ -25,9 +24,9 @@ public class Rectangle_Textured extends Physics_2DTexturedPolygon {
 	}
 	
 	
-	public Coordinate2D checkForCollision(Tangible cT, Vector3D directionVec) {
+	public Coordinate2D checkForCollision(Tangible cT) {
 		for (PolyPoint cP : getPoints() ) {
-			if (cT.checkForCollision((Coordinate2D) cP, (Tangible) this, directionVec, 1)) {
+			if (cT.checkForCollision((Coordinate2D) cP, (Tangible) this, 1)) {
 				return (Coordinate2D) cP;
 			}
 		}	
@@ -35,7 +34,7 @@ public class Rectangle_Textured extends Physics_2DTexturedPolygon {
 	}
 
 
-	public boolean checkForCollision(Coordinate2D point, Tangible ob, Vector3D directionVec, double radius) {
+	public boolean checkForCollision(Coordinate2D point, Tangible ob, double radius) {
 		if (Math.abs(rotation.getR()) % Math.PI/2 < Math.PI/8) { // if our rotation allows for AABB collision (Axis-alligned boundry boxes)
 			return ( (Math.abs(getX() - ob.getX()) < (ob.getXSize()/2+getXSize()/2)) && (Math.abs(getY() - ob.getY()) < (ob.getYSize()/2+getYSize()/2))  );
 		}else {
