@@ -18,6 +18,7 @@ import apgraphicslib.Settings;
 import apgraphicslib.Tangible;
 import apgraphicslib.Three_dimensional;
 import apgraphicslib.Updatable;
+import apgraphicslib.Vector;
 import apgraphicslib.Vector2D;
 import apgraphicslib.Vector3D;
 import shapes.Cylinder;
@@ -226,8 +227,8 @@ public class Character extends Physics_3DDrawMovable {
 		
 	
 		
-		public boolean checkForCollision(Coordinate2D point, Tangible ob, double radius) {
-			
+		public boolean checkForCollision(Coordinate2D point, Tangible ob, Vector3D directionVec, double radius) {
+	//		radius = radius + Math.abs(0.5*Vector3D.proj((Vector3D) getSpeed(),directionVec).getR());
 			//getting the three-dimensional coordinates of point
 			Coordinate3D point3D;
 			try {

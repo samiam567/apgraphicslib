@@ -1000,7 +1000,8 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 		return new CollisionEvent(pointOfCollision, normalVec,(Tangible) this, relativeSpeed);
 	}
 	
-	public boolean checkForCollision(Coordinate2D point, Tangible ob, double radius) {
+	public boolean checkForCollision(Coordinate2D point, Tangible ob, Vector3D directionVec, double radius) {
+		radius += Math.abs(0.5*Vector3D.proj((Vector3D) getSpeed(),directionVec).getR());
 		
 		//getting the three-dimensional coordinates of point
 		Coordinate3D point3D;
@@ -1046,11 +1047,11 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 	 * @param object the object to check if this one is collided with
 	 * @return the point of contact or null if the objects are not collided
 	 */
-	public Coordinate3D checkForCollision(Tangible object) {
+	public Coordinate3D checkForCollision(Tangible object, Vector3D directionVec) {
 		int pointCounter = 100;
 		for (Coordinate3D cPoint : getPlatePoints()) {
 			if (pointCounter % collisionCheckGain == 0) { //only check every [collisionCheckGain] points
-				if (object.checkForCollision(cPoint, (Tangible) this, platePointSize * collisionCheckGain/2)) {
+				if (object.checkForCollision(cPoint, (Tangible) this, directionVec, platePointSize * collisionCheckGain/2 + Math.abs(0.5*Vector3D.proj((Vector3D) getSpeed(),directionVec).getR()))) {
 					return cPoint;
 				}
 			}

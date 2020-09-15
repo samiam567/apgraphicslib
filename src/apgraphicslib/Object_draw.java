@@ -342,6 +342,7 @@ public class Object_draw extends JPanel {
 
 	private void checkForCollisions() {		
 		Coordinate2D pointOfCollision;
+		Vector3D directionVec = new Vector3D();
 		Tangible o1, o2;
 		for (int i = 0; i < tangibles.size(); i++) {
 			for (int a = i+1; a < tangibles.size(); a++) {
@@ -356,7 +357,21 @@ public class Object_draw extends JPanel {
 				}
 				
 				if (o1.getIsTangible() && o2.getIsTangible()) {
-					pointOfCollision = o1.checkForCollision(o2);
+					Coordinate3D o1Coord, o2Coord;
+					if (! Coordinate3D.class.isAssignableFrom(o1.getCoordinates().getClass())) {						
+						o1Coord = new Coordinate3D(o1.getX(),o1.getY(),0);						
+					}else {
+						o1Coord = (Coordinate3D) o1.getCoordinates();
+					}
+					
+					if (! Coordinate3D.class.isAssignableFrom(o2.getCoordinates().getClass())) {						
+						o2Coord = new Coordinate3D(o2.getX(),o2.getY(),0);						
+					}else {
+						o2Coord = (Coordinate3D) o2.getCoordinates();
+					}
+					
+					directionVec.setIJK(o1Coord,o2Coord);
+					pointOfCollision = o1.checkForCollision(o2,directionVec);
 					
 					if (! (pointOfCollision == null)) { // we have a collision
 						o2.collision(o1.getCollisionEvent(o2,pointOfCollision));
