@@ -112,15 +112,15 @@ public class Vector3D extends Vector2D implements Three_dimensional {
 	protected void rectangularToPolar() {
 		
 		if (! polarCalculated) {
-		/*	//error detection removed for performance
-			if (! rectangularCalculated) {
+			//error detection removed for performance
+			/*if (! rectangularCalculated) {
 				Exception e = new Exception("both polar and rectangular are not calculated");
 				e.printStackTrace();
 			}
-		*/	
+			*/
 			r = (Math.sqrt(i*i + j*j + k*k));
 			
-			theta = /*Math.PI +*/ Math.atan2(j,i);
+			theta = Math.atan2(j,i);
 			
 			if (k == 0) {
 				phi = Math.PI/2;
