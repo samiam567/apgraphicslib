@@ -42,6 +42,6 @@ public class Rand extends One_subNode_node {
 	}
 	
 	public String toString() {
-		return "sin";
+		return "rand";
 	}
 }
