@@ -37,7 +37,9 @@ public class Commands {
 		}else if (cIn.contains("help")) {
 			output("Possible commands are: " + commands,eq);
 		}else if (cIn.contains("=")) {
-			addVariable(commandInput);
+			addVariable(commandInput,eq);
+		}else {
+			output("Command unrecognized",eq);
 		}
 		
 	}
@@ -78,7 +80,7 @@ public class Commands {
 		}
 	}
 	
-	public static void addVariable(String commandInput) {
+	public static void addVariable(String commandInput, Equation eq) {
 		
 		String name = "";
 		double value = -0;
@@ -100,27 +102,17 @@ public class Commands {
 					continue; // skip spaces
 				}else if (c.equals("=")) { //we have reached the equals
 					break;
-				}else {
+				}else if (! foundName){
 					name = c;
 					foundName = true;
 				}			
 			}
 			
-			//get the value
-			String valueS = "";
-			for (i = i+1; i < commandInput.length(); i++) {
-				c = commandInput.substring(i,i+1); // get the next character
-				if (c.equals(" ")) continue;
-				valueS += c; // append the character to the value (String version)
-			}
+			Equation varEq = new Equation(commandInput.substring(i+1,commandInput.length()));
 			
-			try {
-				value = Double.parseDouble(valueS);
-				foundValue = true;
-			}catch(NumberFormatException n) {
-				System.out.println("failed to parse variable value ( Commands.addVariable(String) )");
-			}
-			
+			value = varEq.solve();
+			foundValue = true;
+		
 		}else {
 			foundValue = false;
 			foundName = false;
@@ -128,6 +120,7 @@ public class Commands {
 		
 		if (foundValue && foundName) {
 			variables.add(new Variable(name,value));
+			output("Variable " + name + " is now set to " + value, eq);
 		}else {
 			(new Exception("bad command format")).printStackTrace();
 		}
