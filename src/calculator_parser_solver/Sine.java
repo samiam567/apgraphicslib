@@ -1,14 +1,20 @@
 package calculator_parser_solver;
 
 public class Sine extends One_subNode_node {
+	Equation equation;
 	
-	public Sine() {
-
+	public Sine(Equation equation) {
+		this.equation = equation;
 	}
 	
 	protected double operation(double a) {
 		if (Equation.printInProgress) System.out.println("sin" + a);
-		return Math.sin(a);
+
+		if (equation.useRadiansNotDegrees) {
+			return Math.sin(a);
+		}else {
+			return Math.sin(a*Math.PI / 180);
+		}
 	}
 	
 	public String toString() {

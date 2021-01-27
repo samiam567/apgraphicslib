@@ -1,5 +1,6 @@
 package calculator_parser_solver;
 
+import javax.swing.JOptionPane;
 
 /**
  * {@summary a value node can be a number or a variable in an equation}
@@ -41,6 +42,7 @@ public class ValueNode extends EquationNode {
 		if (unsetVal) { //make sure this node's value was set
 			Exception e = new Exception("Variable-node " + name + " never had its value set");
 			e.printStackTrace();
+			if (Equation.JOptionPane_error_messages) JOptionPane.showMessageDialog(null,e);
 		}
 		
 		return super.getValue();

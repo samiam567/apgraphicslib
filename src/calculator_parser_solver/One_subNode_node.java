@@ -5,7 +5,7 @@ public class One_subNode_node extends EquationNode {
 	private EquationNode subNode;
 	
 	public One_subNode_node() {
-		orderOfOpsLevel = 3;
+		orderOfOpsLevel = 4;
 	}
 	
 	public EquationNode getSubNode() {
@@ -24,6 +24,8 @@ public class One_subNode_node extends EquationNode {
 			calculated();
 			value = operation(subNode.getValue()); 
 		}
+		
+		
 		return value;
 	}
 	

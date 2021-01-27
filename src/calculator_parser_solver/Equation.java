@@ -19,24 +19,34 @@ public class Equation extends One_subNode_node {
 	public static int[] numbers = {1,2,3,4,5,6,7,8,9,0};
 	public static String[] numberChars = {"1","2","3","4","5","6","7","8","9","0",".",","};
 	
-	private ArrayList<ValueNode> variables;
 	
-	public static final boolean JOptionPane_error_messages = true;
-	public static final boolean printInProgress = false;
-	
-	private static JFrame calculatorAnchor;	
-	private PrintStream out = System.out;
-		
-	private static double prevAns = 0; //used by the main method
+	private ArrayList<ValueNode> variables;	
 	private EquationNode[] nodes;
+	
+	PrintStream out = System.out;
+	
+	//calculator settings 
+	public static boolean JOptionPane_error_messages = true;
+	public static final boolean printInProgress = false;
+	public boolean useRadiansNotDegrees = true;
+	
+	//used by the runUserCalculator method
+	JFrame calculatorAnchor;
+	private double prevAns = 0; 
+	
 	
 	/**
 	 * {@summary testing method}
 	 * @param equation
 	 */
 	public static void main(String[] args) { 
+		JOptionPane_error_messages = true;
+		(new Equation()).runUserCalculator();
+	}
 	
-		System.out.println("Test took " + testCalculator() + " nanos");
+	public void runUserCalculator() {
+		
+		out.println("Test took " + testCalculator() + " nanos");
 		
 		calculatorAnchor = new JFrame();
 	
@@ -50,36 +60,32 @@ public class Equation extends One_subNode_node {
 			while (input.length() == 0) {
 				input = JOptionPane.showInputDialog(calculatorAnchor,"Type in what you want to solve");
 				
-				if (input.equals("/move")) {
-					JOptionPane.showMessageDialog(calculatorAnchor, "Press ok to be able to move the calculator for a limited amount of time");
-					
-					try {
-						Thread.sleep(3500);
-					}catch(InterruptedException i) {
-						i.printStackTrace();
-					}
-					input = "";
-				}else if (input.isBlank() || input.contains("exit")) {
-					System.out.println("terminating");
+				
+				if (input == null || input.isBlank() || input.contains("exit")) {
+					out.println("terminating");
 					calculatorAnchor.dispose();
 					System.exit(1);
-					System.out.println("exited");
+					out.println("exited");
+				}else if (input.contains("/")) {
+					Commands.parseCommand(input,this);
+					input = "";
 				}
 			}
 		
-			System.out.println("Input: " + input);
+			out.println("Input: " + input);
 			
 			
 			
 			try {
-				Equation eq = new Equation(input);
-				prevAns = eq.solve();
-				JOptionPane.showMessageDialog(calculatorAnchor, eq.value);
+				createTree(input);
+				Commands.applyVariables(this);
+				prevAns = solve();
+				JOptionPane.showMessageDialog(calculatorAnchor, getValue());
 			}catch(Exception e) {
 				e.printStackTrace();
-				System.out.println("terminating because of an exception");
+				out.println("terminating because of an exception");
 				calculatorAnchor.dispose();
-				System.out.println("exited");
+				out.println("exited");
 				System.exit(1);
 			}
 			
@@ -94,11 +100,12 @@ public class Equation extends One_subNode_node {
 	 * @param equation
 	 */
 	public Equation(String equation) {
-		orderOfOpsLevel = 0; //we are the top level
-		setParenthesisLevel(0);
-		
 		variables = new ArrayList<ValueNode>();
 		createTree(equation);
+	}
+	
+	public Equation() {
+		variables = new ArrayList<ValueNode>();
 	}
 	
 	/**
@@ -169,6 +176,14 @@ public class Equation extends One_subNode_node {
 	 */
 	public void createTree(String equation) {
 		
+		if (equation.length() == 0) {
+			Exception e = new Exception("Cannot create a tree with an equation String of length 0");
+			e.printStackTrace();
+			return;
+		}
+		
+		orderOfOpsLevel = 0; //we are the top level
+		setParenthesisLevel(0);
 		
 		//create nodes
 		
@@ -347,22 +362,22 @@ public class Equation extends One_subNode_node {
 			node = new Negative(mode);
 			break;
 		case("sin"):
-			node = new Sine();
+			node = new Sine(this);
 			break;
 		case("cos"):
-			node = new Cosine();
+			node = new Cosine(this);
 			break;
 		case("tan"):
-			node = new Tangent();
+			node = new Tangent(this);
 			break;
 		case("asin"):
-			node = new ArcSine();
+			node = new ArcSine(this);
 			break;
 		case("acos"):
-			node = new ArcCosine();
+			node = new ArcCosine(this);
 			break;
 		case("atan"):
-			node = new ArcTangent();
+			node = new ArcTangent(this);
 			break;
 		case("^"):
 			node = new Pow();
@@ -412,7 +427,10 @@ public class Equation extends One_subNode_node {
 	 * @return the solution to the equation. If the equation has been solved before and no modifications have been made, it will simply return the value of the previous calculation.
 	 */
 	public double solve() {
+	
+		if (Double.isNaN(getValue()))  (new Exception("Calculation returned NaN")).printStackTrace();
 		if (printInProgress) out.println(getValue());
+		
 		return getValue();
 	}
 	
@@ -498,9 +516,11 @@ public class Equation extends One_subNode_node {
 		Equation e5 = new Equation("4rt(tan(atan(0.12))) + 13-sqrt4"); //test sin, asin,sqrt,rt
 		Equation e6 = new Equation("sqrt(3^2 + 4^2) * ( (abs(3)/3 * abs(4)/4) * (_abs(3)/3 + _abs(4)/4) - 1)"); //test abs and negatives
 		Equation e7 = new Equation("1/2*3/2"); //test left to right execution
-		Equation e8 = new Equation("atan(_sqrt(3))"); //testing arctan
+		Equation e8 = new Equation("atan(_(2rt(3)))"); //testing arctan
 		Equation e9 = new Equation("4*10^_31*sin24"); //testing negative exponents
 		Equation e10 = new Equation("1 + _ans * 4");
+		Equation e11 = new Equation("sin8+cos9+tan11*asin0.1+acos0.2+atan0.453"); //test all trig functions
+		Equation e12 = new Equation("isPrime(342)"); //test isPrime
 
 		long start = System.nanoTime();
 			
@@ -533,7 +553,7 @@ public class Equation extends One_subNode_node {
 			successful = false;
 		}
 		
-		if (e5.solve() == Math.pow( 4,1/(Math.tan(Math.atan(0.12))) ) + 13-Math.sqrt(4) ){
+		if (e5.solve() == ( Math.pow( (Math.tan(Math.atan(0.12))),1.0/4 ) + 13-Math.sqrt(4) ) ){
 			System.out.println("e5 worked!");
 		}else {
 			System.out.println("e5 failed :(");
@@ -576,6 +596,29 @@ public class Equation extends One_subNode_node {
 			System.out.println("e10 failed :(");
 			successful = false;
 		}
+	
+		if (e11.solve() ==  Math.sin(8)+Math.cos(9)+Math.tan(11)*Math.asin(0.1) + Math.acos(0.2) + Math.atan(0.453)) {
+			System.out.println("e11 worked!");
+		}else {
+			System.out.println("e11 failed :(");
+			successful = false;
+		}
+		
+		if (e12.solve() == 0) {
+			System.out.println("e12 worked!");
+		}else {
+			System.out.println("e12 failed :(");
+			successful = false;
+		}
+		
+		e1.createTree("((4^2*3-45)^(1+1*4) / 3) * 2"); //test equation reusability
+		
+		if (e1.solve() == ((Math.pow((Math.pow(4,2)*3-45),(1+1*4)) / 3) * 2 )) { 
+			System.out.println("e1 test2 worked!");
+		}else {
+			System.out.println("e1 test2 failed :(");
+			successful = false;
+		}
 		
 		if (successful) {
 			System.out.println("test complete. All systems functional");
@@ -585,6 +628,8 @@ public class Equation extends One_subNode_node {
 		}
 		
 		long end = System.nanoTime();
+		
+		
 		
 		return end-start;
 	}

@@ -1,14 +1,20 @@
 package calculator_parser_solver;
 
 public class ArcTangent extends One_subNode_node {
-
-	public ArcTangent() {
-
+	Equation equation;
+	
+	public ArcTangent(Equation equation) {
+		this.equation = equation;
 	}
 	
 	protected double operation(double a) {
 		if (Equation.printInProgress) System.out.println("atan" + a);
-		return Math.atan(a);
+
+		if (equation.useRadiansNotDegrees) {
+			return Math.atan(a);
+		}else {
+			return 180 * Math.atan(a)/Math.PI;
+		}
 	}
 	
 	public String toString() {
