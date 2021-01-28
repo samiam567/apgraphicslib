@@ -32,7 +32,7 @@ public class Equation extends One_subNode_node {
 	
 	//used by the runUserCalculator method
 	JFrame calculatorAnchor;
-	private double prevAns = 0; 
+	double prevAns = 0; 
 	
 	
 	/**
@@ -46,7 +46,15 @@ public class Equation extends One_subNode_node {
 	
 	public void runUserCalculator() {
 		
+		// put some constants into the variables as a default
+		Commands.enableJFrameOutput = false; //be quiet about it
+		Commands.addVariable("/pi=3.14159265358979323846264",this); // pi
+		Commands.addVariable("/e=2.7182818284590452353602874713527",this); // e
+		Commands.addVariable("/h=6.62607004*10^_34",this); // plank's constant
+		Commands.enableJFrameOutput = true;
+		
 		out.println("Test took " + testCalculator() + " nanos");
+		
 		
 		calculatorAnchor = new JFrame();
 	
@@ -66,7 +74,7 @@ public class Equation extends One_subNode_node {
 					calculatorAnchor.dispose();
 					System.exit(1);
 					out.println("exited");
-				}else if (input.contains("/")) {
+				}else if (input.substring(0,1).equals("/")) {
 					Commands.parseCommand(input,this);
 					input = "";
 				}
@@ -175,6 +183,7 @@ public class Equation extends One_subNode_node {
 	 * @param parent
 	 */
 	public void createTree(String equation) {
+		variables.clear();
 		
 		if (equation.length() == 0) {
 			Exception e = new Exception("Cannot create a tree with an equation String of length 0");
@@ -261,10 +270,18 @@ public class Equation extends One_subNode_node {
 				}else if (prevMode.equals("operation") || prevMode.equals("multi-char-operation") ) {
 					if (indexOf(inputBuffer,operations) != -1) {
 						addToNodesArray(createOperation(inputBuffer,parenthesisLevel,mode));
-					}else {
+					}else { //treat as a variable name
+						
+						//this new code treats multi-char strings that aren't operations as variables
+						ValueNode newVariable = new ValueNode(inputBuffer,parenthesisLevel);
+						variables.add(newVariable);
+						addToNodesArray(newVariable); //add a new ValueNode with the variable name
+						
+						/* this code treated multi-char strings that aren't operations as an error
 						Exception e = new Exception("operation not found in operations array: " + inputBuffer);
 						e.printStackTrace(out);
 						if (JOptionPane_error_messages) JOptionPane.showMessageDialog(calculatorAnchor, e.toString() + "\n" + e.getStackTrace().toString());
+						*/
 					}
 					inputBuffer = ""; //clear the inputBuffer
 				}

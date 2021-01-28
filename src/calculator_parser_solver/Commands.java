@@ -11,10 +11,12 @@ import javax.swing.JOptionPane;
  */
 public class Commands {
 	
-	private static final String commands = "/help, /move, /degRadMode";
+	private static final String commands = "/help, /exit, /move, /degRadMode, /[insert 1-character variable name here] = [insert equation here]";
 	
+	static boolean enableJFrameOutput = true;
 	
-	private static ArrayList<Variable> variables = new ArrayList<Variable>(); // variables that the user has declared
+	static ArrayList<Variable> variables = new ArrayList<Variable>(); // variables that the user has declared
+	
 	
 	/**
 	 * {@summary a user declared variable, used to replace variables in user-entered equations with their values}
@@ -45,7 +47,7 @@ public class Commands {
 	}
 
 	private static void output(String message, Equation eq) {
-		JOptionPane.showMessageDialog(eq.calculatorAnchor,message);
+		if (enableJFrameOutput) JOptionPane.showMessageDialog(eq.calculatorAnchor,message);
 		eq.out.println(message);
 	}
 	
@@ -102,14 +104,16 @@ public class Commands {
 					continue; // skip spaces
 				}else if (c.equals("=")) { //we have reached the equals
 					break;
-				}else if (! foundName){
-					name = c;
+				}else { // this is part of the variable name
+					name += c; 
 					foundName = true;
 				}			
 			}
 			
-			Equation varEq = new Equation(commandInput.substring(i+1,commandInput.length()));
-			
+			Equation varEq = new Equation();
+			varEq.prevAns = eq.prevAns; // make sure we can use prevAns
+			varEq.createTree(commandInput.substring(i+1,commandInput.length()));
+			applyVariables(varEq); // make sure we have all our variables and constants
 			value = varEq.solve();
 			foundValue = true;
 		

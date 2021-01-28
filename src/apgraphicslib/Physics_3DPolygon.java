@@ -542,10 +542,8 @@ public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimens
 			data.points = new Point3D[getPoints().size()];
 			
 			//loop through and create a point at each index of the data.points list
-			i = 0;
-			Coordinate3D cPoint;
-			for (PolyPoint cP : getPoints()) {
-				cPoint = (Coordinate3D) cP;
+		
+			for (i = 0; i < getPoints().size(); i++) {
 				data.points[i] = new Point3D(0,0,0);
 				i++;
 			}
