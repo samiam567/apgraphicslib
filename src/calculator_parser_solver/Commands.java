@@ -24,10 +24,10 @@ public class Commands {
 	 */
 	private static class Variable {
 		private String name;
-		private double value;
-		public Variable(String name, double value) {
+		private EquationNode value;
+		public Variable(String name, EquationNode value2) {
 			this.name = name;
-			this.value = value;
+			this.value = value2;
 		}
 	}
 	public static void parseCommand(String commandInput, Equation eq) {
@@ -63,8 +63,8 @@ public class Commands {
 	}
 	
 	private static void degRadMode(Equation eq) {
-		eq.useRadiansNotDegrees = ! eq.useRadiansNotDegrees;
-		if (eq.useRadiansNotDegrees) {
+		Equation.useRadiansNotDegrees = ! Equation.useRadiansNotDegrees;
+		if (Equation.useRadiansNotDegrees) {
 			output("Using Radians", eq);
 		}else {
 			output("Using Degrees", eq);
@@ -78,14 +78,18 @@ public class Commands {
 	 */
 	public static void applyVariables(Equation equation) {	
 		for (Variable var : variables) {
-			equation.setVariableValue(var.name, var.value);
+			if (AdvancedValueNode.class.isAssignableFrom(var.value.getClass())) {
+				equation.setAdvancedVariableValue(var.name,(AdvancedValueNode) var.value);
+			}else{
+				equation.setVariableValue(var.name, var.value.getValue());
+			}
 		}
 	}
 	
 	public static void addVariable(String commandInput, Equation eq) {
 		
 		String name = "";
-		double value = -0;
+		EquationNode value = null;
 		
 		boolean foundName = false;
 		boolean foundValue = false;
@@ -114,7 +118,7 @@ public class Commands {
 			varEq.prevAns = eq.prevAns; // make sure we can use prevAns
 			varEq.createTree(commandInput.substring(i+1,commandInput.length()));
 			applyVariables(varEq); // make sure we have all our variables and constants
-			value = varEq.solve();
+			value = varEq.evaluate();
 			foundValue = true;
 		
 		}else {
@@ -124,7 +128,7 @@ public class Commands {
 		
 		if (foundValue && foundName) {
 			variables.add(new Variable(name,value));
-			output("Variable " + name + " is now set to " + value, eq);
+			output("Variable " + name + " is now set to " + value.getDataStr(), eq);
 		}else {
 			(new Exception("bad command format")).printStackTrace();
 		}

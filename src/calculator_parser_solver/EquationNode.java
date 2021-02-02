@@ -9,6 +9,7 @@ public abstract class EquationNode {
 	protected int orderOfOpsLevel;
 	private EquationNode parent;
 	protected double value;
+	private AdvancedValueNode valueData = null;
 	
 	private boolean calculated = false;
 	
@@ -40,14 +41,22 @@ public abstract class EquationNode {
 		return parent;
 	}
 	
+	public AdvancedValueNode getValueData() {
+		getValue();
+		return valueData;
+	}
 	
 	/**
-	 * {@summary gets the value of this node and evaluates all children}
+	 * {@summary tells the node to evaluate and evaluates all children and returns the current value}
 	 * {@code will be overridden by some children}
 	 * @return
 	 */
 	public double getValue() {
-		calculated = true;
+		if (! calculated) {
+			Exception e = new Exception("getValue() was not overriden by some children");
+			e.printStackTrace();
+			calculated = true;
+		}
 		return value;
 	}
 
@@ -66,6 +75,31 @@ public abstract class EquationNode {
 	
 	public long getLevel() {
 		return parenthesisLevel * Equation.operations.length + orderOfOpsLevel;
+	}
+	
+	
+	/**
+	 * {@summary this should be overridden to display the operation symbol (*,+,-.etc) or the value if the node is not an operation
+	 */
+	@Override
+	public String toString() {
+		return "" + getValue();
+	}
+	
+	/**
+	 * {@summary this should be overridden to display the data that the node stores} 
+	 * @return
+	 */
+	public String getDataStr() {
+		if (getValueData() == null) {
+			return "" + getValue();
+		}else{
+			return getValueData().toString();
+		}
+	}
+
+	public void setValueData(AdvancedValueNode valueData) {
+		this.valueData = valueData;
 	}
 
 

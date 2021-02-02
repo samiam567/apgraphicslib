@@ -6,7 +6,7 @@ public class Absolute_Value extends One_subNode_node {
 		orderOfOpsLevel = 4;
 	}
 	
-	protected double operation(double a) {
+	protected static double operation(double a) {
 		if (Equation.printInProgress) System.out.println("|" + a + "|");
 		return Math.abs(a);
 	}

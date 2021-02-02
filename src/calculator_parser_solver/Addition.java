@@ -7,7 +7,7 @@ public class Addition extends Two_subNode_node {
 	}
 	
 	@Override
-	protected double operation(double a, double b) {
+	protected static double operation(double a, double b) {
 		if (Equation.printInProgress) System.out.println(a + "+" + b);
 		return a+b;
 	}

@@ -11,7 +11,7 @@ public class ValueNode extends EquationNode {
 	private String name = "number";
 
 	
-	private boolean unsetVal = false;
+	private boolean unsetVal = true;
 	
 	public ValueNode(String name) {
 		unsetVal = true;
@@ -45,7 +45,7 @@ public class ValueNode extends EquationNode {
 			if (Equation.JOptionPane_error_messages) JOptionPane.showMessageDialog(null,e);
 		}
 		
-		return super.getValue();
+		return value;
 	}
 	
 	public String getName() {

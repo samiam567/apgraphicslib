@@ -28,11 +28,11 @@ public class Equation extends One_subNode_node {
 	//calculator settings 
 	public static boolean JOptionPane_error_messages = true;
 	public static final boolean printInProgress = false;
-	public boolean useRadiansNotDegrees = true;
+	public static boolean useRadiansNotDegrees = true;
 	
 	//used by the runUserCalculator method
 	JFrame calculatorAnchor;
-	double prevAns = 0; 
+	EquationNode prevAns = new ValueNode(0); 
 	
 	
 	/**
@@ -87,8 +87,9 @@ public class Equation extends One_subNode_node {
 			try {
 				createTree(input);
 				Commands.applyVariables(this);
-				prevAns = solve();
-				JOptionPane.showMessageDialog(calculatorAnchor, getValue());
+				prevAns = evaluate();
+				JOptionPane.showMessageDialog(calculatorAnchor, toString());
+				out.println("Output: " + toString());
 			}catch(Exception e) {
 				e.printStackTrace();
 				out.println("terminating because of an exception");
@@ -440,7 +441,6 @@ public class Equation extends One_subNode_node {
 	}
 	
 	/**
-	 * 
 	 * @return the solution to the equation. If the equation has been solved before and no modifications have been made, it will simply return the value of the previous calculation.
 	 */
 	public double solve() {
@@ -451,12 +451,39 @@ public class Equation extends One_subNode_node {
 		return getValue();
 	}
 	
+	
+	/**
+	 * {@summary calculates the entire tree and returns the top level node}
+	 * @return
+	 */
+	public EquationNode evaluate() {
+		getSubNode().getValue();
+		return getSubNode();
+	}
+	
+	
 	@Override
 	public double operation(double a) {
 		return a;
 	}
 	
-	
+	/**
+	 *  {@summary replaces all variables with the passed name with the passed AdvancedValueNode}
+	 * @param varName the name of the variables to replace
+	 * @param value the AdvancedValueNode to replace the variables with 
+	 */
+	public boolean setAdvancedVariableValue(String varName, AdvancedValueNode value) {
+		boolean varFound = false;
+		for (ValueNode n : variables) {
+			if (n.getName().equals(varName)) {
+				n = value.copy();
+				varFound = true;
+			}
+		}
+		
+		return varFound;
+	}
+
 	/**
 	 * {@summary sets ALL variables in the equation with the passed name to the passed value.}
 	 * {@code the equation will automatically know to recalculate itself}
@@ -654,6 +681,11 @@ public class Equation extends One_subNode_node {
 
 	public void setPrintStream(PrintStream outputStream) {
 		out = outputStream;
+	}
+	
+	@Override
+	public String toString() {
+		return evaluate().getDataStr();
 	}
 	
 }
