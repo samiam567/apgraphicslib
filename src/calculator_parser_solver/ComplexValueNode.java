@@ -21,6 +21,10 @@ public class ComplexValueNode extends AdvancedValueNode {
 		return new ComplexValueNode(value,-imaginaryComponent);
 	}
 	
+	public double getImaginaryComponent() {
+		return imaginaryComponent;
+	}
+	
 	/*
 	@Override
 	public ComplexValueNode copy() {
@@ -30,6 +34,34 @@ public class ComplexValueNode extends AdvancedValueNode {
 		System.out.println(cV.unsetVal());
 		return cV;
 	}*/
+	
+	
+	public AdvancedValueNode calculateOperation(EquationNode operation) {
+		return null; // we do not have a defined implementation for this operation
+	}
+	
+	/**
+	 * 
+	 * @param operation
+	 * @param nodeB
+	 * @param reverseParamOrder if the equation was originally a [operation] b and we called b.calculateOperation(a). This would be because a is not an AdvancedValueNode
+	 * @return
+	 */
+	@Override
+	public AdvancedValueNode calculateOperation(Two_subNode_node operation, EquationNode nodeB, boolean reverseParamOrder) {
+		
+		if (nodeB.getValueData() != null && ComplexValueNode.class.isAssignableFrom(nodeB.getValueData().getClass())) {
+			ComplexValueNode nodeBComplx = (ComplexValueNode) nodeB;
+			double realComponent = operation.operation(getValue(),nodeBComplx.getValueData().getValue());
+			double imaginaryComponent = operation.operation(getImaginaryComponent(),nodeBComplx.getImaginaryComponent());
+			
+			return new ComplexValueNode(realComponent, imaginaryComponent);
+		}else{
+			double realComponent = operation.operation(value,nodeB.getValue());
+			
+			return new ComplexValueNode(realComponent, getImaginaryComponent()); // we do not have a defined implementation for this operation
+		}
+	}
 	
 	
 	

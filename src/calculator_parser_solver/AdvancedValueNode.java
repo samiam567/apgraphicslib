@@ -66,7 +66,7 @@ public class AdvancedValueNode extends ValueNode {
 	}
 	
 	
-	public AdvancedValueNode calculateOperation(EquationNode operation) {
+	public AdvancedValueNode calculateOperation(One_subNode_node operation) {
 		return null; // we do not have a defined implementation for this operation
 	}
 	
@@ -77,7 +77,7 @@ public class AdvancedValueNode extends ValueNode {
 	 * @param reverseParamOrder if the equation was originally a [operation] b and we called b.calculateOperation(a). This would be because a is not an AdvancedValueNode
 	 * @return
 	 */
-	public AdvancedValueNode calculateOperation(EquationNode operation, EquationNode nodeB, boolean reverseParamOrder) {
+	public AdvancedValueNode calculateOperation(Two_subNode_node operation, EquationNode nodeB, boolean reverseParamOrder) {
 		return null; // we do not have a defined implementation for this operation
 	}
 	

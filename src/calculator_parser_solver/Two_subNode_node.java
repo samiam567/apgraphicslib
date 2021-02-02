@@ -49,6 +49,7 @@ public abstract class Two_subNode_node extends EquationNode {
 		if (! isCalculated()) {
 			calculated();
 			value = operation(getLeftSubNode(), getRightSubNode(),'1'); 
+			
 		}
 		
 		return value;
@@ -62,7 +63,7 @@ public abstract class Two_subNode_node extends EquationNode {
 	
 	
 	private double operation(EquationNode nodeA, EquationNode nodeB, char paramPlaceholder) {
-		if ( (nodeA.getValueData() != null && nodeB.getValueData() != null) && (AdvancedValueNode.class.isAssignableFrom(nodeA.getValueData().getClass()) || AdvancedValueNode.class.isAssignableFrom(nodeB.getValueData().getClass()))) {
+		if ( (nodeA.getValueData() != null || nodeB.getValueData() != null) ) {
 			// we have advanced data, see if we can perform this operation with it
 			
 			if (nodeA.getValueData() != null) {

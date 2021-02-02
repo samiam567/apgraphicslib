@@ -27,7 +27,7 @@ public class Equation extends One_subNode_node {
 	
 	//calculator settings 
 	public static boolean JOptionPane_error_messages = true;
-	public static final boolean printInProgress = false;
+	public static final boolean printInProgress = true;
 	public static boolean useRadiansNotDegrees = true;
 	
 	//used by the runUserCalculator method
