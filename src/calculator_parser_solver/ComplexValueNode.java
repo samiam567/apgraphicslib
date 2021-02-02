@@ -21,9 +21,22 @@ public class ComplexValueNode extends AdvancedValueNode {
 		return new ComplexValueNode(value,-imaginaryComponent);
 	}
 	
+	/*
 	@Override
 	public ComplexValueNode copy() {
-		return new ComplexValueNode(value,imaginaryComponent);
+		ComplexValueNode cV = new ComplexValueNode(value,imaginaryComponent);
+		cV.setUnsetVal(unsetVal(),'k');
+		cV.setName(getName());
+		System.out.println(cV.unsetVal());
+		return cV;
+	}*/
+	
+	
+	
+	
+	@Override
+	public String toString() {
+		return "" + getValue() + " + " + imaginaryComponent + "i ";
 	}
 	
 

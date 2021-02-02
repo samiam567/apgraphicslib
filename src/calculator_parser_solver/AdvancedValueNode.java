@@ -15,6 +15,7 @@ public class AdvancedValueNode extends ValueNode {
 	public AdvancedValueNode(String name, char key) {
 		super(name);
 		assert key == 'k';
+		super.setValueData(this);
 	}
 	
 	
@@ -25,6 +26,7 @@ public class AdvancedValueNode extends ValueNode {
 	public AdvancedValueNode(char key) {
 		super("AdvancedValueNode");
 		assert key == 'k';
+		super.setValueData(this);
 	}
 	
 	/**
@@ -35,18 +37,18 @@ public class AdvancedValueNode extends ValueNode {
 		super("AdvancedValueNode");
 		assert key == 'k';
 		setValue(val);
+		super.setValueData(this);
 	}
-	
 	
 	
 	/**
 	 * @return a non-aliased (brand new) copy of this AdvancedValueNode with all identical data
-	 */
+	 *//*
 	public AdvancedValueNode copy() {
 		Exception e = new Exception("copy() was not overridden (and must be) in child of AdvancedValueNode");
 		e.printStackTrace();
 		return null;
-	}
+	}*/
 	
 	//this method should be overridden since by definition this value can not be represented solely by it's single double representation
 	@Override
@@ -56,10 +58,27 @@ public class AdvancedValueNode extends ValueNode {
 		return super.toString();
 	}
 	
-	
+
 	@Override
 	public void setValueData(AdvancedValueNode valueData) {
 		Exception e = new Exception("AdvancedValueNode is its own valueData so setValueData() should never be called.");
 		e.printStackTrace();
 	}
+	
+	
+	public AdvancedValueNode calculateOperation(EquationNode operation) {
+		return null; // we do not have a defined implementation for this operation
+	}
+	
+	/**
+	 * 
+	 * @param operation
+	 * @param nodeB
+	 * @param reverseParamOrder if the equation was originally a [operation] b and we called b.calculateOperation(a). This would be because a is not an AdvancedValueNode
+	 * @return
+	 */
+	public AdvancedValueNode calculateOperation(EquationNode operation, EquationNode nodeB, boolean reverseParamOrder) {
+		return null; // we do not have a defined implementation for this operation
+	}
+	
 }

@@ -78,7 +78,9 @@ public class Commands {
 	 */
 	public static void applyVariables(Equation equation) {	
 		for (Variable var : variables) {
+			System.out.println("applying variable "  + var.name);
 			if (AdvancedValueNode.class.isAssignableFrom(var.value.getClass())) {
+				System.out.println("Advanced variable applied");
 				equation.setAdvancedVariableValue(var.name,(AdvancedValueNode) var.value);
 			}else{
 				equation.setVariableValue(var.name, var.value.getValue());
@@ -127,6 +129,7 @@ public class Commands {
 		}
 		
 		if (foundValue && foundName) {
+			deleteCommandVariable(name);
 			variables.add(new Variable(name,value));
 			output("Variable " + name + " is now set to " + value.getDataStr(), eq);
 		}else {
@@ -134,4 +137,28 @@ public class Commands {
 		}
 			
 	}
+	
+	/**
+	 * {@summary directly adds the passed node to the variables list with the passed name}
+	 * @param name
+	 * @param value
+	 */
+	public static void addVariable(String name, ComplexValueNode value, Equation eq) {
+		deleteCommandVariable(name);
+		variables.add(new Variable(name,value));
+		output("Variable " + name + " is now set to " + value.getDataStr(), eq);
+	}
+
+	/**
+	 * {@summary deletes all instances of variables with the passed name in the commands variables list}
+	 * @param name
+	 */
+	private static void deleteCommandVariable(String name) {
+		for (Variable v : variables) {
+			if (v.name.equals(name)) {
+				variables.remove(v);
+			}
+		}
+	}
+	
 }

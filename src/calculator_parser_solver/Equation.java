@@ -20,7 +20,7 @@ public class Equation extends One_subNode_node {
 	public static String[] numberChars = {"1","2","3","4","5","6","7","8","9","0",".",","};
 	
 	
-	private ArrayList<ValueNode> variables;	
+	private ArrayList<ValueNode> variables;	// just a list of the variables for quick access
 	private EquationNode[] nodes;
 	
 	PrintStream out = System.out;
@@ -51,9 +51,10 @@ public class Equation extends One_subNode_node {
 		Commands.addVariable("/pi=3.14159265358979323846264",this); // pi
 		Commands.addVariable("/e=2.7182818284590452353602874713527",this); // e
 		Commands.addVariable("/h=6.62607004*10^_34",this); // plank's constant
+		Commands.addVariable("i", new ComplexValueNode(0,1), this);
 		Commands.enableJFrameOutput = true;
 		
-		out.println("Test took " + testCalculator() + " nanos");
+		out.println("Test took " + testCalculator() + " nanos to evaluate equations");
 		
 		
 		calculatorAnchor = new JFrame();
@@ -203,7 +204,7 @@ public class Equation extends One_subNode_node {
 		
 		nodes = new EquationNode[0];
 		
-		variables.clear();
+		
 
 		
 		String mode = "unknown";
@@ -474,9 +475,14 @@ public class Equation extends One_subNode_node {
 	 */
 	public boolean setAdvancedVariableValue(String varName, AdvancedValueNode value) {
 		boolean varFound = false;
+		
 		for (ValueNode n : variables) {
 			if (n.getName().equals(varName)) {
-				n = value.copy();
+				n.setValueData(value);
+				n.setValue(value.getValue());
+			
+				n.setName(varName);
+				
 				varFound = true;
 			}
 		}

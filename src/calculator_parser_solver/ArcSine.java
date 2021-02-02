@@ -8,7 +8,7 @@ public class ArcSine extends One_subNode_node {
 	}
 	
 	@Override
-	protected static double operation(double a) {
+	protected double operation(double a) {
 		if (Equation.printInProgress) System.out.println("asin" + a);
 		
 		if (Equation.useRadiansNotDegrees) {

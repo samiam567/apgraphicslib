@@ -54,7 +54,7 @@ public abstract class Two_subNode_node extends EquationNode {
 		return value;
 	}
 	
-	protected static double operation(double a, double b) {
+	protected double operation(double a, double b) {
 		Exception e = new Exception("Operation method was not overriden for child of Two_subNode_node");
 		e.printStackTrace();
 		return 0;
@@ -62,30 +62,27 @@ public abstract class Two_subNode_node extends EquationNode {
 	
 	
 	private double operation(EquationNode nodeA, EquationNode nodeB, char paramPlaceholder) {
-		if ( (nodeA.getValueData() != null && nodeB.getValueData() != null) && (AdvancedValueNode.class.isAssignableFrom(nodeA.getValueData().getClass()) && AdvancedValueNode.class.isAssignableFrom(nodeB.getValueData().getClass()))) {
-		
-			setValueData(operation( (AdvancedValueNode) nodeA.getValueData(), (AdvancedValueNode) nodeB.getValueData()));
+		if ( (nodeA.getValueData() != null && nodeB.getValueData() != null) && (AdvancedValueNode.class.isAssignableFrom(nodeA.getValueData().getClass()) || AdvancedValueNode.class.isAssignableFrom(nodeB.getValueData().getClass()))) {
+			// we have advanced data, see if we can perform this operation with it
+			
+			if (nodeA.getValueData() != null) {
+				setValueData(nodeA.getValueData().calculateOperation(this,nodeB,false)); // Perform advanced data operation
+			}else { // if nodeA is a normal value we need to use nodeB to do the calculation
+				setValueData(nodeB.getValueData().calculateOperation(this,nodeA,true));
+			}
 			
 			if (getValueData() != null ) {
-				value = getValueData().getValue();
-				return value;
+				return getValueData().getValue();
 			}else {
-				return value; //value should have been set earlier by Two_subNode_node.protected AdvancedValueNode operation(EquationNode a)
+				System.out.println("WARNING: AdvancedValueNode " + nodeA.getValueData().getName() + " (Class= " + nodeA.getValueData().getClass() + " ) has no writen implementation for " + getClass() + " with data type " + nodeA.getValueData().getClass());
+				return operation(nodeA.getValue(),nodeB.getValue()); //value should have been set earlier by Two_subNode_node.protected AdvancedValueNode operation(EquationNode a)
 			}
 		}else {
+			
 			return operation(nodeA.getValue(),nodeB.getValue());
 		}
 	}
 	
-	/**
-	 * {@summary if this is not overridden already by child classes, displays a warning and calls operation with the value of the passed EquationNode}
-	 * @param a
-	 * @return the result of this operation
-	 */
-	protected AdvancedValueNode operation(AdvancedValueNode a, AdvancedValueNode b) {
-		System.out.println("WARNING: Two_subNode_node child " + getClass() + " has not overriden operation(EquationNode a)");
-		value = operation(a.getValue(),b.getValue());
-		return null;
-	}
+	
 	
 }

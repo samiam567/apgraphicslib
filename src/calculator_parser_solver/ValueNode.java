@@ -10,8 +10,7 @@ import javax.swing.JOptionPane;
 public class ValueNode extends EquationNode {
 	private String name = "number";
 
-	
-	private boolean unsetVal = true;
+	protected boolean unsetVal = false;
 	
 	public ValueNode(String name) {
 		unsetVal = true;
@@ -39,12 +38,15 @@ public class ValueNode extends EquationNode {
 	
 	@Override 
 	public double getValue() {
-		if (unsetVal) { //make sure this node's value was set
-			Exception e = new Exception("Variable-node " + name + " never had its value set");
-			e.printStackTrace();
-			if (Equation.JOptionPane_error_messages) JOptionPane.showMessageDialog(null,e);
+		if (! isCalculated()) {
+			if (unsetVal) { //make sure this node's value was set
+				Exception e = new Exception("Variable-node " + name + " never had its value set");
+				e.printStackTrace();
+				if (Equation.JOptionPane_error_messages) JOptionPane.showMessageDialog(null,e);
+			}
+			
+			calculated();
 		}
-		
 		return value;
 	}
 	
@@ -52,16 +54,34 @@ public class ValueNode extends EquationNode {
 		return name;
 	}
 	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	/**
+	 * {@summary sets unsetVal. This method should ONLY be used in SPECIFIC circumstances where using other methods is not an option}
+	 * @param unsetVal
+	 * @param key
+	 */
+	public void setUnsetVal(boolean unsetVal, char key) {
+		assert key == 'k'; //makes sure you know what you're doing when you use this method
+		this.unsetVal = unsetVal;
+	}
+	
 	@Override
 	public long getLevel() {
 		return Long.MAX_VALUE;
 	}
 	
+	public boolean unsetVal() {
+		return unsetVal;
+	}
+	
 	public void setValue(double value) {
-		unsetVal = false;
 		if (getParent() != null) getParent().notCalculated();
 		this.value = value;
 		calculated();
+		unsetVal = false;
 	}
 	
 	public String toString() {

@@ -98,6 +98,7 @@ public abstract class EquationNode {
 		}
 	}
 
+
 	public void setValueData(AdvancedValueNode valueData) {
 		this.valueData = valueData;
 	}

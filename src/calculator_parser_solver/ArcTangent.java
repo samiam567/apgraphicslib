@@ -7,7 +7,7 @@ public class ArcTangent extends One_subNode_node {
 		this.equation = equation;
 	}
 	
-	protected static double operation(double a) {
+	protected double operation(double a) {
 		if (Equation.printInProgress) System.out.println("atan" + a);
 
 		if (Equation.useRadiansNotDegrees) {

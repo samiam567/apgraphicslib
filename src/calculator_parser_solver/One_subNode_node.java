@@ -42,11 +42,12 @@ public class One_subNode_node extends EquationNode {
 		if (nodeA.getValueData() != null) {
 			// we have advanced data, see if we can perform this operation with it
 			
-			setValueData(operation(nodeA.getValueData())); // Perform advanced data operation
+			setValueData(nodeA.getValueData().calculateOperation(this)); // Perform advanced data operation
 			
 			if (getValueData() != null) {
 				return getValueData().getValue();
 			}else { //this means that we have no written advanced data operation for this node
+				System.out.println("WARNING: AdvancedValueNode " + nodeA.getValueData().getName() + " (Class= " + nodeA.getValueData().getClass() + " ) has no writen implementation for " + getClass());
 				return value; //value should have been set earlier by One_subNode_node.protected AdvancedValueNode operation(EquationNode a)
 			}
 		}else{
@@ -54,15 +55,6 @@ public class One_subNode_node extends EquationNode {
 		}
 	}
 	
-	/**
-	 * {@summary if this is not overridden already by child classes, displays a warning and calls operation with the value of the passed EquationNode}
-	 * @param a
-	 * @return the result of this operation
-	 */
-	protected AdvancedValueNode operation(AdvancedValueNode nodeA) {
-		System.out.println("WARNING: One_subNode_node child " + getClass() + " has not overriden operation(EquationNode a)");
-		value = operation(nodeA.getValue());
-		return null;
-	}
+
 	
 }
