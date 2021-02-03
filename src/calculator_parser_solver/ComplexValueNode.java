@@ -49,18 +49,26 @@ public class ComplexValueNode extends AdvancedValueNode {
 	 */
 	@Override
 	public AdvancedValueNode calculateOperation(Two_subNode_node operation, EquationNode nodeB, boolean reverseParamOrder) {
+		double realComponent = getValue();
+		double imaginaryComponent = getImaginaryComponent();
 		
 		if (nodeB.getValueData() != null && ComplexValueNode.class.isAssignableFrom(nodeB.getValueData().getClass())) {
 			ComplexValueNode nodeBComplx = (ComplexValueNode) nodeB;
-			double realComponent = operation.operation(getValue(),nodeBComplx.getValueData().getValue());
-			double imaginaryComponent = operation.operation(getImaginaryComponent(),nodeBComplx.getImaginaryComponent());
-			
-			return new ComplexValueNode(realComponent, imaginaryComponent);
+			realComponent = operation.operation(getValue(),nodeBComplx.getValueData().getValue());
+			imaginaryComponent = operation.operation(getImaginaryComponent(),nodeBComplx.getImaginaryComponent());
 		}else{
-			double realComponent = operation.operation(value,nodeB.getValue());
+		
+			realComponent = operation.operation(value,nodeB.getValue());
 			
-			return new ComplexValueNode(realComponent, getImaginaryComponent()); // we do not have a defined implementation for this operation
+			
+			if (operation instanceof Multiplication || operation instanceof Division) {
+				
+				imaginaryComponent = operation.operation(getImaginaryComponent(), nodeB.getValue());
+				System.out.println("i - " + imaginaryComponent);
+			}
+			
 		}
+		return new ComplexValueNode(realComponent, imaginaryComponent);
 	}
 	
 	

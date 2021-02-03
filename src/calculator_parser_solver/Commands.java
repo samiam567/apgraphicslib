@@ -1,6 +1,7 @@
 package calculator_parser_solver;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 
 import javax.swing.JOptionPane;
 
@@ -78,9 +79,9 @@ public class Commands {
 	 */
 	public static void applyVariables(Equation equation) {	
 		for (Variable var : variables) {
-			System.out.println("applying variable "  + var.name);
+			equation.out.println("applying variable "  + var.name);
 			if (AdvancedValueNode.class.isAssignableFrom(var.value.getClass())) {
-				System.out.println("Advanced variable applied");
+				equation.out.println("Advanced variable applied");
 				equation.setAdvancedVariableValue(var.name,(AdvancedValueNode) var.value);
 			}else{
 				equation.setVariableValue(var.name, var.value.getValue());
@@ -121,6 +122,7 @@ public class Commands {
 			varEq.createTree(commandInput.substring(i+1,commandInput.length()));
 			applyVariables(varEq); // make sure we have all our variables and constants
 			value = varEq.evaluate();
+			varEq = null;
 			foundValue = true;
 		
 		}else {
@@ -129,8 +131,13 @@ public class Commands {
 		}
 		
 		if (foundValue && foundName) {
+			
 			deleteCommandVariable(name);
-			variables.add(new Variable(name,value));
+			if (value.getValueData() != null) {
+				variables.add(new Variable(name,value.getValueData()));
+			}else {
+				variables.add(new Variable(name,value));
+			}
 			output("Variable " + name + " is now set to " + value.getDataStr(), eq);
 		}else {
 			(new Exception("bad command format")).printStackTrace();
@@ -154,10 +161,15 @@ public class Commands {
 	 * @param name
 	 */
 	private static void deleteCommandVariable(String name) {
-		for (Variable v : variables) {
-			if (v.name.equals(name)) {
-				variables.remove(v);
+		try {
+			for (Variable v : variables) {
+					if (v.name.equals(name)) {
+						variables.remove(v);
+					}
 			}
+		}catch(ConcurrentModificationException c) {
+			// this error may be thrown when assigning a variable using an equation that includes that variable
+			c.printStackTrace();
 		}
 	}
 	
