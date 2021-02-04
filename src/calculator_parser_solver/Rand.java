@@ -28,13 +28,13 @@ public class Rand extends One_subNode_node {
 	@Override
 	public double getValue() {
 		if (! isCalculated()) {
-			value = operation(getSubNode().getValue()); 
+			getValueData().setValue(operation(getSubNode().getValue())); 
 			
 			//make all of the parents not calculated so that we have to get a new rand number...
 			notCalculated(); 
 			//but this node is calculated so that we don't re-set the seed
 			calculated();
-			return value;
+			return getValueData().getValue();
 		}else {
 			
 			return rand.nextDouble();

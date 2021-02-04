@@ -20,7 +20,7 @@ public class Equation extends One_subNode_node {
 	public static String[] numberChars = {"1","2","3","4","5","6","7","8","9","0",".",","};
 	
 	
-	private ArrayList<ValueNode> variables;	// just a list of the variables for quick access
+	private ArrayList<VariableNode> variables;	// just a list of the variables for quick access
 	private EquationNode[] nodes;
 	
 	PrintStream out = System.out;
@@ -32,7 +32,7 @@ public class Equation extends One_subNode_node {
 	
 	//used by the runUserCalculator method
 	JFrame calculatorAnchor;
-	EquationNode prevAns = new ValueNode(0); 
+	EquationNode prevAns = new VariableNode(0); 
 	
 	
 	/**
@@ -110,12 +110,12 @@ public class Equation extends One_subNode_node {
 	 * @param equation
 	 */
 	public Equation(String equation) {
-		variables = new ArrayList<ValueNode>();
+		variables = new ArrayList<VariableNode>();
 		createTree(equation);
 	}
 	
 	public Equation() {
-		variables = new ArrayList<ValueNode>();
+		variables = new ArrayList<VariableNode>();
 	}
 	
 	/**
@@ -262,12 +262,12 @@ public class Equation extends One_subNode_node {
 			if ((! prevMode.equals(mode)) && (! prevMode.equals("unknown")) ){
 				if (printInProgress) out.println("modeChange:" + inputBuffer);
 				if (prevMode.equals("letterInput") && (! mode.equals("multi-char-operation"))) { //create a variable 
-					ValueNode newVariable = new ValueNode(inputBuffer,parenthesisLevel);
+					VariableNode newVariable = new VariableNode(inputBuffer,parenthesisLevel);
 					variables.add(newVariable);
-					addToNodesArray(newVariable); //add a new ValueNode with the variable name
+					addToNodesArray(newVariable); //add a new VariableNode with the variable name
 					inputBuffer = ""; //clear the inputBuffer
 				}else if (prevMode.equals("numberInput")) { //create a value
-					addToNodesArray(new ValueNode(Double.parseDouble(inputBuffer),parenthesisLevel)); //add a new ValueNode with the variable name
+					addToNodesArray(new VariableNode(Double.parseDouble(inputBuffer),parenthesisLevel)); //add a new VariableNode with the variable name
 					inputBuffer = ""; //clear the inputBuffer
 				}else if (prevMode.equals("operation") || prevMode.equals("multi-char-operation") ) {
 					if (indexOf(inputBuffer,operations) != -1) {
@@ -275,9 +275,9 @@ public class Equation extends One_subNode_node {
 					}else { //treat as a variable name
 						
 						//this new code treats multi-char strings that aren't operations as variables
-						ValueNode newVariable = new ValueNode(inputBuffer,parenthesisLevel);
+						VariableNode newVariable = new VariableNode(inputBuffer,parenthesisLevel);
 						variables.add(newVariable);
-						addToNodesArray(newVariable); //add a new ValueNode with the variable name
+						addToNodesArray(newVariable); //add a new VariableNode with the variable name
 						
 						/* this code treated multi-char strings that aren't operations as an error
 						Exception e = new Exception("operation not found in operations array: " + inputBuffer);
@@ -476,7 +476,7 @@ public class Equation extends One_subNode_node {
 	public boolean setAdvancedVariableValue(String varName, AdvancedValueNode value) {
 		boolean varFound = false;
 		
-		for (ValueNode n : variables) {
+		for (VariableNode n : variables) {
 			if (n.getName().equals(varName)) {
 				n.setValueData(value);
 				n.setValue(value.getValue());
@@ -499,7 +499,7 @@ public class Equation extends One_subNode_node {
 	 */
 	public boolean setVariableValue(String varName, double value ) {
 		boolean varFound = false;
-		for (ValueNode n : variables) {
+		for (VariableNode n : variables) {
 			if (n.getName().equals(varName)) {
 				n.setValue(value);
 				varFound = true;
@@ -529,7 +529,7 @@ public class Equation extends One_subNode_node {
 	 * @return the index of the first instance of a variable with the passed name, -1 if the variable does not appear in the equation
 	 */
 	public int getVariableIndex(String varName) {
-		ValueNode n;
+		VariableNode n;
 		for (int i = 0; i < variables.size(); i++) {
 			n = variables.get(i);
 			if (n.getName().equals(varName)) {
@@ -541,7 +541,7 @@ public class Equation extends One_subNode_node {
 	}
 	
 	
-	public ValueNode getVariable(int varIndx) {
+	public VariableNode getVariable(int varIndx) {
 		try {
 			return variables.get(varIndx);
 		}catch(IndexOutOfBoundsException i) {

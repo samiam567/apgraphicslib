@@ -23,10 +23,10 @@ public class One_subNode_node extends EquationNode {
 	public double getValue() {
 		if (! isCalculated()) {
 			calculated();
-			value = operation(getSubNode(),'1'); 
+			getValueData().setValue(operation(getSubNode(),'k')); 
 		}
 		
-		return value;
+		return valueData.getValue();
 	}
 	
 
@@ -39,20 +39,21 @@ public class One_subNode_node extends EquationNode {
 	
 	private double operation(EquationNode nodeA, char paramPlaceholder) {
 		
-		if (nodeA.getValueData() != null) {
+		if (nodeA.getValueData() instanceof AdvancedValueNode) {
 			// we have advanced data, see if we can perform this operation with it
 			
-			setValueData(nodeA.getValueData().calculateOperation(this)); // Perform advanced data operation
+			setValueData(operation( nodeA.getValueData().getClass().cast(nodeA.getValueData()) )); // Perform advanced data operation
 			
-			if (getValueData() != null) {
-				return getValueData().getValue();
-			}else { //this means that we have no written advanced data operation for this node
-				System.out.println("WARNING: AdvancedValueNode " + nodeA.getValueData().getName() + " (Class= " + nodeA.getValueData().getClass() + " ) has no writen implementation for " + getClass());
-				return value; //value should have been set earlier by One_subNode_node.protected AdvancedValueNode operation(EquationNode a)
-			}
-		}else{
+			return getValueData().getValue();
+		}else{ // we did not encounter advanced data so do operation normally
 			return operation(nodeA.getValue());
 		}
+	}
+	
+	private ValueNode operation(ValueNode nodeA) {
+		System.out.println("WARNING: " + getClass() + " has no implementation for AdvancedValueNode of type " + nodeA.getClass() + ". Resorting to normal simple-operation");
+		getValueData().setValue(operation(nodeA.getValue())); // do operation normally and assign value to our ValueNode
+		return getValueData();
 	}
 	
 

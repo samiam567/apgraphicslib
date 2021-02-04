@@ -8,12 +8,15 @@ public abstract class EquationNode {
 	private int parenthesisLevel;
 	protected int orderOfOpsLevel;
 	private EquationNode parent;
-	protected double value;
-	private AdvancedValueNode valueData = null;
+	protected ValueNode valueData;
 	
 	private boolean calculated = false;
 	
-	
+	public EquationNode() {
+		if (! (this instanceof ValueNode)) {
+			valueData = new ValueNode(0);
+		}
+	}
 	public boolean isCalculated() {
 		return calculated;
 	}
@@ -41,7 +44,7 @@ public abstract class EquationNode {
 		return parent;
 	}
 	
-	public AdvancedValueNode getValueData() {
+	public ValueNode getValueData() {
 		getValue();
 		return valueData;
 	}
@@ -57,7 +60,7 @@ public abstract class EquationNode {
 			e.printStackTrace();
 			calculated = true;
 		}
-		return value;
+		return valueData.getValue();
 	}
 
 
@@ -99,8 +102,8 @@ public abstract class EquationNode {
 	}
 
 
-	public void setValueData(AdvancedValueNode valueData) {
-		this.valueData = valueData;
+	public void setValueData(ValueNode valueNode) {
+		this.valueData = valueNode;
 	}
 
 

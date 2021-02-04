@@ -48,11 +48,11 @@ public abstract class Two_subNode_node extends EquationNode {
 		
 		if (! isCalculated()) {
 			calculated();
-			value = operation(getLeftSubNode(), getRightSubNode(),'1'); 
+			getValueData().setValue(operation(getLeftSubNode(), getRightSubNode(),'1')); 
 			
 		}
 		
-		return value;
+		return valueData.getValue();
 	}
 	
 	protected double operation(double a, double b) {
@@ -63,27 +63,23 @@ public abstract class Two_subNode_node extends EquationNode {
 	
 	
 	private double operation(EquationNode nodeA, EquationNode nodeB, char paramPlaceholder) {
-		if ( (nodeA.getValueData() != null || nodeB.getValueData() != null) ) {
+		if (nodeA.getValueData() instanceof AdvancedValueNode || nodeB.getValueData() instanceof AdvancedValueNode) {
 			// we have advanced data, see if we can perform this operation with it
 			
-			if (nodeA.getValueData() != null) {
-				setValueData(nodeA.getValueData().calculateOperation(this,nodeB,false)); // Perform advanced data operation
-			}else { // if nodeA is a normal value we need to use nodeB to do the calculation
-				setValueData(nodeB.getValueData().calculateOperation(this,nodeA,true));
-			}
+			setValueData(operation( nodeA.getValueData().getClass().cast(nodeA.getValueData()) , nodeB.getValueData().getClass().cast(nodeB.getValueData()) ));
 			
-			if (getValueData() != null ) {
-				return getValueData().getValue();
-			}else {
-				System.out.println("WARNING: AdvancedValueNode " + nodeA.getValueData().getName() + " (Class= " + nodeA.getValueData().getClass() + " ) has no writen implementation for " + getClass() + " with data type " + nodeA.getValueData().getClass());
-				return operation(nodeA.getValue(),nodeB.getValue()); //value should have been set earlier by Two_subNode_node.protected AdvancedValueNode operation(EquationNode a)
-			}
-		}else {
+			return getValueData().getValue();
+		}else { // we did not encounter advanced data so do operation normally
 			
 			return operation(nodeA.getValue(),nodeB.getValue());
 		}
 	}
 	
+	protected ValueNode operation(ValueNode nodeA, ValueNode nodeB) {
+		System.out.println("WARNING: " + getClass() + " has no implementation for ValueNodes of type " + nodeA.getClass() + ", and " + nodeB.getClass() + " - Resorting to normal simple-operation");
+		getValueData().setValue(operation(nodeA.getValue(), nodeB.getValue())); // do operation normally and assign value to our ValueNode
+		return getValueData();
+	}
 	
 	
 }

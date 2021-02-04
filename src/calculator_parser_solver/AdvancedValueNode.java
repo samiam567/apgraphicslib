@@ -13,7 +13,7 @@ public class AdvancedValueNode extends ValueNode {
 	 * @param key ensures that this constructor can only be used by child classes
 	 */
 	public AdvancedValueNode(String name, char key) {
-		super(name);
+		super(key);
 		assert key == 'k';
 		super.setValueData(this);
 	}
@@ -24,7 +24,7 @@ public class AdvancedValueNode extends ValueNode {
 	 * @param key ensures that this constructor can only be used by child classes
 	 */
 	public AdvancedValueNode(char key) {
-		super("AdvancedValueNode");
+		super(key);
 		assert key == 'k';
 		super.setValueData(this);
 	}
@@ -34,9 +34,8 @@ public class AdvancedValueNode extends ValueNode {
 	 * @param key ensures that this constructor can only be used by child classes
 	 */
 	public AdvancedValueNode(double val, char key) {
-		super("AdvancedValueNode");
-		assert key == 'k';
-		setValue(val);
+		super(val);
+		assert key == 'k';	
 		super.setValueData(this);
 	}
 	
@@ -60,25 +59,10 @@ public class AdvancedValueNode extends ValueNode {
 	
 
 	@Override
-	public void setValueData(AdvancedValueNode valueData) {
+	public void setValueData(ValueNode valueData) {
 		Exception e = new Exception("AdvancedValueNode is its own valueData so setValueData() should never be called.");
 		e.printStackTrace();
 	}
 	
-	
-	public AdvancedValueNode calculateOperation(One_subNode_node operation) {
-		return null; // we do not have a defined implementation for this operation
-	}
-	
-	/**
-	 * 
-	 * @param operation
-	 * @param nodeB
-	 * @param reverseParamOrder if the equation was originally a [operation] b and we called b.calculateOperation(a). This would be because a is not an AdvancedValueNode
-	 * @return
-	 */
-	public AdvancedValueNode calculateOperation(Two_subNode_node operation, EquationNode nodeB, boolean reverseParamOrder) {
-		return null; // we do not have a defined implementation for this operation
-	}
 	
 }

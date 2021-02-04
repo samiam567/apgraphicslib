@@ -24,7 +24,7 @@ public class IsPrime extends One_subNode_node {
 	protected double operation(double a) {
 		return isPrime(a);
 	}
-	
+	/*
 	@Override
 	public double getValue() {
 		if (! isCalculated()) {
@@ -33,7 +33,7 @@ public class IsPrime extends One_subNode_node {
 		} else {
 			return value;
 		}
-	}
+	}*/
 	
 	public String toString() {
 		return "isPrime";

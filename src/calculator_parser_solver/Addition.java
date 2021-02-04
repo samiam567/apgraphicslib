@@ -19,4 +19,21 @@ public class Addition extends Two_subNode_node {
 	public String toString() {
 		return "+";
 	}
+	
+	
+	// class-specific advanced operations
+	
+	
+	protected ValueNode operation(ComplexValueNode n1, ComplexValueNode n2) {
+		return new ComplexValueNode(n1.getReal() + n2.getReal(), n1.getComplex() + n2.getComplex());
+	}
+	protected ValueNode operation(ComplexValueNode n1, ValueNode n2) {
+		return new ComplexValueNode(n1.getReal() + n2.getValue(), n1.getComplex());
+	}
+	protected ValueNode operation(ValueNode n2, ComplexValueNode n1) {
+		return new ComplexValueNode(n1.getReal() + n2.getValue(), n1.getComplex());
+	}
+	
+	
+	
 }
