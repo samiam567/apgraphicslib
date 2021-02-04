@@ -25,6 +25,30 @@ public class ComplexValueNode extends AdvancedValueNode {
 		return imaginaryComponent;
 	}
 	
+	public double getComplex() {
+		return imaginaryComponent;
+	}
+
+	/*
+	@Override
+	public ComplexValueNode copy() {
+		ComplexValueNode cV = new ComplexValueNode(value,imaginaryComponent);
+		cV.setUnsetVal(unsetVal(),'k');
+		cV.setName(getName());
+		System.out.println(cV.unsetVal());
+		return cV;
+	}*/
+	
+	
+	public void setImaginaryComponent(double imaginary) {
+		this.imaginaryComponent = imaginary;
+	}
+
+	public void setValues(double real, double imaginary) {
+		setValue(real);
+		setImaginaryComponent(imaginary);
+	}
+	
 	/*
 	@Override
 	public ComplexValueNode copy() {
@@ -43,10 +67,6 @@ public class ComplexValueNode extends AdvancedValueNode {
 
 	public double getReal() {
 		return value;
-	}
-	
-	public double getComplex() {
-		return imaginaryComponent;
 	}
 	
 

@@ -48,7 +48,7 @@ public abstract class Two_subNode_node extends EquationNode {
 		
 		if (! isCalculated()) {
 			calculated();
-			getValueData().setValue(operation(getLeftSubNode(), getRightSubNode(),'1')); 
+			setValueData(operation(getLeftSubNode().getValueData(),getRightSubNode().getValueData(),getValueData())); 
 			
 		}
 		
@@ -61,7 +61,7 @@ public abstract class Two_subNode_node extends EquationNode {
 		return 0;
 	}
 	
-	
+	/*
 	private double operation(EquationNode nodeA, EquationNode nodeB, char paramPlaceholder) {
 		if (nodeA.getValueData() instanceof AdvancedValueNode || nodeB.getValueData() instanceof AdvancedValueNode) {
 			// we have advanced data, see if we can perform this operation with it
@@ -74,11 +74,11 @@ public abstract class Two_subNode_node extends EquationNode {
 			return operation(nodeA.getValue(),nodeB.getValue());
 		}
 	}
-	
-	protected ValueNode operation(ValueNode nodeA, ValueNode nodeB) {
-		System.out.println("WARNING: " + getClass() + " has no implementation for ValueNodes of type " + nodeA.getClass() + ", and " + nodeB.getClass() + " - Resorting to normal simple-operation");
-		getValueData().setValue(operation(nodeA.getValue(), nodeB.getValue())); // do operation normally and assign value to our ValueNode
-		return getValueData();
+	*/
+	protected ValueNode operation(ValueNode nodeA, ValueNode nodeB, ValueNode outputNode) {
+		System.out.println("WARNING: " + getClass() + " has no implementation for generic ValueNodes");
+		outputNode.setValue(operation(nodeA.getValue(), nodeB.getValue())); // do operation normally and assign value to our ValueNode
+		return outputNode;
 	}
 	
 	

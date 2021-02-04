@@ -81,7 +81,6 @@ public class Commands {
 		for (Variable var : variables) {
 			equation.out.println("applying variable "  + var.name);
 			if (AdvancedValueNode.class.isAssignableFrom(var.value.getClass())) {
-				equation.out.println("Advanced variable applied");
 				equation.setAdvancedVariableValue(var.name,(AdvancedValueNode) var.value);
 			}else{
 				equation.setVariableValue(var.name, var.value.getValue());
