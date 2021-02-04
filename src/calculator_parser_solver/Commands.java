@@ -64,8 +64,8 @@ public class Commands {
 	}
 	
 	private static void degRadMode(Equation eq) {
-		Equation.useRadiansNotDegrees = ! Equation.useRadiansNotDegrees;
-		if (Equation.useRadiansNotDegrees) {
+		eq.useRadiansNotDegrees = ! eq.useRadiansNotDegrees;
+		if (eq.useRadiansNotDegrees) {
 			output("Using Radians", eq);
 		}else {
 			output("Using Degrees", eq);

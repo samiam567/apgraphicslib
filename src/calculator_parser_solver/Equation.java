@@ -14,7 +14,7 @@ import javax.swing.JOptionPane;
  */
 public class Equation extends One_subNode_node {
 	
-	public static final String[] operations = {"_","isPrime","rand","abs","sin", "cos", "tan", "asin", "acos", "atan", "^", "rt", "sqrt", "*", "/", "+", "-" };
+	public static final String[] operations = {"_","<|","|>","[]","isPrime","rand","abs","sin", "cos", "tan", "asin", "acos", "atan", "^", "rt", "sqrt", "*", "/", "+", "-" };
 	private static String[] letters = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
 	public static int[] numbers = {1,2,3,4,5,6,7,8,9,0};
 	public static String[] numberChars = {"1","2","3","4","5","6","7","8","9","0",".",","};
@@ -28,7 +28,7 @@ public class Equation extends One_subNode_node {
 	//calculator settings 
 	public static boolean JOptionPane_error_messages = true;
 	public static final boolean printInProgress = false;
-	public static boolean useRadiansNotDegrees = true;
+	public boolean useRadiansNotDegrees = true;
 	
 	//used by the runUserCalculator method
 	JFrame calculatorAnchor;

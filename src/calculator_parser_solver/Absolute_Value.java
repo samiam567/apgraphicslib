@@ -22,9 +22,9 @@ public class Absolute_Value extends One_subNode_node {
 		
 		if (n1 instanceof AdvancedValueNode) {
 			if (n1 instanceof ComplexValueNode) { 
-				// both complex numbers
+				// complex number
 				if (! (outputNode instanceof ComplexValueNode) ) outputNode = new ComplexValueNode();
-				((ComplexValueNode) outputNode).setValues(operation(n1.getValue()), operation(((ComplexValueNode) n1).getComplex()));
+				((ComplexValueNode) outputNode).setValues(operation(((ComplexValueNode) n1).getReal()), operation(((ComplexValueNode) n1).getComplex()));
 			}else {
 				System.out.println("WARNING: class " + getClass() + " has no implementation for AdvancedValueNodes of class " + n1.getClass());
 				outputNode.setValue(operation(n1.getValue()));

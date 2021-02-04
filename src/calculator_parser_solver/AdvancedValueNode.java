@@ -9,18 +9,6 @@ package calculator_parser_solver;
 public class AdvancedValueNode extends ValueNode {
 	
 	/**
-	 * @param name
-	 * @param key ensures that this constructor can only be used by child classes
-	 */
-	public AdvancedValueNode(String name, char key) {
-		super(key);
-		assert key == 'k';
-		super.setValueData(this);
-	}
-	
-	
-	/**
-	 * @param name
 	 * @param key ensures that this constructor can only be used by child classes
 	 */
 	public AdvancedValueNode(char key) {
@@ -30,7 +18,7 @@ public class AdvancedValueNode extends ValueNode {
 	}
 	
 	/**
-	 * @param name
+	 * @param val the value to set this node to
 	 * @param key ensures that this constructor can only be used by child classes
 	 */
 	public AdvancedValueNode(double val, char key) {

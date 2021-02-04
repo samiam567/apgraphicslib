@@ -10,7 +10,7 @@ public class ArcCosine extends One_subNode_node {
 	protected double operation(double a) {
 		if (Equation.printInProgress) System.out.println("acos" + a);
 		
-		if (Equation.useRadiansNotDegrees) {
+		if (equation.useRadiansNotDegrees) {
 			return Math.acos(a);
 		}else {
 			return 180 * Math.acos(a)/Math.PI;
