@@ -16,14 +16,13 @@ public class Equation extends One_subNode_node {
 	
 	
 	
-	public static final String[] operations = {"_","<|","|>","[]","isPrime","rand","abs","sin", "cos", "tan", "asin", "acos", "atan", "^", "rt", "sqrt", "*", "/", "+", "-" };
+	public static final String[] operations = {"_","isPrime","rand","abs","sin", "cos", "tan", "asin", "acos", "atan", "^", "rt", "sqrt", "*", "/", "+", "-" };
 	private static String[] letters = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
 	public static int[] numbers = {1,2,3,4,5,6,7,8,9,0};
 	public static String[] numberChars = {"1","2","3","4","5","6","7","8","9","0",".",","};
 	
 	
 	private ArrayList<VariableNode> variables;	// just a list of the variables for quick access
-	private EquationNode[] nodes;
 	
 	PrintStream out = System.out;
 	
@@ -177,9 +176,10 @@ public class Equation extends One_subNode_node {
 		return -1;
 	}
 	
-	private void addToNodesArray(EquationNode n) {
+	private EquationNode[] addToNodesArray(EquationNode n, EquationNode[] nodes) {
 		nodes = resizeNodesArray(nodes, 0,nodes.length);
 		nodes[nodes.length-1] = n;
+		return nodes;
 	}
 
 	/**
@@ -189,27 +189,33 @@ public class Equation extends One_subNode_node {
 	 */
 	public void createTree(String equation) {
 		variables.clear();
+		orderOfOpsLevel = 0; //we are the top level
+		setParenthesisLevel(0);
+		
+		setSubNode(recursiveCreateTree(equation));
+	}
+	
+	EquationNode recursiveCreateTree(String equation) {
+		
 		
 		if (equation.length() == 0) {
 			Exception e = new Exception("Cannot create a tree with an equation String of length 0");
 			e.printStackTrace();
-			return;
+			return null;
 		}
 		
-		orderOfOpsLevel = 0; //we are the top level
-		setParenthesisLevel(0);
 		
 		//create nodes
+		
 		
 		while(equation.contains("ans")) {
 			equation = equation.replace("ans", "" + prevAns);
 		}
 		
-		nodes = new EquationNode[0];
 		
-		
+		EquationNode[] nodes = new EquationNode[0];
 
-		
+
 		String mode = "unknown";
 		String prevMode = "unknown";
 		String inputBuffer = "";
@@ -256,31 +262,55 @@ public class Equation extends One_subNode_node {
 			
 			
 			if (indexOf(inputBuffer,operations) != -1) { //catch if we have two operations in a row ex: 1 + sin(25) or 1 + _3
-				addToNodesArray(createOperation(inputBuffer,parenthesisLevel,mode));
+				nodes = addToNodesArray(createOperation(inputBuffer,parenthesisLevel,mode),nodes);
 				inputBuffer = "";
 				prevMode = "unknown";
 			}
 			
 			
-			if ((! prevMode.equals(mode)) && (! prevMode.equals("unknown")) ){
+			 
+			//sandwich operation
+			if (cChar.equals("[")) {
+				mode = "matrixAquisition";
+				int sand_end_indx = Sandwich_operatorNode.getSandwichSubString(equation.substring(i,equation.length()),"[","]");
+				nodes = addToNodesArray(new MatrixCreate(this,equation.substring(i+1,i+sand_end_indx),parenthesisLevel, new MatrixNode()),nodes);
+				inputBuffer = "";
+				i += sand_end_indx+1;
+				continue;
+			}else if (cChar.equals("<")) {
+				mode = "braAquisition";
+				int sand_end_indx = Sandwich_operatorNode.getSandwichSubString(equation.substring(i,equation.length()),"<","|");
+				nodes = addToNodesArray(new MatrixCreate(this,equation.substring(i+1,i+sand_end_indx),parenthesisLevel, new Bra_ket(true)),nodes);
+				inputBuffer = "";
+				i += sand_end_indx+1;
+				continue;
+			}else if (cChar.equals("|")) {
+				mode = "ketAquisition";
+				int sand_end_indx = Sandwich_operatorNode.getSandwichSubString(equation.substring(i+1,equation.length()),"|",">");
+				nodes = addToNodesArray(new MatrixCreate(this,equation.substring(i+1,i+sand_end_indx),parenthesisLevel,new Bra_ket(false)),nodes);
+				inputBuffer = "";
+				i += sand_end_indx+1;
+				continue;
+			}else if ((! prevMode.equals(mode)) && (! prevMode.equals("unknown")) ){
 				if (printInProgress) out.println("modeChange:" + inputBuffer);
+				
 				if (prevMode.equals("letterInput") && (! mode.equals("multi-char-operation"))) { //create a variable 
 					VariableNode newVariable = new VariableNode(inputBuffer,parenthesisLevel);
 					variables.add(newVariable);
-					addToNodesArray(newVariable); //add a new VariableNode with the variable name
+					nodes = addToNodesArray(newVariable,nodes); //add a new VariableNode with the variable name
 					inputBuffer = ""; //clear the inputBuffer
 				}else if (prevMode.equals("numberInput")) { //create a value
-					addToNodesArray(new VariableNode(Double.parseDouble(inputBuffer),parenthesisLevel)); //add a new VariableNode with the variable name
+					nodes = addToNodesArray(new VariableNode(Double.parseDouble(inputBuffer),parenthesisLevel),nodes); //add a new VariableNode with the variable name
 					inputBuffer = ""; //clear the inputBuffer
 				}else if (prevMode.equals("operation") || prevMode.equals("multi-char-operation") ) {
 					if (indexOf(inputBuffer,operations) != -1) {
-						addToNodesArray(createOperation(inputBuffer,parenthesisLevel,mode));
+						nodes = addToNodesArray(createOperation(inputBuffer,parenthesisLevel,mode),nodes);
 					}else { //treat operations that the calculator doesn't recognize as a variable name
 						
 						//this new code treats multi-char strings that aren't operations as variables
 						VariableNode newVariable = new VariableNode(inputBuffer,parenthesisLevel);
 						variables.add(newVariable);
-						addToNodesArray(newVariable); //add a new VariableNode with the variable name
+						nodes = addToNodesArray(newVariable,nodes); //add a new VariableNode with the variable name
 						
 						/* this code treated multi-char strings that aren't operations as an error
 						Exception e = new Exception("operation not found in operations array: " + inputBuffer);
@@ -320,8 +350,9 @@ public class Equation extends One_subNode_node {
 		
 		//create tree linkups
 		
-		setSubNode(getTree(nodes));
 		
+		
+		return getTree(nodes);
 		
 	}
 	

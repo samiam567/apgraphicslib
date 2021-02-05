@@ -47,7 +47,7 @@ public class Commands {
 		
 	}
 
-	private static void output(String message, Equation eq) {
+	static void output(String message, Equation eq) {
 		if (enableJFrameOutput) JOptionPane.showMessageDialog(eq.calculatorAnchor,message);
 		eq.out.println(message);
 	}
