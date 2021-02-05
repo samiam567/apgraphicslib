@@ -1,10 +1,10 @@
 package calculator_parser_solver;
 
-public class Matrix extends AdvancedValueNode {
+public class MatrixCreate extends AdvancedValueNode {
 	
 	public ValueNode[][] matrixData;
 	
-	public Matrix(char key) {
+	public MatrixCreate(char key) {
 		super(key);
 		// TODO Auto-generated constructor stub
 	}

@@ -14,6 +14,8 @@ import javax.swing.JOptionPane;
  */
 public class Equation extends One_subNode_node {
 	
+	
+	
 	public static final String[] operations = {"_","<|","|>","[]","isPrime","rand","abs","sin", "cos", "tan", "asin", "acos", "atan", "^", "rt", "sqrt", "*", "/", "+", "-" };
 	private static String[] letters = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
 	public static int[] numbers = {1,2,3,4,5,6,7,8,9,0};
@@ -45,6 +47,7 @@ public class Equation extends One_subNode_node {
 	}
 	
 	public void runUserCalculator() {
+		(new Exception("ans crashed calc if negative")).printStackTrace();
 		
 		// put some constants into the variables as a default
 		Commands.enableJFrameOutput = false; //be quiet about it
@@ -272,7 +275,7 @@ public class Equation extends One_subNode_node {
 				}else if (prevMode.equals("operation") || prevMode.equals("multi-char-operation") ) {
 					if (indexOf(inputBuffer,operations) != -1) {
 						addToNodesArray(createOperation(inputBuffer,parenthesisLevel,mode));
-					}else { //treat as a variable name
+					}else { //treat operations that the calculator doesn't recognize as a variable name
 						
 						//this new code treats multi-char strings that aren't operations as variables
 						VariableNode newVariable = new VariableNode(inputBuffer,parenthesisLevel);
