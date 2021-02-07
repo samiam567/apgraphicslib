@@ -28,7 +28,7 @@ public class Equation extends One_subNode_node {
 	
 	//calculator settings 
 	public static boolean JOptionPane_error_messages = true;
-	public static final boolean printInProgress = false;
+	public static final boolean printInProgress = true;
 	public boolean useRadiansNotDegrees = true;
 	
 	//used by the runUserCalculator method
@@ -286,7 +286,7 @@ public class Equation extends One_subNode_node {
 				continue;
 			}else if (cChar.equals("|")) {
 				mode = "ketAquisition";
-				int sand_end_indx = Sandwich_operatorNode.getSandwichSubString(equation.substring(i+1,equation.length()),"|",">");
+				int sand_end_indx = Sandwich_operatorNode.getSandwichSubString(equation.substring(i,equation.length()),"|",">");
 				nodes = addToNodesArray(new MatrixCreate(this,equation.substring(i+1,i+sand_end_indx),parenthesisLevel,new Bra_ket(false)),nodes);
 				inputBuffer = "";
 				i += sand_end_indx+1;

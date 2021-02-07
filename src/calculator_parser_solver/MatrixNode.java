@@ -2,21 +2,20 @@ package calculator_parser_solver;
 
 public class MatrixNode extends AdvancedValueNode {
 	
-	public ValueNode[][] values;
+	public ValueNode[] values;
 	
 	public MatrixNode() {
 		super('k');
-		values = new ValueNode[0][0];
+		values = new ValueNode[0];
 		
 	}
 	
-	public MatrixNode(int rows, int columns) {
+	public MatrixNode(ValueNode[] values) {
 		super('k');
-		values = new ValueNode[rows][columns];
+		this.values = values;
 	}
 	
-	public MatrixNode(ValueNode[][] values) {
-		super('k');
+	public void setElements(ValueNode[] values) {
 		this.values = values;
 	}
 	
@@ -24,10 +23,10 @@ public class MatrixNode extends AdvancedValueNode {
 		return getValueDataStr();
 	}
 	
-	public ValueNode[][] getElements() {
+	public ValueNode[] getElements() {
 		return values;
 	}
-	public ValueNode[][] getValues() {
+	public ValueNode[] getValues() {
 		return values;
 	}
 	
@@ -40,9 +39,9 @@ public class MatrixNode extends AdvancedValueNode {
 		
 		// add values
 		if (values != null && values.length != 0) {
-			for (int i = 1; i < values[0].length; i++) {
-				out += values[0][i]; // add the value 
-				out += i < values[0].length-1 ? "," : ""; // add a comma if this isn't the last value
+			for (int i = 0; i < values.length; i++) {
+				out += values[i].getDataStr(); // add the value 
+				out += i < values.length-1 ? "," : ""; // add a comma if this isn't the last value
 						
 			}
 		}else { // if there aren't any values just add null
@@ -56,13 +55,8 @@ public class MatrixNode extends AdvancedValueNode {
 		return out;
 	}
 
-	public ValueNode getSubList(int col_indx) {
-		if (values.length > 1) {
-			return new Bra_ket(values[col_indx],true);
-		}else {
-			return values[0][col_indx];
-		}
-	
+	public ValueNode getElement(int col_indx) {
+		return getElements()[col_indx];
 	}
 	
 	

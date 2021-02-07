@@ -1,5 +1,7 @@
 package calculator_parser_solver;
 
+import java.util.ArrayList;
+
 public class Sandwich_operatorNode extends EquationNode {
 
 	
@@ -26,14 +28,54 @@ public class Sandwich_operatorNode extends EquationNode {
 	public Sandwich_operatorNode(Equation equation, String data, int parenthesisLevel ) {
 		setParenthesisLevel(parenthesisLevel);
 		
+		if (Equation.printInProgress) System.out.println("getting nodes from data: " + data);
 		
-		String[] subEquations = data.split(",");
+		ArrayList<EquationNode> nodesBuffer = new ArrayList<EquationNode>();
 		
-		subNodes = new EquationNode[subEquations.length];
+		int bracketLevel = 0;
+		String cChar = "", prevChar = "";
+		String inputBuffer = "";
+		for(int i = 0; i < data.length(); i++) {
+			cChar = data.substring(i,i+1);
+			
+			if (cChar.equals(" ")) continue; //skip spaces
+			
+			if ( cChar.equals("[") || cChar.equals("<") || (cChar.equals("|") && prevChar.equals(",")) ) {
+				bracketLevel++;
+			}else if ( (cChar.equals("]") || cChar.equals(">") || cChar.equals("|") ) ) {
+				bracketLevel--;
+			}
+			
+			if (Equation.printInProgress) {
+				System.out.println("Char: " + cChar);
+				System.out.println("BracketLevel: " + bracketLevel);
+			}
+			
+			
+			if (cChar.equals(",") && (bracketLevel == 0 || bracketLevel == data.length()-i)) {
+				if (Equation.printInProgress) System.out.println("adding node: " + inputBuffer);
+				nodesBuffer.add(equation.recursiveCreateTree(inputBuffer));
+				
+				inputBuffer = "";
+				continue;
+			}
+			
+			inputBuffer += cChar;
+			
+			prevChar = cChar;
+			
+			
+			
+		}
 		
-		for (int i = 0; i < subEquations.length; i++) {
-			System.out.println(subEquations[i]);
-			subNodes[i] = equation.recursiveCreateTree(subEquations[i]);
+		if (inputBuffer.length() > 0 ) {
+			nodesBuffer.add(equation.recursiveCreateTree(inputBuffer));
+		}
+		
+		subNodes = new EquationNode[nodesBuffer.size()];
+		
+		for (int i = 0; i < nodesBuffer.size(); i++) {
+			subNodes[i] = nodesBuffer.get(i);
 		}
 		
 	}
@@ -45,11 +87,13 @@ public class Sandwich_operatorNode extends EquationNode {
 	 * @return
 	 */
 	public static int getSandwichSubString(String input,String beginChar, String endChar) {
-		System.out.println("getting sandwich from: " + input);
+		if (Equation.printInProgress) System.out.println("getting sandwich from: " + input);
 		int level = 1, i = 1;
 		String cChar;
 		for (i = 1; i < input.length(); i++) {
 			cChar = input.substring(i,i+1);
+			
+			if (cChar.equals(" ")) continue; //skip spaces
 			
 			if (cChar.equals(beginChar)) {
 				level++;
@@ -66,7 +110,8 @@ public class Sandwich_operatorNode extends EquationNode {
 			e.printStackTrace();
 		}
 		
-		return i-1;
+		if (Equation.printInProgress) System.out.println("sandwich got: " + input.substring(1,i));
+		return i;
 	}
 	
 }
