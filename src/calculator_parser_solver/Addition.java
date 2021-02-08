@@ -8,9 +8,14 @@ public class Addition extends Two_subNode_node {
 	
 	@Override
 	protected double operation(double a, double b) {
+		return operationStat(a,b);
+	}
+	
+	protected static double operationStat(double a, double b) {
 		if (Equation.printInProgress) System.out.println(a + "+" + b);
 		return a+b;
 	}
+	
 	
 	public String toString() {
 		return "+";
@@ -21,8 +26,12 @@ public class Addition extends Two_subNode_node {
 	
 	@Override
 	protected ValueNode operation(ValueNode n1, ValueNode n2, ValueNode outputNode) {
-			
+		return Addition.operationStat(n1,n2,outputNode);
+	}
+		
+	public static ValueNode operationStat(ValueNode n1, ValueNode n2, ValueNode outputNode) {
 		if (n1 instanceof AdvancedValueNode || n2 instanceof AdvancedValueNode) {
+			if (Equation.printInProgress) System.out.println(n1.getDataStr() + "+" + n2.getDataStr());
 			
 			if (n1 instanceof ComplexValueNode && n2 instanceof ComplexValueNode) { 
 				// both complex numbers
@@ -37,12 +46,13 @@ public class Addition extends Two_subNode_node {
 				if (! (outputNode instanceof ComplexValueNode) ) outputNode = new ComplexValueNode();
 				((ComplexValueNode) outputNode).setValues( n1.getValue() + ((ComplexValueNode) n2).getReal(), ((ComplexValueNode) n2).getComplex());
 			}else {
-				System.out.println("WARNING: class " + getClass() + " has no implementation for AdvancedValueNodes of class " + n1.getClass() + " and " + n2.getClass());
+				System.out.println("WARNING: class " + Addition.class + " has no implementation for AdvancedValueNodes of class " + n1.getClass() + " and " + n2.getClass());
+				outputNode.setValue(operationStat(n1.getValue(),n2.getValue()));
 			}
 			
 		
 		}else { //they are just normal values
-			outputNode.setValue(operation(n1.getValue(),n2.getValue()));
+			outputNode.setValue(operationStat(n1.getValue(),n2.getValue()));
 		}
 		
 		return outputNode;

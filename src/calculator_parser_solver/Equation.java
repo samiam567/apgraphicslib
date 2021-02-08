@@ -72,7 +72,7 @@ public class Equation extends One_subNode_node {
 				input = JOptionPane.showInputDialog(calculatorAnchor,"Type in what you want to solve");
 				
 				
-				if (input == null || input.isBlank() || input.contains("exit")) {
+				if (input == null || input.isBlank() || input.contains("exit") || input.contains("quit")) {
 					out.println("terminating");
 					calculatorAnchor.dispose();
 					System.exit(1);
@@ -273,6 +273,13 @@ public class Equation extends One_subNode_node {
 			if (cChar.equals("[")) {
 				mode = "matrixAquisition";
 				int sand_end_indx = Sandwich_operatorNode.getSandwichSubString(equation.substring(i,equation.length()),"[","]");
+				nodes = addToNodesArray(new MatrixCreate(this,equation.substring(i+1,i+sand_end_indx),parenthesisLevel, new MatrixNode()),nodes);
+				inputBuffer = "";
+				i += sand_end_indx+1;
+				continue;
+			}else if (cChar.equals("{")) {
+				mode = "matrixAquisition";
+				int sand_end_indx = Sandwich_operatorNode.getSandwichSubString(equation.substring(i,equation.length()),"{","}");
 				nodes = addToNodesArray(new MatrixCreate(this,equation.substring(i+1,i+sand_end_indx),parenthesisLevel, new MatrixNode()),nodes);
 				inputBuffer = "";
 				i += sand_end_indx+1;

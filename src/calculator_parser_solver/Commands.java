@@ -79,7 +79,7 @@ public class Commands {
 	 */
 	public static void applyVariables(Equation equation) {	
 		for (Variable var : variables) {
-			equation.out.println("applying variable "  + var.name);
+			if (Equation.printInProgress) equation.out.println("applying variable "  + var.name);
 			if (AdvancedValueNode.class.isAssignableFrom(var.value.getClass())) {
 				equation.setAdvancedVariableValue(var.name,(AdvancedValueNode) var.value);
 			}else{

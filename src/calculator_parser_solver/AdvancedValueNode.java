@@ -28,6 +28,12 @@ public class AdvancedValueNode extends ValueNode {
 	}
 	
 	
+	public double getValue() {
+		Exception e = new Exception("AdvancedValueNode of type " + getClass() + " did not override getValue()");
+		e.printStackTrace();
+		return value;
+	}
+	
 	/**
 	 * @return a non-aliased (brand new) copy of this AdvancedValueNode with all identical data
 	 *//*

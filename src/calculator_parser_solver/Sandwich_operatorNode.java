@@ -40,9 +40,9 @@ public class Sandwich_operatorNode extends EquationNode {
 			
 			if (cChar.equals(" ")) continue; //skip spaces
 			
-			if ( cChar.equals("[") || cChar.equals("<") || (cChar.equals("|") && prevChar.equals(",")) ) {
+			if ( cChar.equals("{") || cChar.equals("[") || cChar.equals("<") || (cChar.equals("|") && (! prevChar.equals(",")) ) ) {
 				bracketLevel++;
-			}else if ( (cChar.equals("]") || cChar.equals(">") || cChar.equals("|") ) ) {
+			}else if ( (cChar.equals("}") || cChar.equals("]") || cChar.equals(">") || cChar.equals("|") ) ) {
 				bracketLevel--;
 			}
 			
@@ -76,6 +76,7 @@ public class Sandwich_operatorNode extends EquationNode {
 		
 		for (int i = 0; i < nodesBuffer.size(); i++) {
 			subNodes[i] = nodesBuffer.get(i);
+			subNodes[i].setParent(this);
 		}
 		
 	}

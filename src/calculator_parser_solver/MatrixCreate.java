@@ -8,6 +8,8 @@ public class MatrixCreate extends Sandwich_operatorNode {
 		this.equation = equation;
 		super.setValueData(outputMatrix);
 		notCalculated();
+		setParenthesisLevel(parenthesisLevel);
+		orderOfOpsLevel = Equation.operations.length+1;
 	}
 	
 	
@@ -19,7 +21,7 @@ public class MatrixCreate extends Sandwich_operatorNode {
 	@Override
 	public ValueNode getValueData() {
 		if (! isCalculated()) {
-			getMatrix();
+			getMatrixNode();
 			calculated();
 		}
 		return valueData;
@@ -31,11 +33,15 @@ public class MatrixCreate extends Sandwich_operatorNode {
 		e.printStackTrace();
 	}
 	
-	public ValueNode[] getElements() {
-		return ((MatrixNode) getValueData()).getElements();
+	public ValueNode[] getValues() {
+		return ((MatrixNode) getValueData()).getValues();
 	}
 	
-	private void getMatrix() {
+	public ValueNode[][] getMatrix() {
+		return ((MatrixNode) getValueData()).getMatrix();
+	}
+	
+	private void getMatrixNode() {
 		ValueNode[] elements = new ValueNode[getSubNodes().length];
 		((MatrixNode) valueData).setElements(elements);
 		
@@ -44,6 +50,22 @@ public class MatrixCreate extends Sandwich_operatorNode {
 			elements[i] = getSubNodes()[i].getValueData();
 		}
 		
+		valueData.notCalculated();
+	}
+	
+	//@Override
+	public static ValueNode[][] combineIntoMatrix(ValueNode[] nodes, MatrixNode outputNode) {
+		//TODO talk to Dr. Upadhyaya and figure this out
+		(new Exception("method not programmed yet")).printStackTrace();
+		
+		MatrixCombine matCombine = new MatrixCombine();
+		
+		for (int i = 0; i < nodes.length; i++) {
+			outputNode = (MatrixNode) matCombine.operation(outputNode,nodes[i],outputNode);
+		}
+		
+		
+		return outputNode.getMatrix();
 		
 	}
 	

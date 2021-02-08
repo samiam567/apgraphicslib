@@ -41,4 +41,17 @@ public class Bra_ket extends MatrixNode {
 		
 		return out;
 	}
+	
+	protected void calculateMatrix() {
+		
+		if (! bra) {
+			setMatrix(new ValueNode[][] {values});
+		}else {
+			setMatrix(new ValueNode[1][values.length]);
+			
+			for (int i = 0; i < getMatrix()[0].length; i++) {
+				getMatrix()[0][i] = values[i];
+			}
+		}
+	}
 }
