@@ -8,23 +8,6 @@ public class Sandwich_operatorNode extends EquationNode {
 	protected EquationNode[] subNodes;
 	
 	
-	public EquationNode[] getSubNodes() {
-		return subNodes;
-	}
-	@Override
-	public double getValue() {
-		Exception e = new Exception("getValue() not overriden for class " + getClass());
-		e.printStackTrace();
-		return 1;
-	}
-	
-	public Sandwich_operatorNode(ValueNode[] values) {
-		//TODO parse through values and generate matrix
-		
-		Exception e = new Exception("Method not written");
-		e.printStackTrace();
-	}
-	
 	public Sandwich_operatorNode(Equation equation, String data, int parenthesisLevel ) {
 		setParenthesisLevel(parenthesisLevel);
 		
@@ -69,6 +52,7 @@ public class Sandwich_operatorNode extends EquationNode {
 		}
 		
 		if (inputBuffer.length() > 0 ) {
+			if (Equation.printInProgress) System.out.println("Recursively creating tree for subNodeString of sandwich: " + inputBuffer);
 			nodesBuffer.add(equation.recursiveCreateTree(inputBuffer));
 		}
 		
@@ -89,14 +73,16 @@ public class Sandwich_operatorNode extends EquationNode {
 	 */
 	public static int getSandwichSubString(String input,String beginChar, String endChar) {
 		if (Equation.printInProgress) System.out.println("getting sandwich from: " + input);
+		
+		
 		int level = 1, i = 1;
 		String cChar;
 		for (i = 1; i < input.length(); i++) {
 			cChar = input.substring(i,i+1);
 			
-			if (cChar.equals(" ")) continue; //skip spaces
-			
-			if (cChar.equals(beginChar)) {
+			if (cChar.equals(" ")) {
+				continue; //skip spaces
+			}else if (cChar.equals(beginChar)) {
 				level++;
 			}else if (cChar.equals(endChar)) {
 				level--;
@@ -111,8 +97,20 @@ public class Sandwich_operatorNode extends EquationNode {
 			e.printStackTrace();
 		}
 		
-		if (Equation.printInProgress) System.out.println("sandwich got: " + input.substring(1,i));
+		if (Equation.printInProgress) System.out.println("sandwich got: " + input.substring(0,i));
 		return i;
+	}
+	@Override
+	public double getValue() {
+		Exception e = new Exception("getValue() not overriden for class " + getClass());
+		e.printStackTrace();
+		return 1;
+	}
+
+
+
+	public EquationNode[] getSubNodes() {
+		return subNodes;
 	}
 	
 }

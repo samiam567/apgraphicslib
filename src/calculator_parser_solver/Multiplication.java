@@ -20,31 +20,59 @@ public class Multiplication extends Two_subNode_node {
 		if (n1 instanceof AdvancedValueNode || n2 instanceof AdvancedValueNode) {
 			if (Equation.printInProgress) System.out.println(n1.getDataStr() + toString() + n2.getDataStr());
 			
-			if (n1 instanceof MatrixNode && n2 instanceof MatrixNode) {
+			
+			if (false) {//n1 instanceof MatrixNode && n2 instanceof MatrixNode) {
 				// both matrices
-				Exception e = new Exception("NOT CODED");
-				e.printStackTrace();
+				
 			}else if (n1 instanceof MatrixNode) {
+				
 				// only n1 matrixNode
-				if (! (outputNode instanceof MatrixNode)) outputNode = new MatrixNode();
+				MatrixNode N1 = (MatrixNode) n1;
 				
-				((MatrixNode) outputNode).setElements(new ValueNode[((MatrixNode) n1).getValues().length]);
 				
-				for (int i = 0; i < ((MatrixNode) n1).getValues().length; i++ ) {
-					((MatrixNode) outputNode).getValues()[i] = new ValueNode(0);
-					((MatrixNode) outputNode).getValues()[i] = operation(((MatrixNode) n1).getValues()[i],n2,((MatrixNode) outputNode).getValues()[i]);
+				if (! (outputNode instanceof MatrixNode)) outputNode = new MatrixNode(N1.getRows().length, N1.getColumns().length);
+				
+
+				for (int i = 0; i < N1.getRows().length; i++) {
+					((MatrixNode) outputNode).getRows()[i].setValues(((Bra) operation(N1.getRows()[i],n2,((MatrixNode) outputNode).getRows()[i])));
 				}
+				
 			}else if (n2 instanceof MatrixNode) {
 				// only n2 matrixNode
-				if (! (outputNode instanceof MatrixNode)) outputNode = new MatrixNode();
 				
-				((MatrixNode) outputNode).setElements(new ValueNode[((MatrixNode) n2).getValues().length]);
+				MatrixNode N2 = (MatrixNode) n2;
 				
 				
-				for (int i = 0; i < ((MatrixNode) n2).getValues().length; i++ ) {
-					((MatrixNode) outputNode).getValues()[i] = new ValueNode(0);
-					((MatrixNode) outputNode).getValues()[i] = operation(n1,((MatrixNode) n2).getValues()[i],((MatrixNode) outputNode).getValues()[i]);
+				if (! (outputNode instanceof MatrixNode)) outputNode = new MatrixNode(N2.getRows().length, N2.getColumns().length);
+				
+
+				for (int i = 0; i < N2.getRows().length; i++) {
+					((MatrixNode) outputNode).getRows()[i] = ((Bra) operation(N2.getRows()[i],n1,((MatrixNode) outputNode).getRows()[i]));
 				}
+				
+				
+			}else if (n1 instanceof Bra && n2 instanceof Ket) {
+				// inner product
+				System.out.println("WARNING: class " + getClass() + " has no implementation for AdvancedValueNodes of class " + n1.getClass() + " and " + n2.getClass());
+				
+			}else if (n1 instanceof Ket && n2 instanceof Bra) {
+				// outer product
+				System.out.println("WARNING: class " + getClass() + " has no implementation for AdvancedValueNodes of class " + n1.getClass() + " and " + n2.getClass());
+				
+			}else if (n1 instanceof Bra && ! (n2 instanceof Bra) ) {
+				Bra N1 = (Bra) n1;
+				if (! (outputNode instanceof Bra) ) outputNode = new Bra( N1.size() );
+				//Bra * number
+				for (int i = 0; i < N1.size(); i++) {
+					((Bra)outputNode).setValue(i,operation(N1.getValue(i),n2,((Bra)outputNode).getValue(i)));
+				}
+				
+			}else if (false) {//n1 instanceof Ket && ! (n2 instanceof Ket)) {
+				
+			}else if (false) {//n2 instanceof Bra && ! (n1 instanceof Bra) ) {
+				
+			}else if (false) {//n2 instanceof Ket && ! (n1 instanceof Ket)) {
+				
 			}else if (n1 instanceof ComplexValueNode && n2 instanceof ComplexValueNode) { 
 				// both complex numbers
 				if (! (outputNode instanceof ComplexValueNode) ) outputNode = new ComplexValueNode();

@@ -45,7 +45,6 @@ public abstract class EquationNode {
 	}
 	
 	public ValueNode getValueData() {
-		
 		getValue();
 		return valueData;
 	}

@@ -228,7 +228,7 @@ public class Equation extends One_subNode_node {
 			if (i < equation.length()) {
 				cChar = equation.substring(i, i+1);
 					
-				if (printInProgress) out.println(cChar);
+				if (printInProgress) out.println("Parsing character: " + cChar + "   Index: " + i + "  in equation: " + equation);
 				
 				if (cChar.equals(" ")) continue; //skip spaces
 					
@@ -270,33 +270,38 @@ public class Equation extends One_subNode_node {
 			
 			 
 			//sandwich operation
-			if (cChar.equals("[")) {
+			if (cChar.equals("[") && (! mode.equals("end"))) {
+				if (printInProgress) System.out.println("Openbracket");
 				mode = "matrixAquisition";
 				int sand_end_indx = Sandwich_operatorNode.getSandwichSubString(equation.substring(i,equation.length()),"[","]");
-				nodes = addToNodesArray(new MatrixCreate(this,equation.substring(i+1,i+sand_end_indx),parenthesisLevel, new MatrixNode()),nodes);
+				nodes = addToNodesArray(new MatrixCreate(this,equation.substring(i+1,i+sand_end_indx),parenthesisLevel, (Matrixable) new MatrixNode()),nodes);
 				inputBuffer = "";
-				i += sand_end_indx+1;
+				i += sand_end_indx;
 				continue;
-			}else if (cChar.equals("{")) {
+			}else if (cChar.equals("{") && (! mode.equals("end"))) {
+				if (printInProgress) System.out.println("OpenCurlybracket");
 				mode = "matrixAquisition";
 				int sand_end_indx = Sandwich_operatorNode.getSandwichSubString(equation.substring(i,equation.length()),"{","}");
-				nodes = addToNodesArray(new MatrixCreate(this,equation.substring(i+1,i+sand_end_indx),parenthesisLevel, new MatrixNode()),nodes);
+				nodes = addToNodesArray(new MatrixCreate(this,equation.substring(i+1,i+sand_end_indx),parenthesisLevel, (Matrixable) new MatrixNode()),nodes);
 				inputBuffer = "";
-				i += sand_end_indx+1;
+				i += sand_end_indx;
 				continue;
-			}else if (cChar.equals("<")) {
+			}else if (cChar.equals("<") && (! mode.equals("end"))) {
+				if (printInProgress) System.out.println("OpenAnglebracket");
 				mode = "braAquisition";
 				int sand_end_indx = Sandwich_operatorNode.getSandwichSubString(equation.substring(i,equation.length()),"<","|");
-				nodes = addToNodesArray(new MatrixCreate(this,equation.substring(i+1,i+sand_end_indx),parenthesisLevel, new Bra_ket(true)),nodes);
+				nodes = addToNodesArray(new MatrixCreate(this,equation.substring(i+1,i+sand_end_indx),parenthesisLevel,(Matrixable) new Bra()),nodes);
 				inputBuffer = "";
-				i += sand_end_indx+1;
+				i += sand_end_indx;
 				continue;
-			}else if (cChar.equals("|")) {
+			}else if (cChar.equals("|") && (! mode.equals("end"))) {
+				if (printInProgress) System.out.println("Openket");
+				
 				mode = "ketAquisition";
 				int sand_end_indx = Sandwich_operatorNode.getSandwichSubString(equation.substring(i,equation.length()),"|",">");
-				nodes = addToNodesArray(new MatrixCreate(this,equation.substring(i+1,i+sand_end_indx),parenthesisLevel,new Bra_ket(false)),nodes);
+				nodes = addToNodesArray(new MatrixCreate(this,equation.substring(i+1,i+sand_end_indx),parenthesisLevel,(Matrixable) new Ket()),nodes);
 				inputBuffer = "";
-				i += sand_end_indx+1;
+				i += sand_end_indx;
 				continue;
 			}else if ((! prevMode.equals(mode)) && (! prevMode.equals("unknown")) ){
 				if (printInProgress) out.println("modeChange:" + inputBuffer);

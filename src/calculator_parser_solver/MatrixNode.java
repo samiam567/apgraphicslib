@@ -1,84 +1,129 @@
 package calculator_parser_solver;
 
-public class MatrixNode extends AdvancedValueNode {
+public class MatrixNode extends AdvancedValueNode implements Matrixable {
 	
-	protected ValueNode[] values;
-	
-	private ValueNode[][] matrix;
+	//these two lists' values should be aliases
+	private MatrixBra[] rows = new MatrixBra[0]; 
+	private MatrixKet[] columns = new MatrixKet[0]; 
+
 	protected boolean matrixCalculated = false;
+	
+	private boolean matrixSet = false;
 	
 	public MatrixNode() {
 		super('k');
-		values = new ValueNode[0];
-		notCalculated();
+		matrixSet = false;
+	}
+	
+	public MatrixNode(int rowsNum, int colsNum) {
+		super('k');
+		rows = new MatrixBra[rowsNum];
+		columns = new MatrixKet[colsNum];
+		
+		for (int row_indx = 0; row_indx < rowsNum; row_indx++) {
+			rows[row_indx] = new MatrixBra(colsNum);
+		}
+		
+		for (int col_indx = 0; col_indx < colsNum; col_indx++) {
+			columns[col_indx] = new MatrixKet(rowsNum);
+		}
 	}
 	
 	public MatrixNode(ValueNode[] values) {
 		super('k');
-		this.values = values;
-		notCalculated();
+		setMatrixFromValues(values);
 	}
 	
 	public void setElements(ValueNode[] values) {
-		this.values = values;
+		setMatrixFromValues(values);
 		notCalculated();
 	}
 	
+	@Override
 	public String toString() {
 		return getValueDataStr();
 	}
 	
+	@Override
+	public boolean valuesSet() {
+		return matrixSet;
+	}
+	@Override
+	public void setValues(ValueNode[] values) {
+		setMatrixFromValues(values);
+	}
+	public void setMatrixFromValues(ValueNode[] values) {	
+		matrixSet = true;
+		MatrixCreate.combineIntoMatrix(values,this);
+		calculated();
+	}
 	
-	public ValueNode[][] getMatrix() {	
-		if (! matrixCalculated) {
-			matrixCalculated = true;
-			matrix = MatrixCreate.combineIntoMatrix(values,this);
-			getValuesFromMatrix();
+	public Bra[] getRows() {
+		if (! matrixSet) (new Exception("Matrix values not set yet")).printStackTrace();
+
+		return rows;
+	}
+	
+	public Ket[] getColumns() {
+		if (! matrixSet) (new Exception("Matrix values not set yet")).printStackTrace();
+		
+		return columns;
+	}
+	
+	
+	
+	/**
+	 * {@summary the only way to set a MatrixNode's values is through this method in some way or another}
+	 * {@code creates the rows and columns lists from the passed matrix of values}
+	 * @param values
+	 */
+	public void setMatrix(ValueNode[][] values) {
+		assert values[0].length == values[values.length-1].length; //try and ensure the input matrix is rectangular
+		
+		rows = new MatrixBra[values.length];
+		
+		columns = new MatrixKet[values[0].length];
+		
+		// populate rows
+		NodeWrapper[] cRow = new NodeWrapper[values[0].length];
+		for (int row_indx = 0; row_indx < values.length; row_indx++) {
 			
-		}
-		
-		return matrix;
-	}
-	
-	private void getValuesFromMatrix() {
-		notCalculated();
-		
-		assert matrix[0].length == matrix[matrix.length-1].length; //approximate check that the matrix is rectangular
-		
-		if (values.length != matrix.length) values = new ValueNode[matrix.length];
-		
-		if (matrix[0].length > 1) {
-			for (int i = 0; i < matrix.length; i++) {
-				values[i] = new Bra_ket(matrix[i],true);
+			for (int col_indx = 0; col_indx < values[0].length; col_indx++) {
+				cRow[col_indx] = new NodeWrapper(values[row_indx][col_indx]);
 			}
-		}else {
-			for (int i = 0; i < matrix.length; i++) {
-				values[i] = matrix[i][0];
-			}
+			
+			rows[row_indx] = new MatrixBra(cRow);
 		}
 		
 		
-	}
-	
-	public void setMatrix(ValueNode[][] mat) {
-		matrix = mat;
-		matrixCalculated = true;
-		getValuesFromMatrix();
-	}
-	
-	public ValueNode[] getValues() {
-		System.out.println("WARNING: THIS MAY NOT BE CONSISTANT WITH MATRIX");
-		return values;
+		//populate columns with aliased NodeWrappers from rows
+		NodeWrapper[] cCol = new NodeWrapper[values.length];
+		for (int col_indx = 0; col_indx < values[0].length; col_indx++) {
+			for (int row_indx = 0; row_indx < values.length; row_indx++) {
+				cCol[row_indx] = (rows[row_indx]).getWrappers()[col_indx];
+			}
+			
+			columns[col_indx] = new MatrixKet(cCol);
+		}
+		
 	}
 	
 	@Override
 	public double getValue() {
-		if (! isCalculated()) {
+		//TODO rewrite to return determinant
 		
+		System.out.println("WARNING: MatrixNode has no implementation for getValue()");
+		/*
+		if (! isCalculated()) {
+			
+			if (! matrixSet) {
+				(new Exception("Matrix values not set yet")).printStackTrace();
+			}
+			
 			double magnitude = 0;
 			ValueNode outputNode = new ValueNode(0);
 			Multiplication multi = new Multiplication();
-			for (ValueNode v : values) {
+			for (ValueNode v : rows) {
 				magnitude += ((Two_subNode_node)multi).operation(v,v,outputNode).getValue();
 			}
 		
@@ -86,10 +131,12 @@ public class MatrixNode extends AdvancedValueNode {
 			
 			calculated();
 		}
-		return value;
+		*/
+		return 0;
 	}
 	
 	public String getValueDataStr() {
+	
 		String out = "";
 		
 		//add open "bracket" character
@@ -97,10 +144,12 @@ public class MatrixNode extends AdvancedValueNode {
 		
 		
 		// add values
-		if (values != null && values.length != 0) {
-			for (int i = 0; i < values.length; i++) {
-				out += values[i].getDataStr(); // add the value 
-				out += i < values.length-1 ? "," : ""; // add a comma if this isn't the last value
+		if (rows != null && rows.length != 0) {
+			for (int i = 0; i < rows.length; i++) {
+
+				out += rows[i].getDataStr(); // add the value 
+				
+				out += i < rows.length-1 ? "," : ""; // add a comma if this isn't the last value
 						
 			}
 		}else { // if there aren't any values just add null

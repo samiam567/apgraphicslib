@@ -3,11 +3,12 @@ package calculator_parser_solver;
 public class MatrixCreate extends Sandwich_operatorNode {
 	Equation equation;
 	
-	public MatrixCreate(Equation equation, String data, int parenthesisLevel, MatrixNode outputMatrix) {
+	public MatrixCreate(Equation equation, String data, int parenthesisLevel, Matrixable outputMatrix) {
 		super(equation, data, parenthesisLevel);
 		this.equation = equation;
-		super.setValueData(outputMatrix);
 		notCalculated();
+		super.setValueData((ValueNode) outputMatrix);
+	
 		setParenthesisLevel(parenthesisLevel);
 		orderOfOpsLevel = Equation.operations.length+1;
 	}
@@ -32,40 +33,41 @@ public class MatrixCreate extends Sandwich_operatorNode {
 		Exception e = new Exception("You should never set the valueData for a MatrixCreate node");
 		e.printStackTrace();
 	}
-	
-	public ValueNode[] getValues() {
-		return ((MatrixNode) getValueData()).getValues();
-	}
-	
-	public ValueNode[][] getMatrix() {
-		return ((MatrixNode) getValueData()).getMatrix();
+		
+	public MatrixNode getMatrix() {
+		return (MatrixNode) getValueData();
 	}
 	
 	private void getMatrixNode() {
-		ValueNode[] elements = new ValueNode[getSubNodes().length];
-		((MatrixNode) valueData).setElements(elements);
+		if (! ((Matrixable) valueData).valuesSet()) {
 		
-		// set the elements to the valueData of our subNodes
-		for (int i = 0; i < elements.length; i++) {
-			elements[i] = getSubNodes()[i].getValueData();
+			ValueNode[] elements = new ValueNode[getSubNodes().length];
+			
+			
+			// set the elements to the valueData of our subNodes
+			for (int i = 0; i < elements.length; i++) {
+				elements[i] = getSubNodes()[i].getValueData();
+			}
+			
+			((Matrixable) valueData).setValues(elements);
+			
+			valueData.notCalculated();
+			
+			calculated();
+			
 		}
-		
-		valueData.notCalculated();
 	}
 	
 	//@Override
-	public static ValueNode[][] combineIntoMatrix(ValueNode[] nodes, MatrixNode outputNode) {
-		//TODO talk to Dr. Upadhyaya and figure this out
-		(new Exception("method not programmed yet")).printStackTrace();
+	public static MatrixNode combineIntoMatrix(ValueNode[] nodes, MatrixNode outputNode) {
 		
 		MatrixCombine matCombine = new MatrixCombine();
 		
 		for (int i = 0; i < nodes.length; i++) {
 			outputNode = (MatrixNode) matCombine.operation(outputNode,nodes[i],outputNode);
-		}
+		}	
 		
-		
-		return outputNode.getMatrix();
+		return outputNode;
 		
 	}
 	

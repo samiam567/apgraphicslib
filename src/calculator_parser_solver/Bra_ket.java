@@ -1,20 +1,94 @@
 package calculator_parser_solver;
 
-public class Bra_ket extends MatrixNode {
-	public boolean bra = false;
+import java.util.Arrays;
+
+public abstract class Bra_ket extends AdvancedValueNode implements Matrixable {
+	private boolean bra = false;
 	
-	public Bra_ket(boolean bra) {
+	protected ValueNode[] values;
+	
+	public Bra_ket(boolean bra, int numVals) {
+		super('k');
 		this.bra = bra;
+		values = new ValueNode[numVals];
+		for (int i = 0; i < values.length; i++) {
+			values[i] = new ValueNode(0);
+		}
+	}
+	public Bra_ket(boolean bra) {
+		super('k');
+		this.bra = bra;
+		values = new ValueNode[0];
 	}
 	
 	public Bra_ket(ValueNode[] values, boolean bra) {
-		super(values);
+		super('k');
 		this.bra = bra;
+		this.values = values;
 	}
 	
+	public int size() {
+		return values.length;
+	}
 	
 	public String toString() {
 		return getValueDataStr();
+	}
+	
+	public void setValue(int indx, ValueNode value) {
+		getValues()[indx] = value;
+		notCalculated();
+	}
+	
+	public void setValues(ValueNode[] val) {
+		values = val;
+		notCalculated();
+	}
+	
+	public void setValues(ValueNode val) {
+		if (val instanceof Bra_ket) {
+			if ( ! ((Bra_ket)val).bra == bra) (new Exception("WARNING: tried to set values to a Bra_ket with mismatched bool bra. ")).printStackTrace();
+			
+			for (int i = 0; i < ((Bra_ket) val).getValues().length; i++) {
+				getValues()[i] = (((Bra_ket) val).getValues())[i];
+			}
+		}else {
+			values = new ValueNode[] {val};
+		}
+		notCalculated();
+	}
+	
+	@Override
+	public boolean valuesSet() {
+		return values.length > 0;
+	}
+	
+	public ValueNode[] getValues() {
+		return values;
+	}
+	
+	public ValueNode getValue(int indx) {
+		return getValues()[indx];
+	}
+	
+	@Override
+	public double getValue() {
+		if (! isCalculated()) {
+			
+			if (Equation.printInProgress) System.out.println("calculating magnitude of " + toString());
+		
+			double magnitude = 0;
+			ValueNode outputNode = new ValueNode(0);
+			Multiplication multi = new Multiplication();
+			for (ValueNode v : getValues()) {
+				magnitude += ((Two_subNode_node)multi).operation(v,v,outputNode).getValue();
+			}
+		
+			value = Math.sqrt(magnitude);
+			calculated();
+			
+		}
+		return value;
 	}
 	
 	public String getValueDataStr() {
@@ -40,18 +114,5 @@ public class Bra_ket extends MatrixNode {
 		out += bra ? "|" : ">";
 		
 		return out;
-	}
-	
-	protected void calculateMatrix() {
-		
-		if (! bra) {
-			setMatrix(new ValueNode[][] {values});
-		}else {
-			setMatrix(new ValueNode[1][values.length]);
-			
-			for (int i = 0; i < getMatrix()[0].length; i++) {
-				getMatrix()[0][i] = values[i];
-			}
-		}
 	}
 }
