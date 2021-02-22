@@ -55,8 +55,7 @@ public abstract class Two_subNode_node extends EquationNode {
 	}
 	
 	protected double operation(double a, double b) {
-		Exception e = new Exception("Operation method was not overriden for child of Two_subNode_node");
-		e.printStackTrace();
+		Equation.warn("Operation method was not overriden for child of Two_subNode_node");
 		return 0;
 	}
 	
@@ -75,7 +74,7 @@ public abstract class Two_subNode_node extends EquationNode {
 	}
 	*/
 	protected ValueNode operation(ValueNode nodeA, ValueNode nodeB, ValueNode outputNode) {
-		System.out.println("WARNING: " + getClass() + " has no implementation for generic ValueNodes");
+		Equation.warn(getClass() + " has no implementation for generic ValueNodes");
 		outputNode.setValue(operation(nodeA.getValue(), nodeB.getValue())); // do operation normally and assign value to our ValueNode
 		return outputNode;
 	}

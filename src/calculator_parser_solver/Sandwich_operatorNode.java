@@ -93,8 +93,7 @@ public class Sandwich_operatorNode extends EquationNode {
 		}
 		
 		if (level != 0) {
-			Exception e = new Exception("Bad sandwich!! Missing a close character - input: " + input);
-			e.printStackTrace();
+			Equation.warn("Bad sandwich!! Missing a close character - input: " + input);
 		}
 		
 		if (Equation.printInProgress) System.out.println("sandwich got: " + input.substring(0,i));
@@ -102,8 +101,7 @@ public class Sandwich_operatorNode extends EquationNode {
 	}
 	@Override
 	public double getValue() {
-		Exception e = new Exception("getValue() not overriden for class " + getClass());
-		e.printStackTrace();
+		Equation.warn("getValue() not overriden for class " + getClass());
 		return 1;
 	}
 

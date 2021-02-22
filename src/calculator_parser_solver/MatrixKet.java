@@ -18,7 +18,7 @@ public class MatrixKet extends Ket {
 	public void setValues(ValueNode val) {
 		if (! val.equals(this)) {
 			if (val instanceof Bra_ket) {
-				if ( ! (val instanceof Bra) ) (new Exception("WARNING: tried to set values to a ket's values to a bra. ")).printStackTrace();
+				if ( ! (val instanceof Bra) ) Equation.warn("WARNING: tried to set a ket's values to a bra. ");
 				
 				setValues(((Bra_ket) val).getValues());
 			}
@@ -30,7 +30,7 @@ public class MatrixKet extends Ket {
 	public void setValues(ValueNode[] vals) {
 					
 			if (vals.length != size()) {
-				(new Exception("MatrixKet's length should never change")).printStackTrace();
+				Equation.warn("MatrixKet's length should never change");
 				
 				if ( vals.length > size()) return;
 			}

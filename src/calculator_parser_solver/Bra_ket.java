@@ -47,7 +47,7 @@ public abstract class Bra_ket extends AdvancedValueNode implements Matrixable {
 	
 	public void setValues(ValueNode val) {
 		if (val instanceof Bra_ket) {
-			if ( ! ((Bra_ket)val).bra == bra) (new Exception("WARNING: tried to set values to a Bra_ket with mismatched bool bra. ")).printStackTrace();
+			if ( ! ((Bra_ket)val).bra == bra) Equation.warn("WARNING: tried to set values to a Bra_ket with mismatched bool bra. ");
 			
 			for (int i = 0; i < ((Bra_ket) val).getValues().length; i++) {
 				getValues()[i] = (((Bra_ket) val).getValues())[i];

@@ -112,7 +112,7 @@ public class MatrixNode extends AdvancedValueNode implements Matrixable {
 	public double getValue() {
 		//TODO rewrite to return determinant
 		
-		System.out.println("WARNING: MatrixNode has no implementation for getValue()");
+		Equation.warn("WARNING: MatrixNode has no implementation for getValue()");
 		/*
 		if (! isCalculated()) {
 			

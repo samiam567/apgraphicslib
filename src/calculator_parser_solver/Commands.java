@@ -3,6 +3,7 @@ package calculator_parser_solver;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -18,7 +19,7 @@ public class Commands {
 	
 	static ArrayList<Variable> variables = new ArrayList<Variable>(); // variables that the user has declared
 	
-	
+	public static JFrame mostRecentCalculatorAnchor = null;
 	/**
 	 * {@summary a user declared variable, used to replace variables in user-entered equations with their values}
 	 * @author apun1
@@ -32,6 +33,7 @@ public class Commands {
 		}
 	}
 	public static void parseCommand(String commandInput, Equation eq) {
+		mostRecentCalculatorAnchor = eq.calculatorAnchor;
 		String cIn = commandInput.toLowerCase();
 		if (cIn.contains("move")) {
 			move(eq);
@@ -147,12 +149,12 @@ public class Commands {
 	/**
 	 * {@summary directly adds the passed node to the variables list with the passed name}
 	 * @param name
-	 * @param value
+	 * @param variableNode
 	 */
-	public static void addVariable(String name, ComplexValueNode value, Equation eq) {
+	public static void addVariable(String name, ValueNode variableNode, Equation eq) {
 		deleteCommandVariable(name);
-		variables.add(new Variable(name,value));
-		output("Variable " + name + " is now set to " + value.getDataStr(), eq);
+		variables.add(new Variable(name,variableNode));
+		output("Variable " + name + " is now set to " + variableNode.getDataStr(), eq);
 	}
 
 	/**

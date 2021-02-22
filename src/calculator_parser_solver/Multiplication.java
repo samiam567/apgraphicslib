@@ -16,14 +16,13 @@ public class Multiplication extends Two_subNode_node {
 	}
 	
 	protected ValueNode operation(ValueNode n1, ValueNode n2, ValueNode outputNode) {
-			
+		if (outputNode == null) outputNode = new ValueNode(0);
 		if (n1 instanceof AdvancedValueNode || n2 instanceof AdvancedValueNode) {
 			if (Equation.printInProgress) System.out.println(n1.getDataStr() + toString() + n2.getDataStr());
 			
 			
 			if (false) {//n1 instanceof MatrixNode && n2 instanceof MatrixNode) {
 				// both matrices
-				
 			}else if (n1 instanceof MatrixNode) {
 				
 				// only n1 matrixNode
@@ -53,11 +52,19 @@ public class Multiplication extends Two_subNode_node {
 				
 			}else if (n1 instanceof Bra && n2 instanceof Ket) {
 				// inner product
-				System.out.println("WARNING: class " + getClass() + " has no implementation for AdvancedValueNodes of class " + n1.getClass() + " and " + n2.getClass());
+				Bra N1 = (Bra) n1;
+				Ket N2 = (Ket) n2;
 				
-			}else if (n1 instanceof Ket && n2 instanceof Bra) {
+				int length = N1.size() > N2.size() ? N2.size() : N1.size();
+				
+				double innerProduct = 0;
+				for (int i = 0; i < length; i++) {
+					innerProduct += operation(N1.getValue(i),N2.getValue(i),null).getValue();
+				}
+			
+				outputNode = new ValueNode(innerProduct);
+			}else if (false) {// (n1 instanceof Ket && n2 instanceof Bra) {
 				// outer product
-				System.out.println("WARNING: class " + getClass() + " has no implementation for AdvancedValueNodes of class " + n1.getClass() + " and " + n2.getClass());
 				
 			}else if (n1 instanceof Bra && ! (n2 instanceof Bra) ) {
 				Bra N1 = (Bra) n1;
@@ -67,11 +74,28 @@ public class Multiplication extends Two_subNode_node {
 					((Bra)outputNode).setValue(i,operation(N1.getValue(i),n2,((Bra)outputNode).getValue(i)));
 				}
 				
-			}else if (false) {//n1 instanceof Ket && ! (n2 instanceof Ket)) {
+			}else if (n1 instanceof Ket && ! (n2 instanceof Ket)) {
+				Ket N1 = (Ket) n1;
+				if (! (outputNode instanceof Ket) ) outputNode = new Ket( N1.size() );
+				//Ket * number
+				for (int i = 0; i < N1.size(); i++) {
+					((Ket)outputNode).setValue(i,operation(N1.getValue(i),n2,((Ket)outputNode).getValue(i)));
+				}
+			}else if (n2 instanceof Bra && ! (n1 instanceof Bra) ) {
+				Bra N2 = (Bra) n2;
+				if (! (outputNode instanceof Bra) ) outputNode = new Bra( N2.size() );
+				//Bra * number
+				for (int i = 0; i < N2.size(); i++) {
+					((Bra)outputNode).setValue(i,operation(N2.getValue(i),n1,((Bra)outputNode).getValue(i)));
+				}
 				
-			}else if (false) {//n2 instanceof Bra && ! (n1 instanceof Bra) ) {
-				
-			}else if (false) {//n2 instanceof Ket && ! (n1 instanceof Ket)) {
+			}else if (n2 instanceof Ket && ! (n1 instanceof Ket)) {
+				Ket N2 = (Ket) n2;
+				if (! (outputNode instanceof Ket) ) outputNode = new Ket( N2.size() );
+				//Ket * number
+				for (int i = 0; i < N2.size(); i++) {
+					((Ket)outputNode).setValue(i,operation(N2.getValue(i),n1,((Ket)outputNode).getValue(i)));
+				}
 				
 			}else if (n1 instanceof ComplexValueNode && n2 instanceof ComplexValueNode) { 
 				// both complex numbers
@@ -80,13 +104,13 @@ public class Multiplication extends Two_subNode_node {
 			}else if (n1 instanceof ComplexValueNode) { 
 				// only n1 Complex Number
 				if (! (outputNode instanceof ComplexValueNode) ) outputNode = new ComplexValueNode();
-				((ComplexValueNode) outputNode).setValues(((ComplexValueNode) n1).getReal()*((ComplexValueNode) n2).getReal(), ((ComplexValueNode) n1).getComplex()*((ComplexValueNode) n2).getReal());
+				((ComplexValueNode) outputNode).setValues(((ComplexValueNode) n1).getReal()*(n2).getValue(), ((ComplexValueNode) n1).getComplex()*(n2).getValue());
 			}else if (n2 instanceof ComplexValueNode) { 
 				// only n2 complex number
 				if (! (outputNode instanceof ComplexValueNode) ) outputNode = new ComplexValueNode();
-				((ComplexValueNode) outputNode).setValues(((ComplexValueNode) n2).getReal()*((ComplexValueNode) n1).getReal(), ((ComplexValueNode) n2).getComplex()*((ComplexValueNode) n1).getReal());
+				((ComplexValueNode) outputNode).setValues(((ComplexValueNode) n2).getReal()*(n1).getValue(), ((ComplexValueNode) n2).getComplex()*(n1).getValue());
 			}else {
-				System.out.println("WARNING: class " + getClass() + " has no implementation for AdvancedValueNodes of class " + n1.getClass() + " and " + n2.getClass());
+				Equation.warn("class " + getClass() + " has no implementation for AdvancedValueNodes of class " + n1.getClass() + " and " + n2.getClass());
 				outputNode.setValue(operation(n1.getValue(),n2.getValue()));
 			}
 			

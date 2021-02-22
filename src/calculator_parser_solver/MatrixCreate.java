@@ -30,8 +30,8 @@ public class MatrixCreate extends Sandwich_operatorNode {
 	
 	@Override
 	public void setValueData(ValueNode v) {
-		Exception e = new Exception("You should never set the valueData for a MatrixCreate node");
-		e.printStackTrace();
+		Equation.warn("You should never set the valueData for a MatrixCreate node");
+
 	}
 		
 	public MatrixNode getMatrix() {

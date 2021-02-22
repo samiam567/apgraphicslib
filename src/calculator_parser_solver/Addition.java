@@ -46,7 +46,7 @@ public class Addition extends Two_subNode_node {
 				if (! (outputNode instanceof ComplexValueNode) ) outputNode = new ComplexValueNode();
 				((ComplexValueNode) outputNode).setValues( n1.getValue() + ((ComplexValueNode) n2).getReal(), ((ComplexValueNode) n2).getComplex());
 			}else {
-				System.out.println("WARNING: class " + Addition.class + " has no implementation for AdvancedValueNodes of class " + n1.getClass() + " and " + n2.getClass());
+				Equation.warn("class " + Addition.class + " has no implementation for AdvancedValueNodes of class " + n1.getClass() + " and " + n2.getClass());
 				outputNode.setValue(operationStat(n1.getValue(),n2.getValue()));
 			}
 			

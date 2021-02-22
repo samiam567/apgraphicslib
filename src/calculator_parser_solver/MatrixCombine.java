@@ -32,10 +32,10 @@ public class MatrixCombine extends Two_subNode_node {
 	protected MatrixNode operation(ValueNode n1, ValueNode n2, ValueNode outputNode) {
 		assert outputNode instanceof MatrixNode; // we can't combine into a non-matrix
 		
-		//TODO talk to Dr. Upadhyaya and figure this out
+	
 		
 		
-		//for convienience, convert all standalone values to kets
+		//for convenience, convert all standalone values to kets
 		if (! (n2 instanceof AdvancedValueNode)) n2 = new Ket(new ValueNode[] {n2}); 
 			
 		if (n1 instanceof AdvancedValueNode || n2 instanceof AdvancedValueNode) {
@@ -96,7 +96,7 @@ public class MatrixCombine extends Two_subNode_node {
 				// vector <+> matrix
 				
 			}else {
-				System.out.println("WARNING: class " + getClass() + " has no implementation for AdvancedValueNodes of class " + n1.getClass() + " and " + n2.getClass());
+				Equation.warn("class " + getClass() + " has no implementation for AdvancedValueNodes of class " + n1.getClass() + " and " + n2.getClass());
 				outputNode.setValue(addition.operation(n1.getValue(),n2.getValue()));
 				return (MatrixNode) outputNode;
 			}

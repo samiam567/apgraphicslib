@@ -33,7 +33,7 @@ public class Equation extends One_subNode_node {
 	
 	//used by the runUserCalculator method
 	JFrame calculatorAnchor;
-	EquationNode prevAns = new VariableNode(0); 
+	EquationNode prevAns = new ValueNode(0); 
 	
 	
 	/**
@@ -45,11 +45,29 @@ public class Equation extends One_subNode_node {
 		(new Equation()).runUserCalculator();
 	}
 	
+	
+	public static void warn(String warning) {
+		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+		
+		
+		// Print the warning with its stacktrace
+		String stStr = "";
+		for (StackTraceElement s : stackTrace) {
+			stStr += s.toString() + "\n";
+		}
+		System.out.println("WARNING: " + warning + " at: \n" + stStr + " \n --" );
+		
+		//show to JopPane
+		if (JOptionPane_error_messages) JOptionPane.showMessageDialog(null, warning,"WARNING", JOptionPane.ERROR_MESSAGE);
+	}
+	
 	public void runUserCalculator() {
+
 		(new Exception("ans crashed calc if negative")).printStackTrace();
 		
 		// put some constants into the variables as a default
 		Commands.enableJFrameOutput = false; //be quiet about it
+		JOptionPane_error_messages = false;
 		Commands.addVariable("/pi=3.14159265358979323846264",this); // pi
 		Commands.addVariable("/e=2.7182818284590452353602874713527",this); // e
 		Commands.addVariable("/h=6.62607004*10^_34",this); // plank's constant
@@ -57,7 +75,7 @@ public class Equation extends One_subNode_node {
 		Commands.enableJFrameOutput = true;
 		
 		out.println("Test took " + testCalculator() + " nanos to evaluate equations");
-		
+		JOptionPane_error_messages = true;
 		
 		calculatorAnchor = new JFrame();
 	
@@ -68,6 +86,10 @@ public class Equation extends One_subNode_node {
 		String input = "";
 		
 		while (true) { //if the user presses cancel the program will automatically terminate
+			Commands.enableJFrameOutput = false;
+			Commands.addVariable("ans", prevAns.getValueData(), this);
+			Commands.enableJFrameOutput = true;
+			
 			while (input.length() == 0) {
 				input = JOptionPane.showInputDialog(calculatorAnchor,"Type in what you want to solve");
 				
@@ -207,11 +229,11 @@ public class Equation extends One_subNode_node {
 		
 		//create nodes
 		
-		
+/*		
 		while(equation.contains("ans")) {
 			equation = equation.replace("ans", "" + prevAns);
 		}
-		
+		*/
 		
 		EquationNode[] nodes = new EquationNode[0];
 

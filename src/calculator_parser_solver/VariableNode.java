@@ -45,9 +45,7 @@ public class VariableNode extends ValueNode {
 	public double getValue() {
 		if (! isCalculated()) {
 			if (unsetVal) { //make sure this node's value was set
-				Exception e = new Exception("Variable-node " + name + " never had its value set");
-				e.printStackTrace();
-				if (Equation.JOptionPane_error_messages) JOptionPane.showMessageDialog(null,e);
+				Equation.warn("Variable-node " + name + " never had its value set");
 			}
 			
 			calculated();
