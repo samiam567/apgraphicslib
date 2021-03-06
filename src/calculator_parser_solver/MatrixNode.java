@@ -6,7 +6,7 @@ public class MatrixNode extends AdvancedValueNode implements Matrixable {
 	private MatrixBra[] rows = new MatrixBra[0]; 
 	private MatrixKet[] columns = new MatrixKet[0]; 
 
-	protected boolean matrixCalculated = false;
+	
 	
 	private boolean matrixSet = false;
 	
@@ -64,6 +64,10 @@ public class MatrixNode extends AdvancedValueNode implements Matrixable {
 		return rows;
 	}
 	
+	public ValueNode[] getValues() {
+		return getColumns();
+	}
+	
 	public Ket[] getColumns() {
 		if (! matrixSet) (new Exception("Matrix values not set yet")).printStackTrace();
 		
@@ -78,6 +82,7 @@ public class MatrixNode extends AdvancedValueNode implements Matrixable {
 	 * @param values
 	 */
 	public void setMatrix(ValueNode[][] values) {
+		
 		assert values[0].length == values[values.length-1].length; //try and ensure the input matrix is rectangular
 		
 		rows = new MatrixBra[values.length];
@@ -106,32 +111,23 @@ public class MatrixNode extends AdvancedValueNode implements Matrixable {
 			columns[col_indx] = new MatrixKet(cCol);
 		}
 		
+		matrixSet = true;
+		
+		
 	}
 	
 	@Override
 	public double getValue() {
 		//TODO rewrite to return determinant
 		
-		Equation.warn("WARNING: MatrixNode has no implementation for getValue()");
-		/*
-		if (! isCalculated()) {
-			
-			if (! matrixSet) {
-				(new Exception("Matrix values not set yet")).printStackTrace();
-			}
-			
-			double magnitude = 0;
-			ValueNode outputNode = new ValueNode(0);
-			Multiplication multi = new Multiplication();
-			for (ValueNode v : rows) {
-				magnitude += ((Two_subNode_node)multi).operation(v,v,outputNode).getValue();
-			}
 		
-			value = Math.sqrt(magnitude);
+		
+		if (! isCalculated()) {
+			Equation.warn("WARNING: MatrixNode has no implementation for getValue()");
 			
 			calculated();
 		}
-		*/
+		
 		return 0;
 	}
 	

@@ -16,7 +16,7 @@ public class MatrixCombine extends Two_subNode_node {
 	
 	@Override
 	protected double operation(double a, double b) {
-		if (Equation.printInProgress) System.out.println(a + "+" + b);
+		if (Equation.printInProgress) System.out.println(a + "<+>" + b);
 		return a+b;
 	}
 	
@@ -29,17 +29,14 @@ public class MatrixCombine extends Two_subNode_node {
 	// class-specific advanced operations
 	
 	@Override
-	protected MatrixNode operation(ValueNode n1, ValueNode n2, ValueNode outputNode) {
+	protected ValueNode operation(ValueNode n1, ValueNode n2, ValueNode outputNode) {
 		assert outputNode instanceof MatrixNode; // we can't combine into a non-matrix
+
 		
-	
-		
-		
-		//for convenience, convert all standalone values to kets
-		if (! (n2 instanceof AdvancedValueNode)) n2 = new Ket(new ValueNode[] {n2}); 
-			
 		if (n1 instanceof AdvancedValueNode || n2 instanceof AdvancedValueNode) {
-		
+			//for convenience, convert all standalone values to kets
+			if (! (n2 instanceof AdvancedValueNode)) n2 = new Ket(new ValueNode[] {n2}); 
+			
 			ValueNode[][] outputMatrix;
 			
 			if (Equation.printInProgress) System.out.println(n1.toString() + toString() + n2.toString());
@@ -92,30 +89,51 @@ public class MatrixCombine extends Two_subNode_node {
 				}
 				
 				
-			}else if (false) {//n1 instanceof Bra_ket && n2 instanceof MatrixNode) {
-				// vector <+> matrix
+			}else if (n1 instanceof Bra && n2 instanceof Ket) {
+				Bra N1 = (Bra) n1;
+				Ket N2 = (Ket) n2;
+				ValueNode[] outputBra = new ValueNode[N1.size()+1];
 				
-			}else {
+				for (int i = 0; i < N1.size(); i++) {
+					outputBra[i] = N1.getValue(i);
+				}
+				
+				if (N2.size() > 1) {
+					outputBra[N1.size()] = N2;
+				}else {
+					outputBra[N1.size()] = N2.getValue(0);
+				}
+				
+				if (! (outputNode instanceof Bra) ) outputNode = new Bra(); 
+				
+				((Bra) outputNode).setValues(outputBra);
+				
+				return outputNode;
+				
+			} else {
 				Equation.warn("class " + getClass() + " has no implementation for AdvancedValueNodes of class " + n1.getClass() + " and " + n2.getClass());
 				outputNode.setValue(addition.operation(n1.getValue(),n2.getValue()));
 				return (MatrixNode) outputNode;
 			}
-				
+			
+			if (! (outputNode instanceof MatrixNode)) outputNode = new MatrixNode();
 			((MatrixNode) outputNode).setMatrix(outputMatrix);
 			
 			
 			
 			
 		}else { //they are just normal values
-			
+		
 			if (outputNode instanceof MatrixNode) {
 				((MatrixNode) outputNode).setMatrix(new ValueNode[][] {{n1}, {n2}});
 			}else {
+				if (! (outputNode instanceof Matrixable) ) outputNode = new Bra();
+				
 				((Matrixable) outputNode).setValues(new ValueNode[] {n1,n2});
 			}
 		}
 			
-		return (MatrixNode) outputNode;
+		return outputNode;
 	}
 		
 		

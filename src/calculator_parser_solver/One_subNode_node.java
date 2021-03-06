@@ -30,7 +30,7 @@ public class One_subNode_node extends EquationNode {
 	}
 
 	protected double operation(double a) {
-		Equation.warn("Operation method was not overriden for child of One_subNode_node");
+		Equation.warn("Operation method was not overriden for child of One_subNode_node " + getClass());
 		return 0;
 	}
 

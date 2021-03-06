@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 
+
 /**
  * {@summary this equation class will store the tree of operations and values that make up an equation and it will be capable of solving itself with different values}
  * @author apun1
@@ -16,7 +17,9 @@ public class Equation extends One_subNode_node {
 	
 	
 	
-	public static final String[] operations = {"_","isPrime","rand","abs","sin", "cos", "tan", "asin", "acos", "atan", "^", "rt", "sqrt", "*", "/", "+", "-" };
+	public static final String[] operations = {"_","isPrime","percentError","rand","abs","sin", "cos", "tan", "asin", "acos", "atan", "^", "rt", "sqrt", "*", "/", "+", "-","matcomb"};
+	public static final String[][] aliases = { {"<+>",",","matcomb"}, {"%Error","%error","%err","percentError"} }; //parser will replace all of the instances of the first strings with the last string
+	
 	private static String[] letters = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
 	public static int[] numbers = {1,2,3,4,5,6,7,8,9,0};
 	public static String[] numberChars = {"1","2","3","4","5","6","7","8","9","0",".",","};
@@ -28,7 +31,7 @@ public class Equation extends One_subNode_node {
 	
 	//calculator settings 
 	public static boolean JOptionPane_error_messages = true;
-	public static final boolean printInProgress = true;
+	public static final boolean printInProgress = false;
 	public boolean useRadiansNotDegrees = true;
 	
 	//used by the runUserCalculator method
@@ -41,8 +44,10 @@ public class Equation extends One_subNode_node {
 	 * @param equation
 	 */
 	public static void main(String[] args) { 
+
 		JOptionPane_error_messages = true;
 		(new Equation()).runUserCalculator();
+		
 	}
 	
 	
@@ -62,15 +67,16 @@ public class Equation extends One_subNode_node {
 	}
 	
 	public void runUserCalculator() {
-
-		(new Exception("ans crashed calc if negative")).printStackTrace();
 		
 		// put some constants into the variables as a default
 		Commands.enableJFrameOutput = false; //be quiet about it
 		JOptionPane_error_messages = false;
 		Commands.addVariable("/pi=3.14159265358979323846264",this); // pi
+		Commands.addVariable("/c=2.99792458*10^8",this); // speed of light 
 		Commands.addVariable("/e=2.7182818284590452353602874713527",this); // e
 		Commands.addVariable("/h=6.62607004*10^_34",this); // plank's constant
+		Commands.addVariable("/u=4*pi*10^_7",this); // mu-naught or magnetic permeability of free space
+		Commands.addVariable("/E = 1/(c^2*u)",this); // electric permeability of free space 8.854*10^_12
 		Commands.addVariable("i", new ComplexValueNode(0,1), this);
 		Commands.enableJFrameOutput = true;
 		
@@ -227,13 +233,25 @@ public class Equation extends One_subNode_node {
 		}
 		
 		
+		
+		
+		
+		// replace aliases
+		String searchStr; // String to search for
+		String replaceStr; // String to replace searchStr with
+		for (String[] alias : aliases) {
+			replaceStr = alias[alias.length-1];
+			for (int searchStringNum = 0; searchStringNum < alias.length-1; searchStringNum++) {
+				searchStr = alias[searchStringNum];
+				while(equation.contains(searchStr)) {
+					equation = equation.replace(searchStr, replaceStr);
+				}
+			}
+		}
+	
+		
 		//create nodes
 		
-/*		
-		while(equation.contains("ans")) {
-			equation = equation.replace("ans", "" + prevAns);
-		}
-		*/
 		
 		EquationNode[] nodes = new EquationNode[0];
 
@@ -490,6 +508,12 @@ public class Equation extends One_subNode_node {
 		case("abs"):
 			node = new Absolute_Value();
 			break;
+		case("matcomb"):
+			node = new MatrixCombine();
+			break;
+		case("percentError"):
+			node = new PercentError();
+			break;
 		case("rand"):
 			node = new Rand();
 			break;
@@ -639,6 +663,7 @@ public class Equation extends One_subNode_node {
 		Equation e10 = new Equation("1 + _ans * 4");
 		Equation e11 = new Equation("sin8+cos9+tan11*asin0.1+acos0.2+atan0.453"); //test all trig functions
 		Equation e12 = new Equation("isPrime(342)"); //test isPrime
+		Equation e13 = new Equation("%err(1,2)"); //test percent error and aliases
 
 		long start = System.nanoTime();
 			
@@ -738,6 +763,13 @@ public class Equation extends One_subNode_node {
 			successful = false;
 		}
 		
+		if (e13.solve() == (-50) ) { 
+			System.out.println("e13 worked!");
+		}else {
+			System.out.println("e13 failed :(");
+			successful = false;
+		}
+		
 		if (successful) {
 			System.out.println("test complete. All systems functional");
 		}else {
@@ -760,6 +792,16 @@ public class Equation extends One_subNode_node {
 	@Override
 	public String toString() {
 		return evaluate().getDataStr();
+	}
+
+	
+	public static boolean Assert(boolean b) {
+		return Assert(b,"Assertion failed");
+	}
+	
+	public static boolean Assert(boolean b, String failurePhrase) {
+		if (! b) Equation.warn(failurePhrase);
+		return b;
 	}
 	
 }
