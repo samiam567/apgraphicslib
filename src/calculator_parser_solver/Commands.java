@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
  */
 public class Commands {
 	
-	private static final String commands = "/help, /exit, /move, /degRadMode, /[insert 1-character variable name here] = [insert equation here]";
+	private static final String commands = "/help, /operations, /exit, /move, /degRadMode, /[insert 1-character variable name here] = [insert equation here]";
 	
 	static boolean enableJFrameOutput = true;
 	
@@ -43,6 +43,8 @@ public class Commands {
 			output("Possible commands are: " + commands,eq);
 		}else if (cIn.contains("=")) {
 			addVariable(commandInput,eq);
+		}else if (cIn.contains("operations")) {
+			output(Equation.operations,eq);
 		}else {
 			output("Command unrecognized",eq);
 		}
@@ -52,6 +54,15 @@ public class Commands {
 	static void output(String message, Equation eq) {
 		if (enableJFrameOutput) JOptionPane.showMessageDialog(eq.calculatorAnchor,message);
 		eq.out.println(message);
+	}
+	
+	static void output(String[] message, Equation eq) {
+		String totalMessage = "";
+		for (String m : message) {
+			totalMessage += m + ", ";
+		}
+		
+		output(totalMessage.substring(0,totalMessage.length()-2),eq);
 	}
 	
 	private static void move(Equation eq) {
