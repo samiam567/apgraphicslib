@@ -4,9 +4,7 @@ public class Negative extends One_subNode_node {
 	
 	public Negative(String mode) {
 		if (mode.equals("numberInput")) {
-			orderOfOpsLevel = 4;
-		}else {
-			orderOfOpsLevel = 3;
+			orderOfOpsLevel = 6;
 		}
 	}
 	

@@ -15,15 +15,12 @@ import javax.swing.JOptionPane;
  */
 public class Equation extends One_subNode_node {
 	
-	
-	
-	public static final String[] operations = {"_","isPrime","percentError","rand","abs","sin", "cos", "tan", "asin", "acos", "atan", "^", "rt", "sqrt", "*", "/", "Modulo" , "+", "-","matcomb"};
-	public static final String[][] aliases = { {"<+>",",","matcomb"}, {"%Error","%error","%err","percentError"}, {"mod"," Modulo "} }; //parser will replace all of the instances of the first strings with the last string
+	public static final String[] operations = {"_","isPrime","percentError","rand","abs","sin", "cos", "tan", "asin", "acos", "atan", "^", "rt", "sqrt", "*", "/", "Modulo" , "+", "-","matcomb","compareTo","isEqualTo","round","E"};
+	public static final String[][] aliases = { {"==","isEqualTo"}, {"<=>","compareTo"}, {"<+>",",","matcomb"}, {"%Error","%error","%err","percentError"}, {"%","mod"," Modulo "}, {"toInt(","toInt( ", "round("} }; //parser will replace all of the instances of the first strings with the last string
 	
 	private static String[] letters = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
 	public static int[] numbers = {1,2,3,4,5,6,7,8,9,0};
 	public static String[] numberChars = {"1","2","3","4","5","6","7","8","9","0",".",","};
-	
 	
 	private ArrayList<VariableNode> variables;	// just a list of the variables for quick access
 	
@@ -505,6 +502,9 @@ public class Equation extends One_subNode_node {
 		case("-"):
 			node = new Subtraction();
 			break;
+		case("E"):
+			node = new PowerOfTen();
+			break;
 		case("abs"):
 			node = new Absolute_Value();
 			break;
@@ -516,6 +516,15 @@ public class Equation extends One_subNode_node {
 			break;
 		case("Modulo"):
 			node = new Modulo();
+			break;
+		case("compareTo"):
+			node = new CompareTo();
+			break;
+		case("isEqualTo"):
+			node = new IsEqualTo();
+			break;
+		case("round"):
+			node = new Round();
 			break;
 		case("rand"):
 			node = new Rand();
@@ -647,143 +656,89 @@ public class Equation extends One_subNode_node {
 		}
 	}
 	
+	
+	private static int testNum = 0;
+	private static boolean allTestsPassed = true;
+	private static boolean testEquation(String eq, double answer) {
+		Equation e = new Equation(eq);
+		e.solve();
+		System.out.print("Equation " + testNum + " ");
+		testNum++;
+		if (e.getValue() == answer) {
+			System.out.println("passed");
+			return true;
+		}else {
+			System.out.println("failed!");
+			System.out.println("Calculated Answer: " + e.solve() + "   Actual Answer:  " + answer);
+			System.out.println("Equation to solve: " + eq);
+			allTestsPassed = false;
+			return false;		
+		}
+		
+		
+	}
 	@SuppressWarnings("unused")
 	private static long testCalculator() {
 		System.out.println("Testing calculator to ensure accuracy...");
 		
-		System.out.println("Building equations...");
-		boolean successful = true;
-		
-		Equation e1 = new Equation("1 + 1");  // start simple
-		Equation e2 = new Equation("1 + 2 * 6^2"); //get a little more complicated, test negative exponents
-		Equation e3 = new Equation("((4^2*3-45)^(1+1*4) / 3) * 2"); //REALLY complicated
-		Equation e4 = new Equation("45/2 + sin(10-5)/3"); //testing Sine
-		Equation e5 = new Equation("4rt(tan(atan(0.12))) + 13-sqrt4"); //test sin, asin,sqrt,rt
-		Equation e6 = new Equation("sqrt(3^2 + 4^2) * ( (abs(3)/3 * abs(4)/4) * (_abs(3)/3 + _abs(4)/4) - 1)"); //test abs and negatives
-		Equation e7 = new Equation("1/2*3/2"); //test left to right execution
-		Equation e8 = new Equation("atan(_(2rt(3)))"); //testing arctan
-		Equation e9 = new Equation("4*10^_31*sin24"); //testing negative exponents
-		Equation e10 = new Equation("1 + _ans * 4");
-		Equation e11 = new Equation("sin8+cos9+tan11*asin0.1+acos0.2+atan0.453"); //test all trig functions
-		Equation e12 = new Equation("isPrime(342)"); //test isPrime
-		Equation e13 = new Equation("%err(1,2)"); //test percent error and aliases
+		System.out.println("Building equations...");		
 
 		long start = System.nanoTime();
-			
-		System.out.println("equations built. Testing accuracy...");
+		
+		Equation e1 = new Equation("1 + 1");  // start simple
+		
 		if (e1.solve() == (1+1)) { 
-			System.out.println("e1 worked!");
+			testEquation("1",1); //pass
 		}else {
-			System.out.println("e1 failed :(");
-			successful = false;
-		}
-		
-		if (e2.solve() == (1 + 2 * Math.pow(6,2))) { 
-			System.out.println("e2 worked!");
-		}else {
-			System.out.println("e2 failed :(");
-			successful = false;
-		}
-		
-		if (e3.solve() == ((Math.pow((Math.pow(4,2)*3-45),(1+1*4)) / 3) * 2 )) { 
-			System.out.println("e3 worked!");
-		}else {
-			System.out.println("e3 failed :(");
-			successful = false;
-		}
-		
-		if (e4.solve() == (45D/2 + Math.sin(10-5) / 3) ) {
-			System.out.println("e4 worked!");
-		}else {
-			System.out.println("e4 failed :(");
-			successful = false;
-		}
-		
-		if (e5.solve() == ( Math.pow( (Math.tan(Math.atan(0.12))),1.0/4 ) + 13-Math.sqrt(4) ) ){
-			System.out.println("e5 worked!");
-		}else {
-			System.out.println("e5 failed :(");
-			successful = false;
-		}
-		
-		if (e6.solve() ==  Math.sqrt(3*3 + 4*4) * ( (Math.abs(3)/3 * Math.abs(4)/4) * (-Math.abs(3)/3 + -Math.abs(4)/4) - 1)){
-			System.out.println("e6 worked!");
-		}else {
-			System.out.println("e6 failed :(");
-			successful = false;
-		}
-		
-		if (e7.solve() ==  1D/2*3/2){
-			System.out.println("e7 worked!");
-		}else {
-			System.out.println("e7 failed :(");
-			successful = false;
+			testEquation("0",1); //fail
 		}
 		
 		
-		if (e8.solve() ==  Math.atan(-Math.sqrt(3))){
-			System.out.println("e8 worked!");
-		}else {
-			System.out.println("e8 failed :(");
-			successful = false;
-		}
+		
+		testEquation("1 + 2 * 6^2",1 + 2 * Math.pow(6,2)); //get a little more complicated, test negative exponents
+		testEquation("((4^2*3-45)^(1+1*4) / 3) * 2",(Math.pow((Math.pow(4,2)*3-45),(1+1*4)) / 3) * 2 ); //REALLY complicated
+		testEquation("45/2 + sin(10-5)/3",45D/2 + Math.sin(10-5) / 3 ); //testing Sine
+		testEquation("4rt(tan(atan(0.12))) + 13-sqrt4",Math.pow( (Math.tan(Math.atan(0.12))),1.0/4 ) + 13-Math.sqrt(4) ); //test sin, asin,sqrt,rt
+		testEquation("sqrt(3^2 + 4^2) * ( (abs(3)/3 * abs(4)/4) * (_abs(3)/3 + _abs(4)/4) - 1)",Math.sqrt(3*3 + 4*4) * ( (Math.abs(3)/3 * Math.abs(4)/4) * (-Math.abs(3)/3 + -Math.abs(4)/4) - 1)); //test abs and negatives
+		testEquation("1/2*3/2",1D/2*3/2); //test left to right execution
+		testEquation("atan(_(2rt(3)))",Math.atan(-Math.sqrt(3))); //testing arctan
+		testEquation("4*10^_31*sin24",4*Math.pow(10, -31)*Math.sin(24)); //testing negative exponents
+		testEquation("sin8+cos9+tan11*asin0.1+acos0.2+atan0.453",Math.sin(8)+Math.cos(9)+Math.tan(11)*Math.asin(0.1) + Math.acos(0.2) + Math.atan(0.453)); //test all trig functions
+		testEquation("isPrime(342)",0); //test isPrime
+		testEquation("%err(1,2)",-50); //test percent error and aliases
+		testEquation("4rt(tan(atan(0.12))) + 13-sqrt4 isEqualTo 4rt(tan(atan(0.12))) + 13-sqrt4",1);
+		testEquation("324*tan(34)*26/2 == 1*324*tan(34)*26/2+1-1",1);
+		testEquation("1 <=> 2",-1);
+		testEquation("2 <=> 1", 1);
+		testEquation("34+ 12 *23124 <=> sin23",1);
+		testEquation("324*tan(34)*26/2 compareTo 1*324*tan(34)*26/2+1-1",0);
+		testEquation("round(1.2123) == 1",1);
+		testEquation("round(1.2123,1)",1.2);
+		testEquation("5E10",5*Math.pow(10,10));
+		testEquation("sin2E_5",Math.sin(2*Math.pow(10,-5)));
+		testEquation("0.3^3E_6",Math.pow(0.3,3*Math.pow(10,-6)));
+			
 	
-		if (e9.solve() ==  4*Math.pow(10, -31)*Math.sin(24)){
-			System.out.println("e9 worked!");
-		}else {
-			System.out.println("e9 failed :(");
-			successful = false;
-		}
-		
-	
-		if (e10.solve() ==  1 + -e9.solve() * 4){
-			System.out.println("e10 worked!");
-		}else {
-			System.out.println("e10 failed :(");
-			successful = false;
-		}
-	
-		if (e11.solve() ==  Math.sin(8)+Math.cos(9)+Math.tan(11)*Math.asin(0.1) + Math.acos(0.2) + Math.atan(0.453)) {
-			System.out.println("e11 worked!");
-		}else {
-			System.out.println("e11 failed :(");
-			successful = false;
-		}
-		
-		if (e12.solve() == 0) {
-			System.out.println("e12 worked!");
-		}else {
-			System.out.println("e12 failed :(");
-			successful = false;
-		}
 		
 		e1.createTree("((4^2*3-45)^(1+1*4) / 3) * 2"); //test equation reusability
-		
 		if (e1.solve() == ((Math.pow((Math.pow(4,2)*3-45),(1+1*4)) / 3) * 2 )) { 
-			System.out.println("e1 test2 worked!");
+			testEquation("1",1); //pass
 		}else {
-			System.out.println("e1 test2 failed :(");
-			successful = false;
+			testEquation("0",1); //pass
 		}
 		
-		if (e13.solve() == (-50) ) { 
-			System.out.println("e13 worked!");
-		}else {
-			System.out.println("e13 failed :(");
-			successful = false;
-		}
 		
-		if (successful) {
+	
+		
+		long end = System.nanoTime();
+		
+		if (allTestsPassed) {
 			System.out.println("test complete. All systems functional");
 		}else {
 			System.out.println("test FAILED. One or more equations gave an incorrect answer.");
 			JOptionPane.showMessageDialog(null, "Calculator Test failed. One or more equations did not yield a correct answer");
 		}
-		
-		long end = System.nanoTime();
-		
-		
-		
+					
 		return end-start;
 	}
 		

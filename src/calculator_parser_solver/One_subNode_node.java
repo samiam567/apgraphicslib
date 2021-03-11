@@ -34,21 +34,7 @@ public class One_subNode_node extends EquationNode {
 		return 0;
 	}
 
-	/*
-	private double operation(EquationNode nodeA, char paramPlaceholder) {
 
-		if (nodeA.getValueData() instanceof AdvancedValueNode) {
-			// we have advanced data, see if we can perform this operation with it
-
-			setValueData(operation(nodeA.getValueData().getClass().cast(nodeA.getValueData()))); // Perform advanced
-																									// data operation
-
-			return getValueData().getValue();
-		} else { // we did not encounter advanced data so do operation normally
-			return operation(nodeA.getValue());
-		}
-	}
-*/
 	
 	/**
 	 * 
@@ -57,7 +43,7 @@ public class One_subNode_node extends EquationNode {
 	 * @return
 	 */
 	protected ValueNode operation(ValueNode nodeA, ValueNode outputNode) {
-		Equation.warn(getClass() + " has no implementation for generic ValueNode");
+		if (nodeA instanceof AdvancedValueNode) Equation.warn(getClass() + " has no implementation for generic ValueNode");
 		outputNode.setValue(operation(nodeA.getValue())); // do operation normally and assign value to our ValueNode
 		return outputNode;
 	}
