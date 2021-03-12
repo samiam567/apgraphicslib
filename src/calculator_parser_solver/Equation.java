@@ -319,14 +319,7 @@ public class Equation extends One_subNode_node {
 					
 					
 				if (cChar.equals(" ")) {
-					
-					if (mode.equals("multi-char-operation") || mode.equals("operation")) {
-						prevMode = mode;
-						mode = "space";
-						continue;
-					}else {
-						continue;
-					}
+					continue;
 				} else if ( cChar.equals("(") ) { //it is an open-parenthesis, and the parenthesis level goes up
 					mode = "openParent";
 					if (printInProgress) out.println("openParent");
@@ -404,7 +397,7 @@ public class Equation extends One_subNode_node {
 				inputBuffer = "";
 				i += sand_end_indx;
 				continue;
-			}else if ( (mode.equals("space") || (! prevMode.equals(mode))) && (! prevMode.equals("unknown")) ){
+			}else if ( (! prevMode.equals(mode)) && (! prevMode.equals("unknown")) ){
 				if (printInProgress) out.println("modeChange:" + inputBuffer);
 				
 				if (prevMode.equals("letterInput") && (! mode.equals("multi-char-operation"))) { //create a variable 
@@ -433,6 +426,7 @@ public class Equation extends One_subNode_node {
 					}
 					inputBuffer = ""; //clear the inputBuffer
 				}
+				
 			}
 			
 			if (mode.equals("openParent")) {
@@ -781,7 +775,7 @@ public class Equation extends One_subNode_node {
 		testEquation("5E10",5*Math.pow(10,10));
 		testEquation("sin2E_5",Math.sin(2*Math.pow(10,-5)));
 		testEquation("0.3^3E_6",Math.pow(0.3,3*Math.pow(10,-6)));
-	//	testEquation("%err(e,pi)",-13.474402056773494);
+		//testEquation("%err(e,pi)",-13.474402056773494);
 			
 	
 		
