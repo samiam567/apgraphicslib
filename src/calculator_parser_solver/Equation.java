@@ -16,7 +16,7 @@ import javax.swing.JOptionPane;
 public class Equation extends One_subNode_node {
 	
 	public static final String[] operations = {"_","isPrime","percentError","rand","abs","sin", "cos", "tan", "asin", "acos", "atan", "^", "rt", "sqrt", "*", "/", "Modulo" , "+", "-","matcomb","compareTo","isEqualTo","round","E"};
-	public static final String[][] aliases = { {"==","isEqualTo"}, {"<=>","compareTo"}, {"<+>",",","matcomb"}, {"%Error","%error","%err","percentError"}, {"%","mod"," Modulo "}, {"toInt(","toInt( ", "round("} }; //parser will replace all of the instances of the first strings with the last string
+	public static final String[][] aliases = { {"=="," isEqualTo "}, {"<=>"," compareTo "}, {"<+>",","," matcomb "}, {"%Error","%error","%err"," percentError "}, {"%","mod"," Modulo "}, {"toInt(","toInt( ", " round("} }; //parser will replace all of the instances of the first strings with the last string
 	
 	private static String[] letters = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
 	public static int[] numbers = {1,2,3,4,5,6,7,8,9,0};
@@ -73,8 +73,26 @@ public class Equation extends One_subNode_node {
 		Commands.addVariable("/e=2.7182818284590452353602874713527",this); // e
 		Commands.addVariable("/h=6.62607004*10^_34",this); // plank's constant
 		Commands.addVariable("/u=4*pi*10^_7",this); // mu-naught or magnetic permeability of free space
-		Commands.addVariable("/E = 1/(c^2*u)",this); // electric permeability of free space 8.854*10^_12
+		Commands.addVariable("/Enaught = 1/(c^2*u)",this); // electric permeability of free space 8.854*10^_12
 		Commands.addVariable("i", new ComplexValueNode(0,1), this);
+		Commands.addVariable("/Enaught = 1/(c^2*u)",this);
+		
+		//prefixes
+		Commands.addVariable("/peta = 1E15",this);
+		Commands.addVariable("/tera = 1E12",this);
+		Commands.addVariable("/giga = 1E9",this);
+		Commands.addVariable("/mega = 1E6",this);
+		Commands.addVariable("/kilo = 1E3",this);
+		Commands.addVariable("/deci = 1E_1",this);
+		Commands.addVariable("/centi = 1E_2",this);
+		Commands.addVariable("/milli = 1E_3",this);
+		Commands.addVariable("/micro = 1E_6",this);
+		Commands.addVariable("/nano = 1E_9",this);
+		Commands.addVariable("/pico = 1E_12",this);
+		Commands.addVariable("/femto = 1E_15",this);
+		
+		
+		
 		Commands.enableJFrameOutput = true;
 		
 		out.println("Test took " + testCalculator() + " nanos to evaluate equations");
@@ -87,26 +105,33 @@ public class Equation extends One_subNode_node {
 		calculatorAnchor.setTitle("Calculator Parser/Solver - Programmed by Alec Pannunzio");
 		
 		String input = "";
-		
+		String lastInput = "";
+		String eqSuggestion = "";
 		while (true) { //if the user presses cancel the program will automatically terminate
 			Commands.enableJFrameOutput = false;
 			Commands.addVariable("ans", prevAns.getValueData(), this);
 			Commands.enableJFrameOutput = true;
 			
 			while (input.length() == 0) {
-				input = JOptionPane.showInputDialog(calculatorAnchor,"Type in what you want to solve");
-				
+				input = (String) JOptionPane.showInputDialog(calculatorAnchor,"Type in what you want to solve","Calculator V2",1, null,null, eqSuggestion);
 				
 				if (input == null || input.isBlank() || input.contains("exit") || input.contains("quit")) {
 					out.println("terminating");
 					calculatorAnchor.dispose();
 					System.exit(1);
 					out.println("exited");
-				}else if (input.substring(0,1).equals("/")) {
+				}else if (input.contains("/last"))  { 
+					eqSuggestion = lastInput;
+					input = "";
+				} else if (input.substring(0,1).equals("/")) {
 					Commands.parseCommand(input,this);
 					input = "";
 				}
+				
 			}
+			
+			
+			eqSuggestion = ""; // reset the equation suggestion
 		
 			out.println("Input: " + input);
 			
@@ -116,7 +141,28 @@ public class Equation extends One_subNode_node {
 				createTree(input);
 				Commands.applyVariables(this);
 				prevAns = evaluate();
-				JOptionPane.showMessageDialog(calculatorAnchor, toString());
+				
+				
+				
+				// format the answer to look pretty
+				if (Commands.outputFormat == 0) {
+					JOptionPane.showMessageDialog(calculatorAnchor, toString(),input, 1);
+				}else if (Commands.outputFormat == 1) {
+					String ansStr = input + " =\n";
+					for (int i = 0; i < toString().length(); i++) ansStr += " ";
+					
+					int numSpaces = ansStr.length() - toString().length();
+				
+					for (int i = 0; i < numSpaces; i++) ansStr += " ";
+					ansStr += toString();
+					
+					JOptionPane.showMessageDialog(calculatorAnchor, ansStr,"Answer:", 1);
+				}else {
+					JOptionPane.showMessageDialog(calculatorAnchor,toString());
+				}
+				
+				
+				
 				out.println("Output: " + toString());
 			}catch(Exception e) {
 				e.printStackTrace();
@@ -126,6 +172,7 @@ public class Equation extends One_subNode_node {
 				System.exit(1);
 			}
 			
+			lastInput = input;
 			input = "";
 		}
 		
@@ -267,11 +314,20 @@ public class Equation extends One_subNode_node {
 					
 				if (printInProgress) out.println("Parsing character: " + cChar + "   Index: " + i + "  in equation: " + equation);
 				
-				if (cChar.equals(" ")) continue; //skip spaces
+				
+				
 					
 					
+				if (cChar.equals(" ")) {
 					
-				if ( cChar.equals("(") ) { //it is an open-parenthesis, and the parenthesis level goes up
+					if (mode.equals("multi-char-operation") || mode.equals("operation")) {
+						prevMode = mode;
+						mode = "space";
+						continue;
+					}else {
+						continue;
+					}
+				} else if ( cChar.equals("(") ) { //it is an open-parenthesis, and the parenthesis level goes up
 					mode = "openParent";
 					if (printInProgress) out.println("openParent");
 				}else if ( cChar.equals(")") ) { //it is an end-parenthesis, and the parenthesis level goes down
@@ -289,10 +345,18 @@ public class Equation extends One_subNode_node {
 							if (printInProgress) out.println("multi-char-operation");
 						}
 					}
+					
+						
+					
 				}else {
 					mode = "operation";
 					if (printInProgress) out.println("operation");	
 				}
+				
+				
+
+				
+				
 			}else { //we are at the end of the equation
 				mode = "end";
 			}
@@ -340,7 +404,7 @@ public class Equation extends One_subNode_node {
 				inputBuffer = "";
 				i += sand_end_indx;
 				continue;
-			}else if ((! prevMode.equals(mode)) && (! prevMode.equals("unknown")) ){
+			}else if ( (mode.equals("space") || (! prevMode.equals(mode))) && (! prevMode.equals("unknown")) ){
 				if (printInProgress) out.println("modeChange:" + inputBuffer);
 				
 				if (prevMode.equals("letterInput") && (! mode.equals("multi-char-operation"))) { //create a variable 
@@ -361,7 +425,7 @@ public class Equation extends One_subNode_node {
 						variables.add(newVariable);
 						nodes = addToNodesArray(newVariable,nodes); //add a new VariableNode with the variable name
 						
-						/* this code treated multi-char strings that aren't operations as an error
+						/* this old code treated multi-char strings that aren't operations as an error
 						Exception e = new Exception("operation not found in operations array: " + inputBuffer);
 						e.printStackTrace(out);
 						if (JOptionPane_error_messages) JOptionPane.showMessageDialog(calculatorAnchor, e.toString() + "\n" + e.getStackTrace().toString());
@@ -717,6 +781,7 @@ public class Equation extends One_subNode_node {
 		testEquation("5E10",5*Math.pow(10,10));
 		testEquation("sin2E_5",Math.sin(2*Math.pow(10,-5)));
 		testEquation("0.3^3E_6",Math.pow(0.3,3*Math.pow(10,-6)));
+	//	testEquation("%err(e,pi)",-13.474402056773494);
 			
 	
 		

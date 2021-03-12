@@ -13,13 +13,16 @@ import javax.swing.JOptionPane;
  */
 public class Commands {
 	
-	private static final String commands = "/help, /operations, /exit, /move, /degRadMode, /[insert 1-character variable name here] = [insert equation here]";
+	private static final String commands = "/help, /operations, /last, /exit, /move, /degRadMode, /setOutputFormat, /[insert 1-character variable name here] = [insert equation here]";
 	
 	static boolean enableJFrameOutput = true;
 	
 	static ArrayList<Variable> variables = new ArrayList<Variable>(); // variables that the user has declared
 	
 	public static JFrame mostRecentCalculatorAnchor = null;
+	
+	
+	public static int outputFormat = 1; 
 	/**
 	 * {@summary a user declared variable, used to replace variables in user-entered equations with their values}
 	 * @author apun1
@@ -45,6 +48,12 @@ public class Commands {
 			addVariable(commandInput,eq);
 		}else if (cIn.contains("operations")) {
 			output(Equation.operations,eq);
+		}else if (cIn.contains("setoutputformat"))  {
+			try {
+				outputFormat = Integer.parseInt(JOptionPane.showInputDialog(mostRecentCalculatorAnchor,"What is the new outputformat?"));
+			}catch(NumberFormatException n ) {
+				output("Invalid outputFormat. Must be a positive integer",eq);
+			}
 		}else {
 			output("Command unrecognized",eq);
 		}
