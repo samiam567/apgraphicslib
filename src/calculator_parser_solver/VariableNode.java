@@ -7,13 +7,12 @@ package calculator_parser_solver;
  * @author apun1
  *
  */
-public class VariableNode extends ValueNode {
+public class VariableNode extends EquationNode {
 	private String name = "number";
 
 	protected boolean unsetVal = false;
 	
 	public VariableNode(String name) {
-		super('k');
 		unsetVal = true;
 		this.name = name;
 		orderOfOpsLevel = Equation.operations.length;
@@ -21,7 +20,6 @@ public class VariableNode extends ValueNode {
 	}
 	
 	public VariableNode(String name, int parenthesisLevel) {
-		super('k');
 		unsetVal = true;
 		this.name = name;
 		setParenthesisLevel(parenthesisLevel);
@@ -29,13 +27,11 @@ public class VariableNode extends ValueNode {
 	}
 	
 	public VariableNode(double v) {
-		super('k');
 		setValue(v);
 		orderOfOpsLevel = Equation.operations.length;
 	}
 	
 	public VariableNode(double v, int parenthesisLevel) {
-		super('k');
 		setValue(v);
 		setParenthesisLevel(parenthesisLevel);
 		orderOfOpsLevel = Equation.operations.length;
@@ -50,7 +46,7 @@ public class VariableNode extends ValueNode {
 			}
 			calculated();
 		}
-		return getValueData().getValue();
+		return valueData.getValue();
 	}
 	
 	public String getName() {
