@@ -6,12 +6,12 @@ public class Calculator_test {
 	
 	public static void main(String[] args) {
 		
-		Equation eq = new Equation("x+1");
-		eq.setVariableValue("x",1);
+		Equation eq = new Equation("1+1");
+		
 	
 		System.out.println("---------------");
 		
-		System.out.println(eq.getDataStr());
+		System.out.println(eq);
 		
 	}
 }

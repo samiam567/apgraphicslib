@@ -13,7 +13,6 @@ public class ValueNode extends EquationNode {
 		valueData = this;
 	}
 	
-	
 	@Override
 	public double getValue() {
 		return value;

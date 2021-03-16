@@ -7,37 +7,79 @@ package calculator_parser_solver;
  * @author apun1
  *
  */
-public class VariableNode extends ValueNode {
+public class VariableNode extends EquationNode {
 	private String name = "number";
 
-	protected boolean unsetVal = true;
+	protected boolean unsetVal = false;
 	
-	public VariableNode(String name, int parenthesisLevel) {
-		super('k');
-		setParenthesisLevel(parenthesisLevel);
-		this.name = name;
+	public VariableNode(String name) {
 		unsetVal = true;
+		this.name = name;
 		orderOfOpsLevel = Equation.operations.length;
 		
 	}
 	
-	public VariableNode(double value, int parenthesisLevel) {
-		super(value);
+	public VariableNode(String name, int parenthesisLevel) {
+		unsetVal = true;
+		this.name = name;
 		setParenthesisLevel(parenthesisLevel);
-		unsetVal = false;
+		orderOfOpsLevel = Equation.operations.length;
+	}
+	
+	public VariableNode(double v) {
+		setValue(v);
+		orderOfOpsLevel = Equation.operations.length;
+	}
+	
+	public VariableNode(double v, int parenthesisLevel) {
+		setValue(v);
+		setParenthesisLevel(parenthesisLevel);
 		orderOfOpsLevel = Equation.operations.length;
 	}
 
-	/*
-	public void setValueData(ValueNode newData) {
-		super.setValueData(newData);
 	
-	}
-*/
-	public double getValue() {	
-		return value;
+	@Override 
+	public double getValue() {
+		if (! isCalculated()) {
+			if (unsetVal) { //make sure this node's value was set
+				Equation.warn("Variable-node " + name + " never had its value set");
+			}
+			calculated();
+		}
+		return valueData.getValue();
 	}
 	
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	/**
+	 * {@summary sets unsetVal. This method should ONLY be used in SPECIFIC circumstances where using other methods is not an option}
+	 * @param unsetVal
+	 * @param key
+	 */
+	public void setUnsetVal(boolean unsetVal, char key) {
+		assert key == 'k'; //makes sure you know what you're doing when you use this method
+		this.unsetVal = unsetVal;
+	}
+	
+	@Override
+	public long getLevel() {
+		return Long.MAX_VALUE;
+	}
+	
+	public boolean unsetVal() {
+		return unsetVal;
+	}
+	
+	public void setValue(double value) {
+		setValueData(new ValueNode(value));
+		unsetVal = false;
+	}
 	
 	@Override
 	public String toString() {
@@ -46,12 +88,5 @@ public class VariableNode extends ValueNode {
 		}else {
 			return " " + name + ":" + getValue() + " ";
 		}
-	}
-
-	public void setName(String newName) {
-		this.name = newName;
-	}
-	public String getName() {
-		return name;
 	}
 }

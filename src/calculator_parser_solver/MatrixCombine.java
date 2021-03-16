@@ -30,7 +30,7 @@ public class MatrixCombine extends Two_subNode_node {
 	
 	@Override
 	protected ValueNode operation(ValueNode n1, ValueNode n2, ValueNode outputNode) {
-		if (!(outputNode instanceof Matrixable)) outputNode = new MatrixNode(); // we can't combine into a non-matrix
+		assert outputNode instanceof MatrixNode; // we can't combine into a non-matrix
 
 		
 		if ( (n1 instanceof AdvancedValueNode && ( (AdvancedValueNode) n1).needsSpecialOperationConditions) || (n2 instanceof AdvancedValueNode && ( (AdvancedValueNode) n2).needsSpecialOperationConditions) ) {

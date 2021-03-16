@@ -327,25 +327,12 @@ public class Equation extends One_subNode_node {
 				
 				
 				
-				if (mode.equals("StringMode")) {
-					if (cChar.equals("\"")) { //end of string
-						if (inputBuffer.substring(0,1) == "\"") inputBuffer = inputBuffer.substring(1);
-						nodes = addToNodesArray(new StringNode(inputBuffer), nodes);
-						inputBuffer = "";
-						mode = "unknown";
-						continue;
-					}else {
-						inputBuffer += cChar;
-						continue;
-					}
-				}
+					
 					
 				if (cChar.equals(" ")) {
 					space = true;
 					continue;
-				} else if (cChar.equals("\"")) { 
-					mode = "StringMode";
-				}else if ( cChar.equals("(") ) { //it is an open-parenthesis, and the parenthesis level goes up
+				} else if ( cChar.equals("(") ) { //it is an open-parenthesis, and the parenthesis level goes up
 					mode = "openParent";
 					if (printInProgress) out.println("openParent");
 				}else if ( cChar.equals(")") ) { //it is an end-parenthesis, and the parenthesis level goes down
@@ -676,6 +663,8 @@ public class Equation extends One_subNode_node {
 		for (VariableNode n : variables) {
 			if (n.getName().equals(varName)) {
 				n.setValueData(value);
+				n.setValue(value.getValue());
+			
 				n.setName(varName);
 				
 				varFound = true;
@@ -697,7 +686,6 @@ public class Equation extends One_subNode_node {
 		for (VariableNode n : variables) {
 			if (n.getName().equals(varName)) {
 				n.setValue(value);
-				n.setName(varName);
 				varFound = true;
 			}
 		}	
@@ -745,7 +733,7 @@ public class Equation extends One_subNode_node {
 		try {
 			return variables.get(varIndx);
 		}catch(IndexOutOfBoundsException i) {
-			Exception e = new Exception("Variable index not found. That Variable dosen't exist. Indx: " + varIndx);
+			Exception e = new Exception("Variable index not found. That Varaible dosen't exist. Indx: " + varIndx);
 			e.printStackTrace(out);
 			if (JOptionPane_error_messages) JOptionPane.showMessageDialog(calculatorAnchor, e.toString() + "\n" + e.getStackTrace().toString());
 			return null;

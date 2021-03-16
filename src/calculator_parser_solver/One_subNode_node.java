@@ -23,8 +23,7 @@ public class One_subNode_node extends EquationNode {
 	public double getValue() {
 		if (!isCalculated()) {
 			calculated();
-			setValueData(operation(getSubNode().valueData,valueData));
-			calculated();
+			setValueData(operation(getSubNode().getValueData(),getValueData()));
 		}
 
 		return valueData.getValue();

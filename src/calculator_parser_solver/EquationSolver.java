@@ -6,6 +6,8 @@ import calculator_parser_solver.Comparation.ComparationValues;
 public class EquationSolver extends functionNode {
 	private Equation parentEquation;
 	
+	
+	
 	public EquationSolver(Equation equation) {
 		parentEquation = equation;
 	}
@@ -113,7 +115,6 @@ public class EquationSolver extends functionNode {
 		if (! (outputNode instanceof Bra) ) outputNode = new Bra();
 		
 		((Bra) outputNode).setValues(variableValues);
-		
 		return outputNode;
 	}
 	
@@ -124,8 +125,6 @@ public class EquationSolver extends functionNode {
 		// get parameters
 		
 		EquationNode equation1 = params[0];
-		
-		
 		
 		EquationNode equation2;
 		
