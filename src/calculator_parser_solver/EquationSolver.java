@@ -12,9 +12,9 @@ public class EquationSolver extends functionNode {
 		parentEquation = equation;
 	}
 	
-	@Deprecated
-	public static ValueNode solveEquation(Equation parentEquation, ValueNode outputNode,EquationNode equation1,EquationNode equation2,double precision, int maxGuesses, ValueNode[] guesses) {
-		Equation.warn("this method does not work");
+
+	public static ValueNode solveEquation(Equation parentEquation,EquationNode paramsBra, ValueNode outputNode,EquationNode equation1,EquationNode equation2, double precision, int maxGuesses, ValueNode[] guesses) {
+		
 		
 		ValueNode[] variableValues = new ValueNode[parentEquation.variables.size()];
 		
@@ -56,13 +56,25 @@ public class EquationSolver extends functionNode {
 					directionMulti = -1; // this variable is in equation 2
 				}
 				
+				variableValues[variable_indx].setValue(variableValues[variable_indx].getValue());
+				parentEquation.setVariableValue(variable_indx,variableValues[variable_indx].getValue());
+				paramsBra.getValue();
+				prevAnswer = equation1.getValue()-equation2.getValue();	
+
+				parentEquation.setVariableValue(variable_indx,variableValues[variable_indx].getValue()+directionMulti);
+				paramsBra.getValue();
+				answer = equation1.getValue()-equation2.getValue();	
 				
+				if (answer < prevAnswer) {
+					directionMulti *= -1;
+					System.out.println("inverse relationship");
+				}
 						
 				
 				//reset everything
 				prevAnswer = 10+2*precision; // make sure we detect an answer change on first loop
 				answer = 10;
-				direction = 0;
+				direction = 1;
 		
 				prevDirection = 0;
 				prevPrevDirection = 0;
@@ -71,10 +83,10 @@ public class EquationSolver extends functionNode {
 				while (Math.abs(answer) > precision && (Math.abs(answer-prevAnswer) > 0.1*precision) && numGuesses < maxGuesses) {	
 					
 					// figure out if we were too high or too low
-					if (answer < 0) {
-						direction = 1;
-					}else {
+					if (answer > 0) {
 						direction = -1;
+					}else {
+						direction = 1;
 					}
 					
 					
@@ -99,6 +111,7 @@ public class EquationSolver extends functionNode {
 					
 					
 					//get the next result of the equations
+					paramsBra.getValue();
 					answer = equation1.getValue()-equation2.getValue();	
 					
 					
@@ -157,7 +170,7 @@ public class EquationSolver extends functionNode {
 		}
 		
 		
-		outputNode = solveEquation(parentEquation, outputNode,equation1,equation2,precision,maxGuesses,guesses);
+		outputNode = solveEquation(parentEquation,getSubNode(), outputNode,equation1,equation2,precision,maxGuesses,guesses);
 		
 		Round rounder = new Round();
 		rounder.setSubNode(new Bra(new ValueNode[] {outputNode,new ValueNode(precision)}));
