@@ -40,13 +40,7 @@ public class VariableNode extends ValueNode {
 		setParenthesisLevel(parenthesisLevel);
 		orderOfOpsLevel = Equation.operations.length;
 	}
-	
-	
-	@Override
-	public void setValueData(ValueNode valueData) {
-		super.setValueData(valueData);
-		setValue(valueData.getValue());
-	}
+
 	
 	@Override 
 	public double getValue() {
