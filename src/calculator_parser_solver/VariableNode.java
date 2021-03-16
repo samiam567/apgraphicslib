@@ -1,6 +1,6 @@
 package calculator_parser_solver;
 
-import javax.swing.JOptionPane;
+
 
 /**
  * {@summary a value node can be a number or a variable in an equation}
@@ -50,7 +50,7 @@ public class VariableNode extends ValueNode {
 			}
 			calculated();
 		}
-		return value;
+		return getValueData().getValue();
 	}
 	
 	public String getName() {
@@ -81,18 +81,16 @@ public class VariableNode extends ValueNode {
 	}
 	
 	public void setValue(double value) {
-		if (getParent() != null) getParent().notCalculated();
-		this.value = value;
-		calculated();
+		setValueData(new ValueNode(value));
 		unsetVal = false;
 	}
 	
 	@Override
 	public String toString() {
 		if (name.equals("number")) {
-			return "" + value;
+			return "" + getValue();
 		}else {
-			return " " + name + ":" + value + " ";
+			return " " + name + ":" + getValue() + " ";
 		}
 	}
 }

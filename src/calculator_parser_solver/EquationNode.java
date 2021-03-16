@@ -45,7 +45,7 @@ public abstract class EquationNode {
 	}
 	
 	public ValueNode getValueData() {
-		getValue();
+		if (! isCalculated()) getValue();
 		return valueData;
 	}
 	
@@ -104,6 +104,7 @@ public abstract class EquationNode {
 
 	public void setValueData(ValueNode valueNode) {
 		this.valueData = valueNode;
+		if ((getParent() != null) ) parent.notCalculated(); //if we have a parent, they need to redo their calculation
 	}
 	
 	
