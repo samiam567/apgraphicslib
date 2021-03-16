@@ -76,15 +76,19 @@ public abstract class Bra_ket extends AdvancedValueNode implements Matrixable {
 		if (! isCalculated()) {
 			
 			if (Equation.printInProgress) System.out.println("calculating magnitude of " + toString());
-		
-			double magnitude = 0;
-			ValueNode outputNode = new ValueNode(0);
-			Multiplication multi = new Multiplication();
-			for (ValueNode v : getValues()) {
-				magnitude += ((Two_subNode_node)multi).operation(v,v,outputNode).getValue();
+			
+			if (values.length == 1) {
+				value = values[0].getValue();
+			}else {
+				double magnitude = 0;
+				ValueNode outputNode = new ValueNode(0);
+				Multiplication multi = new Multiplication();
+				for (ValueNode v : getValues()) {
+					magnitude += ((Two_subNode_node)multi).operation(v,v,outputNode).getValue();
+				}
+			
+				value = Math.sqrt(magnitude);
 			}
-		
-			value = Math.sqrt(magnitude);
 			calculated();
 			
 		}

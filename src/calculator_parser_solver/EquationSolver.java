@@ -13,7 +13,7 @@ public class EquationSolver extends functionNode {
 	}
 	
 
-	public static ValueNode solveEquation(Equation parentEquation,EquationNode paramsBra, ValueNode outputNode,EquationNode equation1,EquationNode equation2, double precision, int maxGuesses, ValueNode[] guesses) {
+	public static Bra solveEquation(Equation parentEquation,EquationNode paramsBra, ValueNode outputNode,EquationNode equation1,EquationNode equation2, double precision, int maxGuesses, ValueNode[] guesses) {
 		
 		
 		ValueNode[] variableValues = new ValueNode[parentEquation.variables.size()];
@@ -33,15 +33,9 @@ public class EquationSolver extends functionNode {
 		double prevAnswer;
 		double answer = precision * 2; //make sure we are not in range of precision before we start solving
 		int directionMulti = 1;
-		
-		double porportion = 10;
-		double derivative = 1;
-		
-		boolean passedAnswer = false;
-		
 	    
 	    while (Math.abs(answer) > precision && numGuesses < maxGuesses) {
-	    	System.out.println("new total loop");
+
 			for (int variable_indx = 0; variable_indx < variableValues.length; variable_indx++) {
 				
 				if (Equation.printInProgress) parentEquation.out.println("Solving using variable: " + parentEquation.variables.get(variable_indx).getName());
@@ -67,7 +61,7 @@ public class EquationSolver extends functionNode {
 				
 				if (answer < prevAnswer) {
 					directionMulti *= -1;
-					System.out.println("inverse relationship");
+					if (Equation.printInProgress) parentEquation.out.println("inverse relationship");
 				}
 						
 				
@@ -128,7 +122,7 @@ public class EquationSolver extends functionNode {
 		if (! (outputNode instanceof Bra) ) outputNode = new Bra();
 		
 		((Bra) outputNode).setValues(variableValues);
-		return outputNode;
+		return (Bra) outputNode;
 	}
 	
 	public ValueNode function(EquationNode[] params, ValueNode outputNode) {
@@ -144,7 +138,7 @@ public class EquationSolver extends functionNode {
 		ValueNode[] guesses = {new ValueNode(0)};
 		
 		
-		double precision = 0.001;
+		double precision = 0.0000001;
 		
 		int maxGuesses = (int) (10/precision);
 		
@@ -173,7 +167,7 @@ public class EquationSolver extends functionNode {
 		outputNode = solveEquation(parentEquation,getSubNode(), outputNode,equation1,equation2,precision,maxGuesses,guesses);
 		
 		Round rounder = new Round();
-		rounder.setSubNode(new Bra(new ValueNode[] {outputNode,new ValueNode(precision)}));
+		rounder.setSubNode(new Bra(new ValueNode[] {outputNode,new ValueNode(-Math.log(precision-1))}));
 		
 		outputNode = rounder.getValueData();
 		

@@ -11,7 +11,7 @@ public class MatrixCombine extends Two_subNode_node {
 	
 	
 	public MatrixCombine() {
-		orderOfOpsLevel = 1;
+		orderOfOpsLevel = 0;
 	}
 	
 	@Override

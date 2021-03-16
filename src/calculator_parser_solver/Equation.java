@@ -754,7 +754,7 @@ public class Equation extends One_subNode_node {
 			return true;
 		}else {
 			System.out.println("failed!");
-			System.out.println("Calculated Answer: " + e.solve() + "   Actual Answer:  " + answer);
+			System.out.println("Calculated Answer: " + e.solve() + "   Actual Answer:  " + answer + "    ValueData: " + e.getValueData());
 			System.out.println("Equation to solve: " + eq);
 			allTestsPassed = false;
 			return false;		
@@ -801,9 +801,11 @@ public class Equation extends One_subNode_node {
 		testEquation("round(1.2123,1)",1.2);
 		testEquation("5E10",5*Math.pow(10,10));
 		testEquation("sin2E_5",Math.sin(2*Math.pow(10,-5)));
-		testEquation("0.3^3E_6",Math.pow(0.3,3*Math.pow(10,-6)));
-		
+		testEquation("0.3^3E_6",Math.pow(0.3,3*Math.pow(10,-6)));		
 		testEquation("%err(e,pi)",-13.474402056773494);
+		testEquation("solveEquation(x,10)",10);
+		testEquation("solveEquation(x+1,10)",9);
+		testEquation("solveEquation(18,x+20)",-2);
 			
 	
 		
