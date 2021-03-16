@@ -2,12 +2,7 @@ package calculator_parser_solver;
 
 public class functionNode extends One_subNode_node {
 	
-	public void setSubNode(EquationNode sub) {
-		super.setSubNode(sub);
-		
-		
-	}
-	
+
 	private EquationNode[] getParams() {
 		EquationNode[] params;
 		if (getSubNode().getValueData() instanceof Matrixable) {

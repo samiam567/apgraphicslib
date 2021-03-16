@@ -8,6 +8,7 @@ package calculator_parser_solver;
  */
 public class AdvancedValueNode extends ValueNode {
 	
+	public boolean needsSpecialOperationConditions = true;
 	/**
 	 * @param key ensures that this constructor can only be used by child classes
 	 */

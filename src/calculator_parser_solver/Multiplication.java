@@ -17,7 +17,7 @@ public class Multiplication extends Two_subNode_node {
 	
 	protected ValueNode operation(ValueNode n1, ValueNode n2, ValueNode outputNode) {
 		if (outputNode == null) outputNode = new ValueNode(0);
-		if (n1 instanceof AdvancedValueNode || n2 instanceof AdvancedValueNode) {
+		if ( (n1 instanceof AdvancedValueNode && ( (AdvancedValueNode) n1).needsSpecialOperationConditions) || (n2 instanceof AdvancedValueNode && ( (AdvancedValueNode) n2).needsSpecialOperationConditions) ) {
 			if (Equation.printInProgress) System.out.println(n1.getDataStr() + toString() + n2.getDataStr());
 			
 			

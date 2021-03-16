@@ -21,7 +21,7 @@ public class Subtraction extends Two_subNode_node {
 		@Override
 		protected ValueNode operation(ValueNode n1, ValueNode n2, ValueNode outputNode) {
 				
-			if (n1 instanceof AdvancedValueNode || n2 instanceof AdvancedValueNode) {
+			if ( (n1 instanceof AdvancedValueNode && ( (AdvancedValueNode) n1).needsSpecialOperationConditions) || (n2 instanceof AdvancedValueNode && ( (AdvancedValueNode) n2).needsSpecialOperationConditions) )	{
 				
 				if (n1 instanceof ComplexValueNode && n2 instanceof ComplexValueNode) { 
 					// both complex numbers

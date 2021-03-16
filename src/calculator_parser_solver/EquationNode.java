@@ -105,6 +105,23 @@ public abstract class EquationNode {
 	public void setValueData(ValueNode valueNode) {
 		this.valueData = valueNode;
 	}
+	
+	
+	public static boolean hasChildInTree(EquationNode nodeToCheck, EquationNode nodeToLookFor) {
+		
+		if (nodeToCheck.equals(nodeToLookFor)) {
+			return true;
+		}else {
+			if (nodeToCheck instanceof One_subNode_node) {
+				return hasChildInTree( ((One_subNode_node) nodeToCheck).getSubNode(), nodeToLookFor );
+			}else if (nodeToCheck instanceof Two_subNode_node) {
+				return hasChildInTree( ((Two_subNode_node) nodeToCheck).getLeftSubNode(), nodeToLookFor ) || hasChildInTree( ((Two_subNode_node) nodeToCheck).getRightSubNode(), nodeToLookFor );
+			}
+		
+		}
+		
+		return false;
+	}
 
 
 }

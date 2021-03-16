@@ -30,7 +30,7 @@ public class Addition extends Two_subNode_node {
 	}
 		
 	public static ValueNode operationStat(ValueNode n1, ValueNode n2, ValueNode outputNode) {
-		if (n1 instanceof AdvancedValueNode || n2 instanceof AdvancedValueNode) {
+		if ( (n1 instanceof AdvancedValueNode && ( (AdvancedValueNode) n1).needsSpecialOperationConditions) || (n2 instanceof AdvancedValueNode && ( (AdvancedValueNode) n2).needsSpecialOperationConditions) ) {
 			if (Equation.printInProgress) System.out.println(n1.getDataStr() + "+" + n2.getDataStr());
 			
 			if (n1 instanceof ComplexValueNode && n2 instanceof ComplexValueNode) { 

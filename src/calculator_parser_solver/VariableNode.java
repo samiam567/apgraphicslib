@@ -41,13 +41,19 @@ public class VariableNode extends ValueNode {
 		orderOfOpsLevel = Equation.operations.length;
 	}
 	
+	
+	@Override
+	public void setValueData(ValueNode valueData) {
+		super.setValueData(valueData);
+		setValue(valueData.getValue());
+	}
+	
 	@Override 
 	public double getValue() {
 		if (! isCalculated()) {
 			if (unsetVal) { //make sure this node's value was set
 				Equation.warn("Variable-node " + name + " never had its value set");
 			}
-			
 			calculated();
 		}
 		return value;

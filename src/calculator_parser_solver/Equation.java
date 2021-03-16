@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import calculator_parser_solver.Comparation.ComparationValues;
+
 
 
 /**
@@ -15,14 +17,14 @@ import javax.swing.JOptionPane;
  */
 public class Equation extends One_subNode_node {
 	
-	public static final String[] operations = {"_","isPrime","percentError","rand","abs","sin", "cos", "tan", "asin", "acos", "atan", "^", "rt", "sqrt", "*", "/", "Modulo" , "+", "-","matcomb","compareTo","isEqualTo","round","E"};
-	public static final String[][] aliases = { {"=="," isEqualTo "}, {"<=>"," compareTo "}, {"<+>",","," matcomb "}, {"%Error","%error","%err"," percentError "}, {"%","mod"," Modulo "}, {"toInt(","toInt( ", " round("} }; //parser will replace all of the instances of the first strings with the last string
+	public static final String[] operations = {"_","isPrime","percenterror","rand","abs","sin", "cos", "tan", "asin", "acos", "atan", "^", "rt", "sqrt", "*", "/", "Modulo" , "+", "-","matcomb","compareTo","isequalTo","round","timesTenToThe","Solveequation"};
+	public static final String[][] aliases = { {"==", "isEqualTo"," isequalTo "}, {"<=>", "compareto", " compareTo "}, {"<+>",","," matcomb "}, {"%Error","%error","%err"," percenterror "}, {"%","mod"," Modulo "}, {"toInt(","toInt( ", " round("}, {"graphEquation","graph", "solveEquation", "Solveequation"}, {"E"," timesTenToThe "}  }; //parser will replace all of the instances of the first strings with the last string
 	
 	private static String[] letters = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
 	public static int[] numbers = {1,2,3,4,5,6,7,8,9,0};
 	public static String[] numberChars = {"1","2","3","4","5","6","7","8","9","0",".",","};
 	
-	private ArrayList<VariableNode> variables;	// just a list of the variables for quick access
+	ArrayList<VariableNode> variables;	// just a list of the variables for quick access
 	
 	PrintStream out = System.out;
 	
@@ -76,6 +78,8 @@ public class Equation extends One_subNode_node {
 		Commands.addVariable("/Enaught = 1/(c^2*u)",this); // electric permeability of free space 8.854*10^_12
 		Commands.addVariable("i", new ComplexValueNode(0,1), this);
 		Commands.addVariable("/Enaught = 1/(c^2*u)",this);
+		Commands.addVariable("true", new Comparation(ComparationValues.True), this);
+		Commands.addVariable("false", new Comparation(ComparationValues.False), this);
 		
 		//prefixes
 		Commands.addVariable("/peta = 1E15",this);
@@ -228,7 +232,12 @@ public class Equation extends One_subNode_node {
 				}
 				parenthesisLevel = n.getParenthesisLevel();
 			}
-			out.print(n + " ");
+			
+			try {
+				out.print(n + " ");
+			}catch(NullPointerException npe) {
+				out.print("null ");
+			}
 		}
 		out.println();
 	}
@@ -306,6 +315,8 @@ public class Equation extends One_subNode_node {
 		
 		int parenthesisLevel = 0;
 		
+		boolean space = false;
+		
 		String cChar = "";
 		for (int i = 0; i < equation.length()+1; i++) {	
 	
@@ -319,6 +330,7 @@ public class Equation extends One_subNode_node {
 					
 					
 				if (cChar.equals(" ")) {
+					space = true;
 					continue;
 				} else if ( cChar.equals("(") ) { //it is an open-parenthesis, and the parenthesis level goes up
 					mode = "openParent";
@@ -397,7 +409,7 @@ public class Equation extends One_subNode_node {
 				inputBuffer = "";
 				i += sand_end_indx;
 				continue;
-			}else if ( (! prevMode.equals(mode)) && (! prevMode.equals("unknown")) ){
+			}else if ( (! prevMode.equals("unknown")) && ( (! prevMode.equals(mode)) || space )  ) {
 				if (printInProgress) out.println("modeChange:" + inputBuffer);
 				
 				if (prevMode.equals("letterInput") && (! mode.equals("multi-char-operation"))) { //create a variable 
@@ -408,7 +420,7 @@ public class Equation extends One_subNode_node {
 				}else if (prevMode.equals("numberInput")) { //create a value
 					nodes = addToNodesArray(new VariableNode(Double.parseDouble(inputBuffer),parenthesisLevel),nodes); //add a new VariableNode with the variable name
 					inputBuffer = ""; //clear the inputBuffer
-				}else if (prevMode.equals("operation") || prevMode.equals("multi-char-operation") ) {
+				}else if (prevMode.equals("operation") || prevMode.equals("multi-char-operation") || (prevMode.equals("letterInput") && space) ) {
 					if (indexOf(inputBuffer,operations) != -1) {
 						nodes = addToNodesArray(createOperation(inputBuffer,parenthesisLevel,mode),nodes);
 					}else { //treat operations that the calculator doesn't recognize as a variable name
@@ -436,6 +448,8 @@ public class Equation extends One_subNode_node {
 			}else {		
 				inputBuffer += cChar;
 			}
+			
+			space = false;
 			
 			prevMode = mode;
 			 
@@ -560,7 +574,7 @@ public class Equation extends One_subNode_node {
 		case("-"):
 			node = new Subtraction();
 			break;
-		case("E"):
+		case("timesTenToThe"):
 			node = new PowerOfTen();
 			break;
 		case("abs"):
@@ -569,7 +583,7 @@ public class Equation extends One_subNode_node {
 		case("matcomb"):
 			node = new MatrixCombine();
 			break;
-		case("percentError"):
+		case("percenterror"):
 			node = new PercentError();
 			break;
 		case("Modulo"):
@@ -578,7 +592,7 @@ public class Equation extends One_subNode_node {
 		case("compareTo"):
 			node = new CompareTo();
 			break;
-		case("isEqualTo"):
+		case("isequalTo"):
 			node = new IsEqualTo();
 			break;
 		case("round"):
@@ -586,6 +600,9 @@ public class Equation extends One_subNode_node {
 			break;
 		case("rand"):
 			node = new Rand();
+			break;
+		case("Solveequation"):
+			node = new EquationSolver(this);
 			break;
 		case("isPrime"):
 			node = new IsPrime();
@@ -627,6 +644,11 @@ public class Equation extends One_subNode_node {
 	
 	@Override
 	public double operation(double a) {
+		return a;
+	}
+	
+	@Override
+	public ValueNode operation(ValueNode a, ValueNode outputNode) {
 		return a;
 	}
 	
@@ -675,15 +697,19 @@ public class Equation extends One_subNode_node {
 	 * @param varIndx
 	 * @param value
 	 */
-	public void setVariableValue(int varIndx, double value) {
+	public boolean setVariableValue(int varIndx, double value) {
 		try {
 			variables.get(varIndx).setValue(value);
+			return true;
 		}catch(IndexOutOfBoundsException i) {
 			Exception e = new Exception("Variable index not found. That Variable dosen't exist. Indx: " + varIndx);
 			e.printStackTrace(out);
 			if (JOptionPane_error_messages) JOptionPane.showMessageDialog(calculatorAnchor, e.toString() + "\n" + e.getStackTrace().toString());
+			return false;
 		}
 	}
+	
+
 
 
 	/**
@@ -719,6 +745,7 @@ public class Equation extends One_subNode_node {
 	private static boolean allTestsPassed = true;
 	private static boolean testEquation(String eq, double answer) {
 		Equation e = new Equation(eq);
+		Commands.applyVariables(e);
 		e.solve();
 		System.out.print("Equation " + testNum + " ");
 		testNum++;
@@ -775,7 +802,8 @@ public class Equation extends One_subNode_node {
 		testEquation("5E10",5*Math.pow(10,10));
 		testEquation("sin2E_5",Math.sin(2*Math.pow(10,-5)));
 		testEquation("0.3^3E_6",Math.pow(0.3,3*Math.pow(10,-6)));
-		//testEquation("%err(e,pi)",-13.474402056773494);
+		
+		testEquation("%err(e,pi)",-13.474402056773494);
 			
 	
 		

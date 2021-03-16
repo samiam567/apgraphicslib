@@ -12,4 +12,8 @@ public class PercentError extends functionNode {
 		
 		return outputNode;
 	}
+	
+	public String toString() {
+		return "percentError";
+	}
 }

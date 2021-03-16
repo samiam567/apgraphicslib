@@ -24,16 +24,31 @@ public class IsPrime extends One_subNode_node {
 	protected double operation(double a) {
 		return isPrime(a);
 	}
-	/*
+
+	
+	
 	@Override
-	public double getValue() {
-		if (! isCalculated()) {
-			value = operation(getSubNode().getValue()); 
-			return value;
-		} else {
-			return value;
+	protected ValueNode operation(ValueNode n1, ValueNode outputNode) {
+		if (! (outputNode instanceof Comparation)) outputNode = new Comparation();
+		
+		if ( (n1 instanceof AdvancedValueNode && ( (AdvancedValueNode) n1).needsSpecialOperationConditions)) {
+			Equation.warn("class " + IsPrime.class + " has no implementation for AdvancedValueNodes of class " + n1.getClass());
+
+			if (operation(n1.getValue()) == 1) {
+				((Comparation) outputNode).setValue(Comparation.ComparationValues.True);
+			}else {
+				((Comparation) outputNode).setValue(Comparation.ComparationValues.False);
+			}
+		}else {
+			if (operation(n1.getValue()) == 1) {
+				((Comparation) outputNode).setValue(Comparation.ComparationValues.True);
+			}else {
+				((Comparation) outputNode).setValue(Comparation.ComparationValues.False);
+			}
 		}
-	}*/
+		
+		return outputNode;
+	}
 	
 	public String toString() {
 		return "isPrime";

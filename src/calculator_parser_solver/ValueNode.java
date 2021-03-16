@@ -28,6 +28,8 @@ public class ValueNode extends EquationNode {
 		return "" + getValue();
 	}
 	public void setValue(double value) {
+		notCalculated();
+		calculated();
 		this.value = value;	
 	}
 

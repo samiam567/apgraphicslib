@@ -73,9 +73,9 @@ public abstract class Two_subNode_node extends EquationNode {
 		}
 	}
 	*/
-	protected ValueNode operation(ValueNode nodeA, ValueNode nodeB, ValueNode outputNode) {
-		if (nodeA instanceof AdvancedValueNode || nodeB instanceof AdvancedValueNode) Equation.warn(getClass() + " has no implementation for generic ValueNodes");
-		outputNode.setValue(operation(nodeA.getValue(), nodeB.getValue())); // do operation normally and assign value to our ValueNode
+	protected ValueNode operation(ValueNode n1, ValueNode n2, ValueNode outputNode) {
+		if ( (n1 instanceof AdvancedValueNode && ( (AdvancedValueNode) n1).needsSpecialOperationConditions) || (n2 instanceof AdvancedValueNode && ( (AdvancedValueNode) n2).needsSpecialOperationConditions) ) Equation.warn(getClass() + " has no implementation for generic ValueNodes");
+		outputNode.setValue(operation(n1.getValue(), n2.getValue())); // do operation normally and assign value to our ValueNode
 		return outputNode;
 	}
 	

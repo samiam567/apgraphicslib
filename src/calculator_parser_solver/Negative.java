@@ -25,7 +25,7 @@ public class Negative extends One_subNode_node {
 	@Override
 	protected ValueNode operation(ValueNode n1, ValueNode outputNode) {
 		
-		if (n1 instanceof AdvancedValueNode) {
+		if ( (n1 instanceof AdvancedValueNode && ( (AdvancedValueNode) n1).needsSpecialOperationConditions)) {
 			if (n1 instanceof ComplexValueNode) { 
 				// both complex numbers
 				if (! (outputNode instanceof ComplexValueNode) ) outputNode = new ComplexValueNode();

@@ -33,7 +33,7 @@ public class MatrixCombine extends Two_subNode_node {
 		assert outputNode instanceof MatrixNode; // we can't combine into a non-matrix
 
 		
-		if (n1 instanceof AdvancedValueNode || n2 instanceof AdvancedValueNode) {
+		if ( (n1 instanceof AdvancedValueNode && ( (AdvancedValueNode) n1).needsSpecialOperationConditions) || (n2 instanceof AdvancedValueNode && ( (AdvancedValueNode) n2).needsSpecialOperationConditions) ) {
 			//for convenience, convert all standalone values to kets
 			if (! (n2 instanceof AdvancedValueNode)) n2 = new Ket(new ValueNode[] {n2}); 
 			
