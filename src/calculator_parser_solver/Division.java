@@ -28,7 +28,7 @@ public class Division extends Two_subNode_node {
 			}else if (n1 instanceof ComplexValueNode) { 
 				// only n1 Complex Number
 				if (! (outputNode instanceof ComplexValueNode) ) outputNode = new ComplexValueNode();
-				((ComplexValueNode) outputNode).setValues((((ComplexValueNode) n1).getReal()*((ComplexValueNode) n2).getReal()+((ComplexValueNode) n1).getImaginaryComponent())/(((ComplexValueNode) n2).getReal()*((ComplexValueNode) n2).getReal()), (((ComplexValueNode) n1).getImaginaryComponent()*((ComplexValueNode) n2).getReal()-((ComplexValueNode) n1).getReal())/(((ComplexValueNode) n2).getReal()*((ComplexValueNode) n2).getReal()));
+				((ComplexValueNode) outputNode).setValues((((ComplexValueNode) n1).getReal()*(n2).getValue()+((ComplexValueNode) n1).getImaginaryComponent())/(( n2).getValue()*(n2).getValue()), (((ComplexValueNode) n1).getImaginaryComponent()*(n2).getValue()-((ComplexValueNode) n1).getReal())/( (n2).getValue()*(n2).getValue()));
 				
 			}else if (n2 instanceof ComplexValueNode) { 
 				// only n2 complex number
