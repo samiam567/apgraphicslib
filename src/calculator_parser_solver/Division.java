@@ -33,7 +33,7 @@ public class Division extends Two_subNode_node {
 			}else if (n2 instanceof ComplexValueNode) { 
 				// only n2 complex number
 				if (! (outputNode instanceof ComplexValueNode) ) outputNode = new ComplexValueNode(); //cast outputNode to the correct type 
-				((ComplexValueNode) outputNode).setValues((((ComplexValueNode) n1).getReal()*((ComplexValueNode) n2).getReal()+((ComplexValueNode) n2).getImaginaryComponent())/(((ComplexValueNode) n2).getReal()*((ComplexValueNode) n2).getReal()+((ComplexValueNode) n2).getImaginaryComponent()*((ComplexValueNode) n2).getImaginaryComponent()), (((ComplexValueNode) n2).getReal()-((ComplexValueNode) n1).getReal()*((ComplexValueNode) n2).getImaginaryComponent())/(((ComplexValueNode) n2).getReal()*((ComplexValueNode) n2).getReal()+((ComplexValueNode) n2).getImaginaryComponent()*((ComplexValueNode) n2).getImaginaryComponent()));
+				((ComplexValueNode) outputNode).setValues(((n1).getValue()*((ComplexValueNode) n2).getReal()+((ComplexValueNode) n2).getImaginaryComponent())/(((ComplexValueNode) n2).getReal()*((ComplexValueNode) n2).getReal()+((ComplexValueNode) n2).getImaginaryComponent()*((ComplexValueNode) n2).getImaginaryComponent()), (((ComplexValueNode) n2).getReal()-( n1).getValue()*((ComplexValueNode) n2).getImaginaryComponent())/(((ComplexValueNode) n2).getReal()*((ComplexValueNode) n2).getReal()+((ComplexValueNode) n2).getImaginaryComponent()*((ComplexValueNode) n2).getImaginaryComponent()));
 			}else {
 				Equation.warn("class " + getClass() + " has no implementation for AdvancedValueNodes of class " + n1.getClass() + " and " + n2.getClass());
 				outputNode.setValue(operation(n1.getValue(),n2.getValue()));

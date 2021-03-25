@@ -10,7 +10,7 @@ import java.util.Random;
 @Deprecated
 public class Rand extends One_subNode_node {
 	
-	Random rand;
+	static Random rand;
 	
 	public Rand() {
 
@@ -20,7 +20,7 @@ public class Rand extends One_subNode_node {
 	@Override
 	protected double operation(double a) {
 		if (Equation.printInProgress) System.out.println("rand" + a);
-		rand.setSeed((long) a);
+		//rand.setSeed((long) a);
 		return rand.nextDouble();
 		
 	}
@@ -28,7 +28,7 @@ public class Rand extends One_subNode_node {
 	@Override
 	public double getValue() {
 		if (! isCalculated()) {
-			getValueData().setValue(operation(getSubNode().getValue())); 
+			valueData.setValue(operation(getSubNode().getValue())); 
 			
 			//make all of the parents not calculated so that we have to get a new rand number...
 			notCalculated(); 
