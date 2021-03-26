@@ -17,8 +17,8 @@ import calculator_parser_solver.Comparation.ComparationValues;
  */
 public class Equation extends One_subNode_node {
 	
-	public static final String[] operations = {"_","isPrime","percenterror","rand","abs","sin", "cos", "tan", "asin", "acos", "atan", "^", "rt", "sqrt", "*", "/", "Modulo" , "+", "-","matcomb","compareTo","isequalTo","round","timesTenToThe","Solveequation","log","ln"};
-	public static final String[][] aliases = { {"==", "isEqualTo"," isequalTo "}, {"<=>", "compareto", " compareTo "}, {"<+>",","," matcomb "}, {"%Error","%error","%err"," percenterror "}, {"%","mod"," Modulo "}, {"toInt(","toInt( ", " round("}, {"graphEquation","graph", "solveEquation", "Solveequation"}, {"E"," timesTenToThe "}  }; //parser will replace all of the instances of the first strings with the last string
+	public static final String[] operations = {"_","isPrime","percenterror","rand","abs","sin", "cos", "tan", "asin", "acos", "atan", "^", "rt", "sqrt", "*", "/", "Modulo" , "+", "-","matcomb","compareTo","isequalTo","round","timesTenToThe","Solveequation","log","ln","parallImpedanceAdd"};
+	public static final String[][] aliases = { {"==", "isEqualTo"," isequalTo "}, {"<=>", "compareto", " compareTo "}, {"<+>",","," matcomb "}, {"%Error","%error","%err"," percenterror "}, {"%","mod"," Modulo "}, {"toInt(","toInt( ", " round("}, {"graphEquation","graph", "solveEquation", "Solveequation"}, {"E"," timesTenToThe "} , {"parallel"," parallImpedanceAdd "}, {"⁻","_"}, {"×","*"}, {"÷","/"}, {"pi","π"} }; //parser will replace all of the instances of the first strings with the last string
 	
 	private static String[] letters = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
 	public static int[] numbers = {1,2,3,4,5,6,7,8,9,0};
@@ -70,14 +70,14 @@ public class Equation extends One_subNode_node {
 		// put some constants into the variables as a default
 		Commands.enableJFrameOutput = false; //be quiet about it
 		JOptionPane_error_messages = false;
-		Commands.addVariable("/pi=3.14159265358979323846264",this); // pi
+		Commands.addVariable("/π=3.14159265358979323846264",this); // pi
 		Commands.addVariable("/c=2.99792458*10^8",this); // speed of light 
 		Commands.addVariable("/e=2.7182818284590452353602874713527",this); // e
 		Commands.addVariable("/h=6.62607004*10^_34",this); // plank's constant
-		Commands.addVariable("/u=4*pi*10^_7",this); // mu-naught or magnetic permeability of free space
-		Commands.addVariable("/Enaught = 1/(c^2*u)",this); // electric permeability of free space 8.854*10^_12
+		Commands.addVariable("/ℏ=h/2/π",this);
+		Commands.addVariable("/µ=4*pi*10^_7",this); // mu-naught or magnetic permeability of free space
+		Commands.addVariable("/ε = 1/(c^2*µ)",this); // electric permeability of free space 8.854*10^_12
 		Commands.addVariable("i", new ComplexValueNode(0,1), this);
-		Commands.addVariable("/Enaught = 1/(c^2*u)",this);
 		Commands.addVariable("true", new Comparation(ComparationValues.True), this);
 		Commands.addVariable("false", new Comparation(ComparationValues.False), this);
 		
@@ -612,6 +612,9 @@ public class Equation extends One_subNode_node {
 			break;
 		case("ln"):
 			node = new Natural_logarithm();
+			break;
+		case("parallImpedanceAdd"):
+			node = new ParallelImpedanceAdd();
 			break;
 		default:
 			

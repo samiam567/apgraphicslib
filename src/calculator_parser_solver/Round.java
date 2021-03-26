@@ -1,7 +1,7 @@
 package calculator_parser_solver;
 
 //round(value,numDecimals) or round(value) 
-public class Round extends functionNode {
+public class Round extends FunctionNode {
 	
 	private ValueNode round(ValueNode value, int precision, ValueNode outputNode) {
 		if (value instanceof Matrixable) {
@@ -30,7 +30,6 @@ public class Round extends functionNode {
 		}else {
 			outputNode = round(params[0].getValueData(),0,outputNode);
 		}
-		
-		return outputNode;
+				return outputNode;
 	}
 }

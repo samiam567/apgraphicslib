@@ -1,6 +1,6 @@
 package calculator_parser_solver;
 
-public class functionNode extends One_subNode_node {
+public class FunctionNode extends One_subNode_node {
 	
 
 	private EquationNode[] getParams() {
@@ -19,7 +19,7 @@ public class functionNode extends One_subNode_node {
 	
 	
 	public ValueNode function(EquationNode[] params, ValueNode outputNode) {
-		Equation.warn("Function method was not overriden for child of functionNode " + getClass() );
+		Equation.warn("Function method was not overriden for child of FunctionNode " + getClass() );
 		return null;
 	}
 	

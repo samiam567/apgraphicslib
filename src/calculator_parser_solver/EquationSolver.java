@@ -3,7 +3,7 @@ package calculator_parser_solver;
 import calculator_parser_solver.Comparation.ComparationValues;
 
 //solveEquation(eq1,eq2,precision,maxGuesses,guess1,guess2,...)
-public class EquationSolver extends functionNode {
+public class EquationSolver extends FunctionNode {
 	private Equation parentEquation;
 	
 	

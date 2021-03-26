@@ -1,6 +1,6 @@
 package calculator_parser_solver;
 
-public class Logarithm extends functionNode {
+public class Logarithm extends FunctionNode {
 	
 	private static Natural_logarithm logCalc = new Natural_logarithm();
 	private static Division divCalc = new Division();
