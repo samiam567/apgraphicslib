@@ -62,7 +62,7 @@ public class ComplexValueNode extends AdvancedValueNode {
 	
 	@Override
 	public String toString() {
-		return "" + value + " + " + imaginaryComponent + "i ";
+		return "" + value + " + " + imaginaryComponent + "i";
 	}
 
 	public double getReal() {

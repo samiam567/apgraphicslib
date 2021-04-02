@@ -17,8 +17,8 @@ import calculator_parser_solver.Comparation.ComparationValues;
  */
 public class Equation extends One_subNode_node {
 	
-	public static final String[] operations = {"_","isPrime","percenterror","rand","abs","sin", "cos", "tan", "asin", "acos", "atan", "^", "rt", "sqrt", "*", "/", "Modulo" , "+", "-","matcomb","compareTo","isequalTo","round","timesTenToThe","Solveequation","log","ln","parallImpedanceAdd"};
-	public static final String[][] aliases = { {"==", "isEqualTo"," isequalTo "}, {"<=>", "compareto", " compareTo "}, {"<+>",","," matcomb "}, {"%Error","%error","%err"," percenterror "}, {"%","mod"," Modulo "}, {"toInt(","toInt( ", " round("}, {"graphEquation","graph", "solveEquation", "Solveequation"}, {"E"," timesTenToThe "} , {"parallel"," parallImpedanceAdd "}, {"⁻","_"}, {"×","*"}, {"÷","/"}, {"pi","π"} }; //parser will replace all of the instances of the first strings with the last string
+	public static final String[] operations = {"_","isPrime","percenterror","rand","abs","sin", "cos", "tan", "asin", "acos", "atan", "^", "rt", "sqrt", "*", "/", "Modulo" , "+", "-","matcomb","compareTo","isequalTo","round","timesTenToThe","Solveequation","log","ln","parallImpedanceAdd","exp"};
+	public static final String[][] aliases = { {"==", "isEqualTo"," isequalTo "}, {"<=>", "compareto", " compareTo "}, {"<+>",","," matcomb "}, {"%Error","%error","%err"," percenterror "}, {"%","mod"," Modulo "}, {"toInt(","toInt( ", " round("}, {"graphEquation","graph", "solveEquation", " Solveequation"}, {"E"," timesTenToThe "} , {"parallel"," parallImpedanceAdd "}, {"⁻"," _"}, {"×"," * "}, {"÷"," / "}, {"π"," pi "}, {"e^","exp"}}; //parser will replace all of the instances of the first strings with the last string
 	
 	private static String[] letters = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
 	public static int[] numbers = {1,2,3,4,5,6,7,8,9,0};
@@ -70,14 +70,15 @@ public class Equation extends One_subNode_node {
 		// put some constants into the variables as a default
 		Commands.enableJFrameOutput = false; //be quiet about it
 		JOptionPane_error_messages = false;
-		Commands.addVariable("/π=3.14159265358979323846264",this); // pi
+		Commands.addVariable("/pi=3.14159265358979323846264",this); // pi
 		Commands.addVariable("/c=2.99792458*10^8",this); // speed of light 
 		Commands.addVariable("/e=2.7182818284590452353602874713527",this); // e
-		Commands.addVariable("/h=6.62607004*10^_34",this); // plank's constant
-		Commands.addVariable("/ℏ=h/2/π",this);
-		Commands.addVariable("/µ=4*pi*10^_7",this); // mu-naught or magnetic permeability of free space
+		Commands.addVariable("/ℏ=1.054571817×10^_34",this);
+		Commands.addVariable("/h= 6.62607015×10^_34",this); // plank's constant
+		Commands.addVariable("/µ= 4 * π * 10^_7",this); // mu-naught or magnetic permeability of free space
 		Commands.addVariable("/ε = 1/(c^2*µ)",this); // electric permeability of free space 8.854*10^_12
 		Commands.addVariable("i", new ComplexValueNode(0,1), this);
+		Commands.addVariable("/Kb = 1.38064852*10^_23",this);
 		Commands.addVariable("true", new Comparation(ComparationValues.True), this);
 		Commands.addVariable("false", new Comparation(ComparationValues.False), this);
 		
@@ -107,6 +108,9 @@ public class Equation extends One_subNode_node {
 		calculatorAnchor.setVisible(true);
 		calculatorAnchor.setSize(300,10);
 		calculatorAnchor.setTitle("Calculator Parser/Solver - Programmed by Alec Pannunzio");
+		
+		//warn the user about known issues
+		knownIssues();
 		
 		String input = "";
 		String lastInput = "";
@@ -311,6 +315,7 @@ public class Equation extends One_subNode_node {
 
 		String mode = "unknown";
 		String prevMode = "unknown";
+		String prevPrevMode = "unknown";
 		String inputBuffer = "";
 		
 		int parenthesisLevel = 0;
@@ -412,14 +417,22 @@ public class Equation extends One_subNode_node {
 			}else if ( (! prevMode.equals("unknown")) && ( (! prevMode.equals(mode)) || space )  ) {
 				if (printInProgress) out.println("modeChange:" + inputBuffer);
 				
-				if (prevMode.equals("letterInput") && (! mode.equals("multi-char-operation"))) { //create a variable 
-					VariableNode newVariable = new VariableNode(inputBuffer,parenthesisLevel);
-					variables.add(newVariable);
-					nodes = addToNodesArray(newVariable,nodes); //add a new VariableNode with the variable name
-					inputBuffer = ""; //clear the inputBuffer
+				if (prevMode.equals("letterInput") ) { //create a variable 
+					
+					if (mode.equals("multi-char-operation")) { 
+						if (! (prevPrevMode.equals("multi-char-operation") || prevPrevMode.equals("operation")) ) {
+							
+						}
+					}else { // single-letter variable
+						VariableNode newVariable = new VariableNode(inputBuffer,parenthesisLevel);
+						variables.add(newVariable);
+						nodes = addToNodesArray(newVariable,nodes); //add a new VariableNode with the variable name
+						inputBuffer = ""; //clear the inputBuffer
+					}
 				}else if (prevMode.equals("numberInput")) { //create a value
 					nodes = addToNodesArray(new VariableNode(Double.parseDouble(inputBuffer),parenthesisLevel),nodes); //add a new VariableNode with the variable name
 					inputBuffer = ""; //clear the inputBuffer
+					
 				}else if (prevMode.equals("operation") || prevMode.equals("multi-char-operation") || (prevMode.equals("letterInput") && space) ) {
 					if (indexOf(inputBuffer,operations) != -1) {
 						nodes = addToNodesArray(createOperation(inputBuffer,parenthesisLevel,mode),nodes);
@@ -451,7 +464,9 @@ public class Equation extends One_subNode_node {
 			
 			space = false;
 			
+			prevPrevMode = prevMode;
 			prevMode = mode;
+			
 			 
 			
 		}
@@ -616,6 +631,9 @@ public class Equation extends One_subNode_node {
 		case("parallImpedanceAdd"):
 			node = new ParallelImpedanceAdd();
 			break;
+		case("exp"):
+			node = new Exp();
+			break;
 		default:
 			
 			
@@ -760,7 +778,7 @@ public class Equation extends One_subNode_node {
 		e.solve();
 		System.out.print("Equation " + testNum + " ");
 		testNum++;
-		if (e.getValue() == answer) {
+		if (e.solve() == answer) {
 			System.out.println("passed");
 			return true;
 		}else {
@@ -769,9 +787,24 @@ public class Equation extends One_subNode_node {
 			System.out.println("Equation to solve: " + eq);
 			allTestsPassed = false;
 			return false;		
-		}
-		
-		
+		}	
+	}
+	private static boolean testEquation(String eq, String answerStr, double ans) {
+		Equation e = new Equation(eq);
+		Commands.applyVariables(e);
+		e.solve();
+		System.out.print("Equation " + testNum + " ");
+		testNum++;
+		if ( (e.getValueData().toString()).equals(answerStr) && e.solve() == ans) {
+			System.out.println("passed");
+			return true;
+		}else {
+			System.out.println("failed!");
+			System.out.println("Calculated ValueData \"" + e.getValueData().toString() + "\" Target ValueData:  \"" + answerStr + "\"\nCalculated Answer: " + e.solve() + "   Actual Answer: " + ans);
+			System.out.println("Equation to solve: " + eq);
+			allTestsPassed = false;
+			return false;	
+		}	
 	}
 	@SuppressWarnings("unused")
 	private static long testCalculator() {
@@ -817,6 +850,8 @@ public class Equation extends One_subNode_node {
 		testEquation("solveEquation(x,10)",10);
 		testEquation("solveEquation(x+1,10)",9);
 		testEquation("solveEquation(18,x+20)",-2);
+		testEquation("i+1","1.0 + 1.0i",1);
+		
 			
 	
 		
@@ -860,6 +895,24 @@ public class Equation extends One_subNode_node {
 	public static boolean Assert(boolean b, String failurePhrase) {
 		if (! b) Equation.warn(failurePhrase);
 		return b;
+	}
+	
+	
+	/*
+	 * A list of all the known issues with the calculator
+	 */
+	public static void knownIssues() {
+		String knownIssues = "Known Issues:\n";
+		
+		
+		
+		knownIssues += "ans may yield wrong answer when used with some functions ; known: sqrt\n";
+		knownIssues += "operations may not be recognized if there is not a space between them and an operation";
+		
+		
+		
+		
+		warn(knownIssues);
 	}
 	
 }
