@@ -8,7 +8,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import apgraphicslib.Physics_2DPolygon.PolyPoint;
-import calculator_parser_solver.Equation;
+import calculatorv2_core.Equation;
 
 
 

@@ -1,6 +1,6 @@
 package coffee_machine;
 
-import calculator_parser_solver.Equation;
+import calculatorv2_core.Equation;
 
 public class Calculator_test {
 	

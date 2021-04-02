@@ -15,7 +15,7 @@ import javax.swing.JOptionPane;
 
 import apgraphicslib.Physics_2DPolygon.PolyPoint;
 import apgraphicslib.Physics_3DPolygon.Point3D;
-import calculator_parser_solver.Equation;
+import calculatorv2_core.Equation;
 
 public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Textured3D, Updatable {
 	
