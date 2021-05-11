@@ -7,14 +7,11 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
-import apgraphicslib.Physics_2DPolygon.PolyPoint;
-import apgraphicslib.Physics_3DPolygon.Point3D;
 import calculatorv2_core.Equation;
 
 public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Textured3D, Updatable {
@@ -584,7 +581,7 @@ public class Physics_3DTexturedPolygon extends Physics_3DPolygon implements Text
 			}
 			
 			
-		
+			
 			//sort the dataPointSet by z pos
 			dataPointSet.sort(new Comparator<Point3D>() {
 				@Override
