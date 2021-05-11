@@ -11,9 +11,9 @@ public class SongGenerator {
 	private static int notesToSkip = 0;
 	
 	//this is the difficulty
-	private static int notesPerBeat = 100;
+	private static int notesPerBeat = 1;
 		
-	private static double timeInBetweenNotes = 0.0; //this is in beats
+	private static double timeInBetweenNotes = 0.25; //this is in beats
 	
 	private static double[][] notePitches;
 
