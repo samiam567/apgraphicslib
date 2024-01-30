@@ -23,6 +23,10 @@ public class LegendOfJavaRunner {
 	private static Room endRoom;
 	
 	public static void main(String[] args) {
+		new LegendOfJavaRunner();
+	}
+		
+	public LegendOfJavaRunner() {
 		//set the Settings:
 		Settings.perspective = true;
 		Settings.advancedRotation = true;

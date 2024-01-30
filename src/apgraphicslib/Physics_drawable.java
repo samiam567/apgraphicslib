@@ -8,7 +8,8 @@ import java.awt.Color;
  */
 public abstract class Physics_drawable extends Physics_object implements Drawable, Two_dimensional {
 	protected Coordinate2D coordinates;
-	private double xSize, ySize;
+	protected double xSize;
+	protected double ySize;
 	protected double maxSize;
 	private boolean isVisible = true;
 	

@@ -232,6 +232,16 @@ public class Physics_3DPolygon extends Physics_2DPolygon implements Three_dimens
 		}
 		
 	}
+	
+	/**
+	 * shorthand to set the speed of the object
+	 * @param xSpeed
+	 * @param ySpeed
+	 * @param zSpeed
+	 */
+	public void setSpeed(double xSpeed, double ySpeed, double zSpeed) {
+		setSpeed(new Vector3D(xSpeed, ySpeed, zSpeed));
+	}
 
 	@Override
 	public void setPos(double x, double y, double z) {

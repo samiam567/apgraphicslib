@@ -19,4 +19,6 @@ public class Egg extends Physics_3DTexturedEquationedPolygon implements CameraMo
 		return new double[] {x,y,z};		
 		
 	}
+	
+	
 }

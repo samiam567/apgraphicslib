@@ -29,7 +29,7 @@ import apgraphicslib.Settings;
 
 public class Song extends Physics_2DDrawMovable implements KeyListener{
 	
-	private double audioLatency = 3910, noteStart;
+	private double noteStart, audioLatency = 1400;//3910;
 	double noteSpeed;
 	//if these arrows on the mat are pressed down 
 	private boolean left = false, down = false, up = false, right = false;

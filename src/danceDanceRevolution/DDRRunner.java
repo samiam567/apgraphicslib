@@ -18,6 +18,9 @@ public class DDRRunner {
 	
 	static ScoreBoard score;
 	public static void main(String[] args) {
+		new DDRRunner();
+	}
+	public DDRRunner() { 
 		
 		Settings.width = 1200;
 		Settings.height = 1000;

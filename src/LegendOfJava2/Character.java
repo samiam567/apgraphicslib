@@ -225,7 +225,7 @@ public class Character extends Physics_3DDrawMovable {
 		}
 		
 	
-		
+		@Override
 		public boolean checkForCollision(Coordinate2D point, Tangible ob, double radius) {
 			
 			//getting the three-dimensional coordinates of point

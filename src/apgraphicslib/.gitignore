@@ -86,3 +86,8 @@
 /Physics_3DTexturedPolygon$CameraPaintData.class
 /Timer$TimerUnits.class
 /Timer.class
+/AffineRotation.class
+/AffineRotation3D.class
+/ExpirableVectorAdd.class
+/ExpirableVectorAddable.class
+/Vector3D_Drawable.class

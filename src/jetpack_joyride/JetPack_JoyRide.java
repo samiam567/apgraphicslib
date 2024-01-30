@@ -410,16 +410,16 @@ public class JetPack_JoyRide implements MouseListener, KeyListener{
 	 @Override
      public void keyPressed(KeyEvent e) {
    	 
-   	  jetpack.getAcceleration().setJ(-jetpack.current_power);
-   	  jetpack.fireSize = 0.75;
-   	  drawer.inactivity_timer = 0;
-   	  
-   	  if (keyPressedTimes % 1 == 0) {
-	   	  JetPack_fire.showFire();
-	   	  JetPack_fire.showFire();
-   	  }  	 
-   	  
-   	  keyPressedTimes++;
+	   	  jetpack.getAcceleration().setJ(-jetpack.current_power);
+	   	  jetpack.fireSize = 0.75;
+	   	  drawer.inactivity_timer = 0;
+	   	  
+	   	  if (keyPressedTimes % 1 == 0) {
+		   	  JetPack_fire.showFire();
+		   	  JetPack_fire.showFire();
+	   	  }  	 
+	   	  
+	   	  keyPressedTimes++;
    
      }
 
